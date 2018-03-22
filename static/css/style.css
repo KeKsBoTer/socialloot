@@ -3,3 +3,7 @@ body{
     Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", Helvetica, Arial,
     sans-serif;
 }
+
+.right{
+    float:right
+}

@@ -1,3 +1,5 @@
 *.exe
 *.exe~
 *.sqlite
+socialloot
+tmp/*

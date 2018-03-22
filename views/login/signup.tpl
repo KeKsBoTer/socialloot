@@ -12,4 +12,3 @@
   </div>
   <input type="submit" value="signup">
 </form>
-<a href='{{urlfor "LoginController.Login"}}'>Login</a>
