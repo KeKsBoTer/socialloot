@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"html/template"
+	"net/http"
 
 	"github.com/astaxie/beego"
 
@@ -28,10 +29,10 @@ func (c *LoginController) Login() {
 	}
 
 	flash := beego.NewFlash()
-	email := c.GetString("Email")
+	name := c.GetString("Name")
 	password := c.GetString("Password")
 
-	user, err := lib.Authenticate(email, password)
+	user, err := lib.Authenticate(name, password)
 	if err != nil || user.Id < 1 {
 		flash.Warning(err.Error())
 		flash.Store(&c.Controller)
@@ -43,7 +44,7 @@ func (c *LoginController) Login() {
 
 	c.SetLogin(user)
 
-	c.Redirect(c.URLFor("UsersController.Index"), 303)
+	c.Redirect(c.URLFor("UsersController.Index"), http.StatusSeeOther)
 }
 
 func (c *LoginController) Logout() {
@@ -90,5 +91,5 @@ func (c *LoginController) Signup() {
 
 	c.SetLogin(u)
 
-	c.Redirect(c.URLFor("UsersController.Index"), 303)
+	c.Redirect(c.URLFor("UsersController.Index"), http.StatusSeeOther)
 }

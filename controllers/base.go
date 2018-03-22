@@ -8,7 +8,7 @@ import (
 	"github.com/astaxie/beego"
 )
 
-type BaseController struct {
+type  BaseController struct {
 	beego.Controller
 
 	Userinfo *models.User
@@ -53,11 +53,14 @@ func (c *BaseController) Finish() {
 }
 
 func (c *BaseController) GetLogin() *models.User {
-	u := &models.User{
-		Id: c.GetSession("userinfo").(int),
+	if i, ok := c.GetSession("userinfo").(int); ok {
+		u := &models.User{
+			Id: i,
+		}
+		u.Read()
+		return u
 	}
-	u.Read()
-	return u
+	return nil
 }
 
 func (c *BaseController) DelLogin() {

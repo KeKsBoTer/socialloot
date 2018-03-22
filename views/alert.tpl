@@ -6,7 +6,7 @@
     {{else if (index .flash "error")}}
         <span>Error:</span>
         {{i18nja (index .flash "error")}}
-    {{else if (index .flash "success")}}
+    {{else if (index .flash "success")}}    
         <span>Success:</span>
         {{i18nja (index .flash "success")}}
     {{end}}
