@@ -9,7 +9,7 @@ import (
 	"github.com/KeKsBoTer/socialloot/models"
 )
 
-func SignupUser(u *models.User) (int, error) {
+func SignupUser(u *models.User) error {
 	var (
 		err error
 		msg string
@@ -17,20 +17,15 @@ func SignupUser(u *models.User) (int, error) {
 
 	if models.Users().Filter("name", u.Email).Exist() {
 		msg = "was already regsitered input name address."
-		return 0, errors.New(msg)
+		return errors.New(msg)
 	}
 
 	hashedPw, err := bcrypt.GenerateFromPassword([]byte(u.Password), bcrypt.DefaultCost)
 	if err != nil {
-		return 0, err
+		return err
 	}
 	u.Password = string(hashedPw)
 	u.CreationDate = time.Now()
 	u.LastLoginTime = u.CreationDate
-	err = u.Insert()
-	if err != nil {
-		return 0, err
-	}
-
-	return u.Id, err
+	return u.Insert()
 }

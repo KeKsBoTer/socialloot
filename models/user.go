@@ -8,11 +8,11 @@ import (
 )
 
 type User struct {
-	Id            int    `orm:"pk;auto"`
-	Name          string `orm:"unique" form:"Name" valid:"Required;Name"`
-	RePassword    string `orm:"-" form:"Repassword" valid:"Required"`
-	Password      string `orm:"size(32)" form:"Password" valid:"Required;MinSize(8)"`
-	CreationDate  time.Time
+	Id            int       `orm:"pk;auto"`
+	Name          string    `orm:"unique" form:"Name" valid:"Required"`
+	RePassword    string    `orm:"-" form:"Repassword" valid:"Required"`
+	Password      string    `orm:"" form:"Password" valid:"Required;MinSize(8)"`
+	CreationDate  time.Time `orm:"auto_now_add`
 	LastLoginTime time.Time `orm:"null"`
 	Email         string    `orm:"null"`
 }

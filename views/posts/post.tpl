@@ -1,4 +1,4 @@
-<h1>{{.Topic.Name}}</h1>
+<h1>{{.Post.Title}}</h1>
 <div>
-    <p>This is a topic page</p>
+    <p>{{.Post.Content}}</p>
 </div>
