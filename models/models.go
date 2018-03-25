@@ -9,5 +9,6 @@ func init() {
 		new(User),
 		new(Topic),
 		new(Post),
+		new(Vote),
 	)
 }

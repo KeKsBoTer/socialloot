@@ -26,7 +26,7 @@ func init() {
 		return time.Now().Add(time.Duration(9) * time.Hour).Format(format)
 	})
 
-	beego.AddFuncMap("dateformatJst", func(in time.Time) string {
+	beego.AddFuncMap("dateformat", func(in time.Time) string {
 		in = in.Add(time.Duration(9) * time.Hour)
 		return in.Format("01/02/2006 15:04")
 	})
@@ -56,13 +56,6 @@ func init() {
 		return runewidth.Truncate(in, length, "...")
 	})
 
-	beego.AddFuncMap("noname", func(in string) string {
-		if in == "" {
-			return "(未入力)"
-		}
-		return in
-	})
-
 	beego.AddFuncMap("cleanurl", func(in string) string {
 		return strings.Trim(strings.Trim(in, " "), "　")
 	})
@@ -85,5 +78,9 @@ func init() {
 			data[key] = append(data[key].([]interface{}), v)
 		}
 		return template.JS("")
+	})
+
+	beego.AddFuncMap("URL", func(data interface{}) string {
+		return lib.URLForItem(data)
 	})
 }

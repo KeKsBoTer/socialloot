@@ -2,7 +2,6 @@ package lib
 
 import (
 	"errors"
-	"log"
 	"time"
 
 	"github.com/KeKsBoTer/socialloot/models"
@@ -23,9 +22,7 @@ func Submit(p *models.Post) error {
 	p.Topic = &models.Topic{
 		Name: p.TopicName,
 	}
-
-	if err = models.Topics().Filter("name", p.TopicName).One(p.Topic); err != nil {
-		log.Println(err)
+	if err = p.Topic.Read("Name"); err != nil {
 		msg = "topic does not exist"
 		return errors.New(msg)
 	}
@@ -40,4 +37,17 @@ func Submit(p *models.Post) error {
 
 func CreateTopic(t *models.Topic) error {
 	return t.Insert()
+}
+
+func VoteOnPost(action models.UserVote, postId string, user *models.User) error {
+	vote := models.Vote{
+		User:   user,
+		Action: action,
+		Item:   postId,
+		Type:   "post",
+	}
+	if err := models.IsValid(vote); err != nil {
+		return err
+	}
+	return vote.Insert()
 }

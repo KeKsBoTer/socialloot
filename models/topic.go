@@ -3,7 +3,7 @@ package models
 import "github.com/astaxie/beego/orm"
 
 type Topic struct {
-	Id          int    `orm:"pk"`
+	Id          int    `orm:"pk;auto"`
 	Name        string `orm:"unique"`
 	Title       string
 	Description string
@@ -17,6 +17,13 @@ func Topics() orm.QuerySeter {
 
 func (t *Topic) Insert() error {
 	if _, err := orm.NewOrm().Insert(t); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *Topic) Read(fields ...string) error {
+	if err := orm.NewOrm().Read(m, fields...); err != nil {
 		return err
 	}
 	return nil

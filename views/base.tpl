@@ -4,8 +4,10 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0"/>
-    <title>Auth sample</title>
+    <title>{{if .Title}}{{.Title}}{{else}}Socialloot{{end}}</title>
     <link href="/static/css/style.css" rel="stylesheet">
+    <script type="text/javascript"  src="/static/js/jquery-3.3.1.min.js"></script>
+    <script src="/static/js/script.js"></script>
     {{range .HeadStyles}}
         <link rel="stylesheet" href="{{.}}">
     {{end}}

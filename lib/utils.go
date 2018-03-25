@@ -7,10 +7,37 @@ import (
 	"encoding/hex"
 	"fmt"
 	"math/big"
+	"reflect"
 	"regexp"
 	"strconv"
 	"strings"
+
+	"github.com/KeKsBoTer/socialloot/models"
+	"github.com/astaxie/beego"
 )
+
+func URLForItem(data interface{}) string {
+	rv := reflect.ValueOf(data)
+	// if data is a pointer, get the value to make type switching possible
+	for rv.Kind() == reflect.Ptr || rv.Kind() == reflect.Interface {
+		rv = rv.Elem()
+	}
+	data = rv.Interface()
+	switch data.(type) {
+	case models.Post:
+		post := data.(models.Post)
+		return beego.URLFor("PostController.Get", ":topic", post.Topic.Name, ":post", post.Id)
+	case models.Topic:
+		topic := data.(models.Topic)
+		return beego.URLFor("TopicController.Get", ":topic", topic.Name)
+	case models.User:
+		user := data.(models.User)
+		return beego.URLFor("UserController.Get", ":user", user.Name)
+	default:
+		beego.Error("Cannot create URL for:", reflect.TypeOf(data))
+		return "/"
+	}
+}
 
 func NumberEncode(number string, alphabet []byte) string {
 	token := make([]byte, 0, 12)
