@@ -1,6 +1,8 @@
 package controllers
 
 import (
+	"log"
+
 	"github.com/KeKsBoTer/socialloot/lib"
 	"github.com/KeKsBoTer/socialloot/models"
 )
@@ -12,16 +14,17 @@ type ApiController struct {
 func (c *ApiController) Vote() {
 	dir, err := c.GetInt("dir")
 	if err != nil {
-		c.Abort("505")
+		c.Abort("400")
 		return
 	}
 	id := c.GetString("id")
 	if len(id) < 1 {
-		c.Abort("505")
+		c.Abort("400")
 		return
 	}
 	if err := lib.VoteOnPost(models.UserVote(dir), id, c.GetLogin()); err != nil {
-		c.Abort("400")
+		log.Println(err)
+		c.Abort("500")
 		return
 	}
 	c.Data["json"] = "success"

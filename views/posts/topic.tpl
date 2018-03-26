@@ -8,9 +8,9 @@
         {{range $post := .Posts}}
         <li class="post" item="{{$post.Id}}">
             <div class="vote-container">
-                <div class="vote up"></div>
-                <div class="votes">{{$post.Votes}}</div>
-                <div class="vote down"></div>
+                <div class="vote-button up {{if eq $post.VoteDir 1}}voted{{end}}" onclick="vote(this)"></div>
+                <div class="vote-count">{{$post.Votes}}</div>
+                <div class="vote-button down {{if eq $post.VoteDir -1}}voted{{end}}" onclick="vote(this)"></div>
             </div>
             <div class="post-details">
                 <a class="title" href="{{URL $post}}">{{$post.Title}}</a>

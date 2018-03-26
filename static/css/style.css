@@ -19,20 +19,12 @@ body {
 .post-list .post .vote-container {
   float: left;
   padding: 2px 10px;
+  margin-right: 10px;
   text-align: center; }
 
-.post-list .post .vote-container .vote {
-  width: 100%;
-  min-width: 20px;
-  height: 20px;
-  cursor: pointer;
-  background-image: url("/static/img/vote.png");
-  transform-origin: center center;
-  background-position: center center;
-  background-repeat: no-repeat; }
-
-.post-list .post .vote-container .vote.down {
-  transform: rotateZ(180deg); }
+.post-list .post .vote-count {
+  font-weight: bold;
+  color: #505050; }
 
 .post-list .post .post-details .title {
   color: #16A;
@@ -52,3 +44,19 @@ body {
 
 .clear {
   clear: both; }
+
+.vote-button {
+  width: 100%;
+  min-width: 20px;
+  height: 20px;
+  cursor: pointer;
+  background-image: url("/static/img/vote.png");
+  transform-origin: center center;
+  background-position: center center;
+  background-repeat: no-repeat; }
+
+.vote-button.down {
+  transform: rotateZ(180deg); }
+
+.vote-button.voted {
+  background-image: url("/static/img/vote_active.png"); }

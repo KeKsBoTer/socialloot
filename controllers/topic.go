@@ -34,11 +34,14 @@ func getPostsForTopic(topic *models.Topic, c *TopicController) (*[]*models.Post,
 	if _, err := models.Posts().Filter("Topic", topic.Id).RelatedSel().All(&posts); err != nil {
 		return nil, err
 	}
-	for i,p:=range posts{
-		votes,err := models.GetVotesForPost(p.Id)
-		if err !=nil{
+	for i, p := range posts {
+		if c.User != nil {
+			posts[i].VoteDir = models.GetUserVoteOnPost(c.User, p)
+		}
+		votes, err := models.GetVotesForPost(p)
+		if err != nil {
 			log.Println(err)
-		}else{
+		} else {
 			posts[i].Votes = votes
 		}
 	}

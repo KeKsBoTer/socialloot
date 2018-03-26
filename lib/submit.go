@@ -51,5 +51,5 @@ func VoteOnPost(action models.UserVote, postId string, user *models.User) error 
 	if err := models.IsValid(vote); err != nil {
 		return err
 	}
-	return vote.Insert()
+	return vote.InsertOrUpdate()
 }
