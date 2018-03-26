@@ -19,23 +19,12 @@ body {
         .vote-container {
             float: left;
             padding: 2px 10px;
+            margin-right: 10px;
             text-align: center;
-            .vote {
-                width: 100%;
-                min-width: 20px;
-                height: 20px;
-                cursor: pointer;
-                background-image: url("/static/img/vote.png");
-                transform-origin: center center;
-                background-position: center center;
-                background-repeat: no-repeat;
-                &.up {
-                   // background-color: green;
-                }
-                &.down {
-                    transform: rotateZ(180deg)
-                }
-            }
+        }
+        .vote-count{
+            font-weight: bold;
+            color: rgb(80,80,80)
         }
         .post-details {
             .title {
@@ -60,4 +49,24 @@ body {
 
 .clear {
     clear: both;
+}
+
+.vote-button {
+    width: 100%;
+    min-width: 20px;
+    height: 20px;
+    cursor: pointer;
+    background-image: url("/static/img/vote.png");
+    transform-origin: center center;
+    background-position: center center;
+    background-repeat: no-repeat;
+    &.up {
+       // background-color: green;
+    }
+    &.down {
+        transform: rotateZ(180deg)
+    }
+    &.voted{
+        background-image: url("/static/img/vote_active.png");
+    }
 }

@@ -1,7 +1,7 @@
 <div>
   <a href="/">Home</a>
   {{if .IsLogin}}
-  <a itemprop="url" href='{{urlfor "SubmitController.Submit"}}'>Submit</a>
+  <a itemprop="url" href='{{urlfor "SubmitController.Submit"}}{{if .Topic}}?topic={{.Topic.Name}}{{end}}'>Submit {{if .Topic}}to {{.Topic.Name}}{{end}}</a>
   <a itemprop="url" href='{{urlfor "SubmitController.CreateTopic"}}'>Create Topic</a>
   {{end}}
   <div class="right">

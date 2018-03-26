@@ -9,11 +9,15 @@
   <div>
     <textarea placeholder="content" name="Content" type="text" id="inputContent"></textarea>
   </div>
-
-  <label for="inputTopic">Topic</label>
-  <div>
-    <input placeholder="topic" name="Topic" value="" type="text" id="inputTopic" />
-  </div>
+  
+  {{if .Topic}}
+    <input name="Topic" value="{{.Topic.Name}}" type="hidden" id="inputTopic" />
+  {{else}}
+    <label for="inputTopic">Topic</label>
+    <div>
+      <input placeholder="topic" name="Topic" value="" type="text" id="inputTopic" />
+    </div>
+  {{end}}
   <p class="message"></p>
 
   <input type="submit" value="Submit">
