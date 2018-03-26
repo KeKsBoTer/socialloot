@@ -21,7 +21,8 @@ $(function () {
 
     $(".vote").on("click", function (e) {
         var $vote = $(this)
-        var item = $vote.parents(".post").attr("item")
+        var $post = $vote.parents(".post")
+        var item = $post.attr("item")
         var dir = 0
         if ($vote.hasClass("up"))
             dir = 1
@@ -32,14 +33,19 @@ $(function () {
             return
         }
         if (item)
-            voteOnPost(item, dir)
+            voteOnPost(item, dir,function(){
+                console.log("success")
+                var voteContainer = $post.children(".votes")
+                var votes = parseInt(voteContainer.text())
+                voteContainer.text(votes+dir)
+            })
         else
             console.error("error while voting")
     });
 });
 
 
-function voteOnPost(id, dir) {
+function voteOnPost(id, dir, onSuccess) {
     $.ajax({
         type: "POST",
         url: "/api/vote",
@@ -49,6 +55,7 @@ function voteOnPost(id, dir) {
         },
         success: function (data) {
             console.log("voted!")
+            onSuccess && onSuccess()
         }
     });
 }

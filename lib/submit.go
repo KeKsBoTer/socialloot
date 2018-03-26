@@ -2,6 +2,7 @@ package lib
 
 import (
 	"errors"
+	"strings"
 	"time"
 
 	"github.com/KeKsBoTer/socialloot/models"
@@ -20,7 +21,7 @@ func Submit(p *models.Post) error {
 	p.Date = time.Now()
 	p.Id = GetRandomString(11)
 	p.Topic = &models.Topic{
-		Name: p.TopicName,
+		Name: strings.ToLower(p.TopicName),
 	}
 	if err = p.Topic.Read("Name"); err != nil {
 		msg = "topic does not exist"
@@ -36,6 +37,7 @@ func Submit(p *models.Post) error {
 }
 
 func CreateTopic(t *models.Topic) error {
+	t.Name = strings.ToLower(t.Name)
 	return t.Insert()
 }
 

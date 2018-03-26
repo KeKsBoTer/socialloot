@@ -44,3 +44,23 @@ func (v *Vote) Valid(va *validation.Validation) {
 	va.Required(v.Item, "no item provided")
 	va.Required(v.Type, "no type provided")
 }
+
+func Votes() orm.QuerySeter {
+	var table Vote
+	return orm.NewOrm().QueryTable(table)
+}
+func GetVotesForPost(item string) (int, error) {
+	var votes []*Vote
+	if _, err := Votes().Filter("type", "post").Filter("item", item).All(&votes); err != nil {
+		return 0, err
+	}
+	voteCount := 0
+	for _, v := range votes {
+		if v.Action == ActionUpVote {
+			voteCount++
+		} else if v.Action == ActionDownVote {
+			voteCount--
+		}
+	}
+	return voteCount, nil
+}
