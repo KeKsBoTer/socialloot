@@ -15,6 +15,7 @@ type Post struct {
 	Content   string `form:"Content" valid:"Required"`
 	TopicName string `orm:"-" form:"Topic" valid:"Required"`
 	Topic     *Topic `orm:"rel(fk);null;on_delete(do_nothing)"`
+	Votes int `orm:"-"`
 }
 
 func Posts() orm.QuerySeter {

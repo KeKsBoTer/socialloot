@@ -9,7 +9,7 @@
         <li class="post" item="{{$post.Id}}">
             <div class="vote-container">
                 <div class="vote up"></div>
-                <div class="votes">200</div>
+                <div class="votes">{{$post.Votes}}</div>
                 <div class="vote down"></div>
             </div>
             <div class="post-details">

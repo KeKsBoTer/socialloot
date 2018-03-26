@@ -18,13 +18,18 @@ body {
 
 .post-list .post .vote-container {
   float: left;
-  padding: 2px 10px; }
+  padding: 2px 10px;
+  text-align: center; }
 
 .post-list .post .vote-container .vote {
   width: 100%;
+  min-width: 20px;
   height: 20px;
   cursor: pointer;
-  background-image: url("/static/img/vote.png"); }
+  background-image: url("/static/img/vote.png");
+  transform-origin: center center;
+  background-position: center center;
+  background-repeat: no-repeat; }
 
 .post-list .post .vote-container .vote.down {
   transform: rotateZ(180deg); }
