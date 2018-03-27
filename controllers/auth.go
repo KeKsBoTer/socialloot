@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"encoding/json"
 	"net/http"
 
 	"github.com/KeKsBoTer/socialloot/models"
@@ -26,13 +27,17 @@ func (c *AuthController) Prepare() {
 	if c.Ctx.Input.IsGet() {
 		c.Data["IsLogin"] = isLogin
 		c.Data["User"] = c.User
+		if dst := c.GetString("dest"); len(dst) > 1 {
+			c.Data["Dest"] = dst
+		}
 
 		c.Data["HeadStyles"] = []string{}
 		c.Data["HeadScripts"] = []string{}
+		c.Data["URL"] = c.Ctx.Input.URL()
 
 		c.Layout = "base.tpl"
 		c.LayoutSections = make(map[string]string)
-		c.LayoutSections["BaseHeader"] = "header.tpl"
+		c.LayoutSections["BaseHeader"] = "components/header.tpl"
 	}
 }
 
@@ -80,8 +85,16 @@ func (c *NeedsAuthController) Prepare() {
 		if c.Ctx.Input.IsGet() {
 			c.RedirectForm()
 			if !c.Ctx.Output.IsRedirect() {
-				c.Ctx.Redirect(http.StatusSeeOther, c.URLFor("IndexController.Index"))
+				c.Ctx.Redirect(http.StatusUnauthorized, c.URLFor("IndexController.Index"))
 			}
+		} else if c.Ctx.Input.IsPost() {
+			r := ApiResponse{
+				Success: false,
+				Message: "unauthorized",
+				Dest:    c.URLFor("LoginController.LoginPage"),
+			}
+			j, _ := json.Marshal(r)
+			c.CustomAbort(http.StatusUnauthorized, string(j))
 		} else {
 			c.Abort("401")
 		}

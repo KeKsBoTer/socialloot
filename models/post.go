@@ -1,6 +1,7 @@
 package models
 
 import (
+	"log"
 	"time"
 
 	"github.com/astaxie/beego/orm"
@@ -51,6 +52,43 @@ func (p *Post) Valid(v *validation.Validation) {
 func (p *Post) Read(fields ...string) error {
 	if err := orm.NewOrm().Read(p, fields...); err != nil {
 		return err
+	}
+	return nil
+}
+
+func (p *Post) ReadVoteData(u *User) {
+	if u != nil {
+		if err := u.WriteVoteToPost(p); err != nil {
+			log.Println(err)
+		}
+	}
+	err := p.ReadVoteSum()
+	if err != nil {
+		log.Println(err)
+	}
+}
+
+func (u *User) WriteVoteToPost(p *Post) error {
+	var vote Vote
+	if err := getUserVoteOnPost(p.Id, u).One(&vote, "action"); err != nil {
+		return err
+	}
+	p.VoteDir = vote.Action
+	return nil
+}
+
+func (p *Post) ReadVoteSum() error {
+	var votes []*Vote
+	p.Votes = 0
+	if _, err := getVotesOnPost(p.Id).All(&votes); err != nil {
+		return err
+	}
+	for _, v := range votes {
+		if v.Action == ActionUpVote {
+			p.Votes++
+		} else if v.Action == ActionDownVote {
+			p.Votes--
+		}
 	}
 	return nil
 }

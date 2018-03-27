@@ -18,6 +18,7 @@ func (this *PostController) Get() {
 		return
 	}
 	this.Data["Topic"] = topic
+
 	postID := this.Ctx.Input.Param(":post")
 	post := models.Post{
 		Id: postID,
@@ -26,7 +27,8 @@ func (this *PostController) Get() {
 		this.Abort("404")
 		return
 	}
+	post.ReadVoteData(this.User)
 	this.Data["Post"] = post
 	this.Layout = "base.tpl"
-	this.TplName = "posts/post.tpl"
+	this.TplName = "pages/posts/post.tpl"
 }

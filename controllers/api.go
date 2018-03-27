@@ -3,6 +3,8 @@ package controllers
 import (
 	"log"
 
+	"github.com/astaxie/beego"
+
 	"github.com/KeKsBoTer/socialloot/lib"
 	"github.com/KeKsBoTer/socialloot/models"
 )
@@ -90,4 +92,13 @@ func (c *ApiController) CreateTopic() {
 	}
 	r.Success = true
 	r.Dest = lib.URLForItem(*t)
+}
+
+func apiResponse(c *beego.Controller) *ApiResponse {
+	r := ApiResponse{}
+	if dst := c.GetString("dest"); len(dst) > 0 {
+		r.Dest = dst
+	}
+	c.Data["json"] = &r
+	return &r
 }

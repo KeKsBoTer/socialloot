@@ -12,17 +12,12 @@
         <link rel="stylesheet" href="{{.}}">
     {{end}}
  </head>
-<body id="home">
+<body>
+    {{.BaseHeader}}
+    {{.LayoutContent}}
+    {{range .HeadScripts}}
+        <script src="{{.}}"></script>
+    {{end}}
 
-  {{.BaseHeader}}
-  
-  <div id="wrap">
-      {{.LayoutContent}}
-  </div>
-  
-  {{range .HeadScripts}}
-      <script src="{{.}}"></script>
-  {{end}}
- 
 </body>
 </html>

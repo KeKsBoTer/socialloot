@@ -21,12 +21,14 @@ $(function () {
 
 });
 
+const vote_container = ".vote-container";
+
 function vote(button, dir) {
     var $vote = $(button)
     // check if allready voted
     if ($vote.hasClass("voted"))
         return
-    var $post = $vote.parents(".post")
+    var $post = $vote.parents(vote_container)
     var item = $post.attr("item")
     var dir = 0
     if ($vote.hasClass("up"))
@@ -43,7 +45,7 @@ function vote(button, dir) {
             $otherVoteButton = $vote.siblings(".vote-button")
             if ($otherVoteButton.hasClass("voted")) {
                 $otherVoteButton.removeClass("voted")
-                dir*=2
+                dir *= 2
             }
 
             // update vote count
@@ -60,12 +62,18 @@ function voteOnPost(id, dir, onSuccess) {
     $.ajax({
         type: "POST",
         url: "/api/vote",
+        dataType: "json",
         data: {
             id: id,
             dir: parseInt(dir)
         },
         success: function (data) {
             onSuccess && onSuccess()
-        }
+        },
+        statusCode: {
+            401: function () {
+                window.location="/login?dest="+encodeURIComponent(window.location.pathname);
+            }
+        },
     });
 }

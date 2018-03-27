@@ -18,5 +18,5 @@ func (this *UserController) Get() {
 		return
 	}
 	this.Data["User"] = user
-	this.TplName = "users/page.tpl"
+	this.TplName = "pages/users/page.tpl"
 }

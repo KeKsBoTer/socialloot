@@ -10,7 +10,7 @@ type IndexController struct {
 
 func (this *IndexController) Get() {
 	this.Data["Title"] = "Socailloot: like reddit but different"
-	this.TplName = "index.tpl"
+	this.TplName = "pages/index.tpl"
 	var topics []*models.Topic
 	if _, err := models.Topics().All(&topics); err != nil {
 		this.Abort("505")

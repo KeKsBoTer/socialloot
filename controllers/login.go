@@ -15,18 +15,17 @@ func (c *LoginController) LoginPage() {
 	if c.IsLogin() {
 		c.RedirectForm()
 		if !c.Ctx.Output.IsRedirect() {
-			c.Ctx.Redirect(http.StatusSeeOther, c.URLFor("IndexController.Index"))
+			c.Ctx.Redirect(http.StatusSeeOther, c.LoginPath())
 		}
 		return
 	}
-	c.TplName = "login/login.tpl"
+	c.TplName = "pages/login/login.tpl"
 	c.Data["Title"] = "Login"
 }
 
 func (c *LoginController) Login() {
 	// server answer as json
-	r := ApiResponse{}
-	c.Data["json"] = &r
+	r := apiResponse(&c.Controller)
 	defer c.ServeJSON(true)
 
 	name := c.GetString("Name")
@@ -40,10 +39,6 @@ func (c *LoginController) Login() {
 	}
 	c.SetLogin(user)
 	r.Success = true
-
-	if dst := c.GetString("dest"); len(dst) > 0 {
-		r.Dest = dst
-	}
 }
 
 func (c *LoginController) Logout() {
@@ -52,15 +47,13 @@ func (c *LoginController) Logout() {
 }
 
 func (c *LoginController) SignupPage() {
-	c.TplName = "login/signup.tpl"
+	c.TplName = "pages/login/signup.tpl"
 	c.Data["Title"] = "Sign up to Socialloot"
-
 }
 
 func (c *LoginController) Signup() {
 	// server answer as json
-	r := ApiResponse{}
-	c.Data["json"] = &r
+	r := apiResponse(&c.Controller)
 	defer c.ServeJSON(true)
 
 	u := &models.User{}
@@ -82,7 +75,4 @@ func (c *LoginController) Signup() {
 	}
 	c.SetLogin(u)
 	r.Success = true
-	if dst := c.GetString("dest"); len(dst) > 0 {
-		r.Dest = dst
-	}
 }

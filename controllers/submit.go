@@ -11,7 +11,7 @@ type SubmitController struct {
 }
 
 func (c *SubmitController) Submit() {
-	c.TplName = "submit/submit.tpl"
+	c.TplName = "pages/submit/submit.tpl"
 	c.Data["Title"] = "Submit to Socialloot"
 	topicName := c.GetString("topic")
 	if len(topicName) < 1 {
@@ -28,6 +28,6 @@ func (c *SubmitController) Submit() {
 }
 
 func (c *SubmitController) CreateTopic() {
-	c.TplName = "submit/createTopic.tpl"
+	c.TplName = "pages/submit/createTopic.tpl"
 	c.Data["Title"] = "Create a topic"
 }
