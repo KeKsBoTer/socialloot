@@ -61,33 +61,9 @@ func Votes() orm.QuerySeter {
 	return orm.NewOrm().QueryTable(table)
 }
 
-func GetVotesForPost(p *Post) (int, error) {
-	var votes []*Vote
-	if _, err := getVotesOnPost(p.Id).All(&votes); err != nil {
-		return 0, err
-	}
-	voteCount := 0
-	for _, v := range votes {
-		if v.Action == ActionUpVote {
-			voteCount++
-		} else if v.Action == ActionDownVote {
-			voteCount--
-		}
-	}
-	return voteCount, nil
-}
-
 func getVotesOnPost(item string) orm.QuerySeter {
 	return Votes().Filter("type", "post").Filter("item", item)
 }
 func getUserVoteOnPost(item string, u *User) orm.QuerySeter {
 	return getVotesOnPost(item).Filter("user", u)
-}
-
-func GetUserVoteOnPost(u *User, p *Post) UserVote {
-	var vote Vote
-	if err := getUserVoteOnPost(p.Id, u).One(&vote); err != nil {
-		return 0
-	}
-	return vote.Action
 }

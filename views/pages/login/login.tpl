@@ -8,6 +8,9 @@
   <div>
     <input placeholder="password" name="Password" type="password" value="" title="Password" id="inputPassword" />
   </div>
+  {{if .Dest}}
+    <input type="hidden" name="dest" value="{{.Dest}}"/>
+  {{end}}
   <p class="message"></p>
   <input type="submit" value="Login">
 

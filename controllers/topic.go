@@ -12,8 +12,10 @@ type TopicController struct {
 
 func (this *TopicController) Get() {
 	topicName := this.Ctx.Input.Param(":topic")
-	topic := &models.Topic{}
-	if err := models.Topics().Filter("name", topicName).One(topic); err != nil {
+	topic := &models.Topic{
+		Name: topicName,
+	}
+	if err := topic.Read("name"); err != nil {
 		this.Abort("404")
 		return
 	}
@@ -26,7 +28,7 @@ func (this *TopicController) Get() {
 	}
 	this.Data["Posts"] = posts
 	this.Layout = "base.tpl"
-	this.TplName = "posts/topic.tpl"
+	this.TplName = "pages/posts/topic.tpl"
 }
 
 func getPostsForTopic(topic *models.Topic, c *TopicController) (*[]*models.Post, error) {
@@ -34,16 +36,8 @@ func getPostsForTopic(topic *models.Topic, c *TopicController) (*[]*models.Post,
 	if _, err := models.Posts().Filter("Topic", topic.Id).RelatedSel().All(&posts); err != nil {
 		return nil, err
 	}
-	for i, p := range posts {
-		if c.User != nil {
-			posts[i].VoteDir = models.GetUserVoteOnPost(c.User, p)
-		}
-		votes, err := models.GetVotesForPost(p)
-		if err != nil {
-			log.Println(err)
-		} else {
-			posts[i].Votes = votes
-		}
+	for i := range posts {
+		posts[i].ReadVoteData(c.User)
 	}
 	return &posts, nil
 }
