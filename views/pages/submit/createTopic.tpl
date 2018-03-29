@@ -2,17 +2,17 @@
 <form method="POST" action='{{urlfor "ApiController.CreateTopic"}}'>
   <label for="inputName">Name</label>
   <div>
-    <input placeholder="name" name="Name" value="" type="text" id="inputName" />
+    <input placeholder="name" name="name" value="" type="text" id="inputName" />
   </div>
 
   <label for="inputTitle">Title</label>
   <div>
-    <input placeholder="title" name="Title" value="" type="text" id="inputTitle" />
+    <input placeholder="title" name="title" value="" type="text" id="inputTitle" />
   </div>
 
   <label for="inputDescription">Description</label>
   <div>
-    <input placeholder="description" name="Description" value="" type="text" id="inputDescription" />
+    <input placeholder="description" name="description" value="" type="text" id="inputDescription" />
   </div>
   <p class="message"></p>
 

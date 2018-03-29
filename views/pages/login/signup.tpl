@@ -2,12 +2,12 @@
   {{ .xsrfdata }}
   <label for="inputName">Name</label>
   <div>
-    <input placeholder="username" name="Name" value="" type="text" id="inputName" />
+    <input placeholder="username" name="username" value="" type="text" id="inputName" />
   </div>
   <label for="inputPassword">Password</label>
   <div>
-    <input placeholder="enter password" name="Password" type="password" value="" title="Password" id="inputPassword" />
-    <input placeholder="reenter password" name="Repassword" type="password" title="Password" />
+    <input placeholder="enter password" name="password" type="password" value="" title="Password" id="inputPassword" />
+    <input placeholder="reenter password" name="passwordre" type="password" title="Password" />
   </div>
   {{if .Dest}}
     <input type="hidden" name="dest" value="{{.Dest}}"/>

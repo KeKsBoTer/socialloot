@@ -1,7 +1,7 @@
 package controllers
 
 import (
-	"log"
+	"errors"
 
 	"github.com/astaxie/beego"
 
@@ -14,23 +14,67 @@ type ApiController struct {
 }
 
 func (c *ApiController) Vote() {
-	dir, err := c.GetInt("dir")
-	if err != nil {
-		c.Abort("400")
-		return
-	}
-	id := c.GetString("id")
-	if len(id) < 1 {
-		c.Abort("400")
-		return
-	}
-	if err := lib.VoteOnPost(models.UserVote(dir), id, c.GetLogin()); err != nil {
-		log.Println(err)
-		c.Abort("500")
-		return
-	}
-	c.Data["json"] = "success"
-	c.ServeJSON(true)
+	form := &models.VoteForm{}
+	handleForm(form, &c.AuthController, func(r *ApiResponse) {
+		err := lib.VoteOnPost(form.Direction, form.Item, c.User)
+		if err != nil {
+			r.Fail(err)
+			return
+		}
+		r.Success = true
+	})
+}
+
+func (c *ApiController) Submit() {
+	form := &models.SubmitForm{}
+	handleForm(form, &c.AuthController, func(r *ApiResponse) {
+		topic := models.Topic{
+			Name: form.TopicName,
+		}
+		if err := topic.Read("name"); err != nil {
+			r.Fail(errors.New("Topic not found"))
+			return
+		}
+		post, err := lib.Submit(form.Title, form.Content, &topic, c.User)
+		if err != nil {
+			r.Fail(err)
+			return
+		}
+		r.Success = true
+		r.Dest = lib.URLForItem(post)
+	})
+}
+
+func (c *ApiController) CreateTopic() {
+	form := &models.CreateTopicForm{}
+	handleForm(form, &c.AuthController, func(r *ApiResponse) {
+		topic, err := lib.CreateTopic(form.Name, form.Title, form.Description)
+		if err != nil {
+			r.Fail(err)
+			return
+		}
+		r.Success = true
+		r.Dest = lib.URLForItem(topic)
+	})
+}
+
+func (c *ApiController) Comment() {
+	form := &models.CommentForm{}
+	handleForm(form, &c.AuthController, func(r *ApiResponse) {
+		// get post from request (client sends post id)
+		post := models.Post{
+			Id: form.Post,
+		}
+		if err := post.Read("Id"); err != nil {
+			r.Fail(err)
+			return
+		}
+		if err := lib.CommentOnPost(form.Comment, &post, c.User); err != nil {
+			r.Fail(err)
+			return
+		}
+		r.Success = true
+	})
 }
 
 type ApiResponse struct {
@@ -39,66 +83,33 @@ type ApiResponse struct {
 	Dest    string `json:"dest"`
 }
 
-func (c *ApiController) Submit() {
-	// server answer as json
-	r := ApiResponse{}
-	c.Data["json"] = &r
-	defer c.ServeJSON(true)
-
-	p := &models.Post{}
-	if err := c.ParseForm(p); err != nil {
-		r.Success = false
-		r.Message = err.Error()
-		return
-	}
-	p.User = c.User
-	if err := models.IsValid(p); err != nil {
-		r.Success = false
-		r.Message = err.Error()
-		return
-	}
-	err := lib.Submit(p)
-	if err != nil {
-		r.Success = false
-		r.Message = err.Error()
-		return
-	}
-	r.Success = true
-	r.Dest = lib.URLForItem(*p)
-}
-
-func (c *ApiController) CreateTopic() {
-	// server answer as json
-	r := ApiResponse{}
-	c.Data["json"] = &r
-	defer c.ServeJSON(true)
-
-	t := &models.Topic{}
-	if err := c.ParseForm(t); err != nil {
-		r.Success = false
-		r.Message = err.Error()
-		return
-	}
-	if err := models.IsValid(t); err != nil {
-		r.Success = false
-		r.Message = err.Error()
-		return
-	}
-	err := lib.CreateTopic(t)
-	if err != nil {
-		r.Success = false
-		r.Message = err.Error()
-		return
-	}
-	r.Success = true
-	r.Dest = lib.URLForItem(*t)
-}
-
-func apiResponse(c *beego.Controller) *ApiResponse {
+func NewApiResponse(c *beego.Controller) *ApiResponse {
 	r := ApiResponse{}
 	if dst := c.GetString("dest"); len(dst) > 0 {
 		r.Dest = dst
 	}
 	c.Data["json"] = &r
 	return &r
+}
+
+func (a *ApiResponse) Fail(err error) {
+	a.Success = false
+	a.Message = err.Error()
+}
+
+type FormHandlerFunc func(r *ApiResponse)
+
+func handleForm(form interface{}, c *AuthController, f FormHandlerFunc) {
+	r := NewApiResponse(&c.Controller)
+	defer c.ServeJSON(true)
+
+	if err := c.ParseForm(form); err != nil {
+		r.Fail(err)
+		return
+	}
+	if err := models.IsValid(form); err != nil {
+		r.Fail(err)
+		return
+	}
+	f(r)
 }

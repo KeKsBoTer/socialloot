@@ -3,7 +3,6 @@ package models
 import (
 	"errors"
 
-	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/validation"
 )
 
@@ -16,8 +15,12 @@ func IsValid(model interface{}) (err error) {
 	if !b {
 		var msg string
 		for _, err := range valid.Errors {
-			beego.Warning(err.Key, ":", err.Message)
-			msg += err.Key + " : " + err.Message
+			if len(err.Field) > 1 {
+				msg += err.Field + ": "
+			}
+			msg += err.Message
+			// only diplay first error to user
+			break
 		}
 		return errors.New(msg)
 	}
