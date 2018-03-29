@@ -2,6 +2,8 @@ package controllers
 
 import (
 	"github.com/KeKsBoTer/socialloot/models"
+	"github.com/astaxie/beego"
+	"github.com/astaxie/beego/orm"
 )
 
 type PostController struct {
@@ -27,7 +29,21 @@ func (this *PostController) Get() {
 		this.Abort("404")
 		return
 	}
-	post.ReadVoteData(this.User)
+	if _, err := orm.NewOrm().LoadRelated(&post, "user"); err != nil {
+		this.Abort("505")
+		return
+	}
+
+	// loading comments
+	if err := post.ReadComments(); err != nil {
+		beego.Error(err)
+	}
+
+	// loading total votes count and user vote
+	if err := post.ReadVoteData(this.User); err != nil {
+		beego.Error(err)
+	}
+
 	this.Data["Post"] = post
 	this.Layout = "base.tpl"
 	this.TplName = "pages/posts/post.tpl"

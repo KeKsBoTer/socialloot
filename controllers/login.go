@@ -24,21 +24,16 @@ func (c *LoginController) LoginPage() {
 }
 
 func (c *LoginController) Login() {
-	// server answer as json
-	r := apiResponse(&c.Controller)
-	defer c.ServeJSON(true)
-
-	name := c.GetString("Name")
-	password := c.GetString("Password")
-
-	user, err := lib.Authenticate(name, password)
-	if err != nil {
-		r.Success = false
-		r.Message = err.Error()
-		return
-	}
-	c.SetLogin(user)
-	r.Success = true
+	form := &models.LoginForm{}
+	handleForm(form, &c.AuthController, func(r *ApiResponse) {
+		user, err := lib.Authenticate(form.UserName, form.Password)
+		if err != nil {
+			r.Fail(err)
+			return
+		}
+		c.SetLogin(user)
+		r.Success = true
+	})
 }
 
 func (c *LoginController) Logout() {
@@ -52,27 +47,14 @@ func (c *LoginController) SignupPage() {
 }
 
 func (c *LoginController) Signup() {
-	// server answer as json
-	r := apiResponse(&c.Controller)
-	defer c.ServeJSON(true)
-
-	u := &models.User{}
-	if err := c.ParseForm(u); err != nil {
-		r.Success = false
-		r.Message = "Signup invalid!"
-		return
-	}
-	if err := models.IsValid(u); err != nil {
-		r.Success = false
-		r.Message = err.Error()
-		return
-	}
-
-	if err := lib.SignupUser(u); err != nil {
-		r.Success = false
-		r.Message = err.Error()
-		return
-	}
-	c.SetLogin(u)
-	r.Success = true
+	form := &models.SignUpForm{}
+	handleForm(form, &c.AuthController, func(r *ApiResponse) {
+		user, err := lib.SignupUser(form.UserName, form.Password)
+		if err != nil {
+			r.Fail(err)
+			return
+		}
+		c.SetLogin(user)
+		r.Success = true
+	})
 }

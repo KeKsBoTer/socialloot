@@ -2,11 +2,11 @@
 <form method="POST" action='{{urlfor "LoginController.Login"}}'>
   <label for="inputName">Name</label>
   <div>
-    <input placeholder="username" name="Name" type="text" id="inputName" />
+    <input placeholder="username" name="username" type="text" id="inputName" />
   </div>
   <label for="inputPassword">Password</label>
   <div>
-    <input placeholder="password" name="Password" type="password" value="" title="Password" id="inputPassword" />
+    <input placeholder="password" name="password" type="password" value="" title="Password" id="inputPassword" />
   </div>
   {{if .Dest}}
     <input type="hidden" name="dest" value="{{.Dest}}"/>

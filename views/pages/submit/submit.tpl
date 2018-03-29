@@ -2,20 +2,20 @@
 <form method="POST" action='{{urlfor "ApiController.Submit"}}'>
   <label for="inputTitle">Title</label>
   <div>
-    <input placeholder="title" name="Title" value="" type="text" id="inputTitle" />
+    <input placeholder="title" name="title" value="" type="text" id="inputTitle" />
   </div>
 
   <label for="inputContent">Text</label>
   <div>
-    <textarea placeholder="content" name="Content" type="text" id="inputContent"></textarea>
+    <textarea placeholder="content" name="content" type="text" id="inputContent"></textarea>
   </div>
   
   {{if .Topic}}
-    <input name="Topic" value="{{.Topic.Name}}" type="hidden" id="inputTopic" />
+    <input name="topic" value="{{.Topic.Name}}" type="hidden" id="inputTopic" />
   {{else}}
     <label for="inputTopic">Topic</label>
     <div>
-      <input placeholder="topic" name="Topic" value="" type="text" id="inputTopic" />
+      <input placeholder="topic" name="topic" value="" type="text" id="inputTopic" />
     </div>
   {{end}}
   <p class="message"></p>

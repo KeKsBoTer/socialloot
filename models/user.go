@@ -4,23 +4,14 @@ import (
 	"time"
 
 	"github.com/astaxie/beego/orm"
-	"github.com/astaxie/beego/validation"
 )
 
 type User struct {
-	Id            int       `orm:"pk;auto"`
-	Name          string    `orm:"unique" form:"Name" valid:"Required"`
-	RePassword    string    `orm:"-" form:"Repassword" valid:"Required"`
-	Password      string    `orm:"" form:"Password" valid:"Required;MinSize(8)"`
+	Id            int    `orm:"pk;auto"`
+	Name          string `orm:"unique"`
+	Password      string
 	CreationDate  time.Time `orm:"auto_now_add`
 	LastLoginTime time.Time `orm:"null"`
-	Email         string    `orm:"null"`
-}
-
-func (u *User) Valid(v *validation.Validation) {
-	if u.Password != u.RePassword {
-		v.SetError("Repassword", "Does not matched password, repassword")
-	}
 }
 
 func (m *User) Insert() error {

@@ -10,6 +10,8 @@ $(function () {
             data: $form.serialize(),
             success: function (data) {
                 if (data["success"] == true) {
+                    if ($form.hasClass("clear-on-submit"))
+                        $form.trigger("reset");
                     if (data["dest"])
                         window.location.href = data["dest"]
                 } else {
