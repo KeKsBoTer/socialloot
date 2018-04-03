@@ -1,15 +1,23 @@
+@import url(./normalize.css);
+@font-face {
+  font-family: "Hemera";
+  src: url("/static/fonts/Hemera.ttf"); }
+
 body {
   font-family: medium-content-sans-serif-font, "Lucida Grande", "Lucida Sans Unicode", "Lucida Sans", Geneva, Arial, sans-serif;
   letter-spacing: -.42px;
-  background-color: #f3f3f3; }
+  background-color: white; }
 
 a {
   color: #551a8b;
   cursor: pointer;
   text-decoration: underline; }
 
-a.no-underline {
+a.no-underline, a.no-style {
   text-decoration: none; }
+
+a.no-style {
+  color: inherit; }
 
 .uppercase {
   text-transform: uppercase; }
@@ -185,7 +193,9 @@ a.no-underline {
 .comment .toggle:before {
   content: "[-]"; }
 
-.comment.collapsed .text, .comment.collapsed .controlls, .comment.collapsed .replies {
+.comment.collapsed .text,
+.comment.collapsed .controlls,
+.comment.collapsed .replies {
   display: none; }
 
 .comment.collapsed .toggle:before {
@@ -200,3 +210,50 @@ a.no-underline {
 
 .post-content .image {
   height: 500px; }
+
+.header {
+  width: 100%;
+  background-color: white; }
+
+.header .title-bar {
+  width: 100%;
+  max-width: 1000px;
+  margin: 10px auto;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: space-around;
+  align-items: center; }
+
+.header .title-bar .title {
+  font-family: Hemera;
+  text-transform: lowercase;
+  font-size: 50px;
+  margin: 0; }
+
+.header .button-group {
+  display: flex;
+  flex-direction: row;
+  align-items: center; }
+
+.header .button-group > button {
+  margin-left: 7px;
+  margin-right: 7px; }
+
+button.icon-button {
+  background: transparent;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  opacity: .6;
+  transition: opacity .2s;
+  display: inline-block; }
+
+button.icon-button:hover {
+  opacity: 1; }
+
+button.icon-button:active {
+  transform: none; }
+
+button.icon-button.large {
+  font-size: 36px; }

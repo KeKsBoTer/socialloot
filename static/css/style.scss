@@ -1,19 +1,29 @@
+@import "./normalize.css";
+$background-color: white;
+@font-face {
+    font-family: "Hemera";
+    src: url("/static/fonts/Hemera.ttf");
+}
+
 body {
     font-family: medium-content-sans-serif-font, "Lucida Grande", "Lucida Sans Unicode", "Lucida Sans", Geneva, Arial, sans-serif;
     letter-spacing: -.42px;
-    background-color: rgb(243, 243, 243);
+    background-color: $background-color;
 }
 
 a {
     color: rgb(85, 26, 139);
     cursor: pointer;
     text-decoration: underline;
-    &.no-underline{
+    &.no-underline {
         text-decoration: none;
+    }&.no-style {
+        @extend .no-underline;
+        color: inherit;
     }
 }
 
-.uppercase{
+.uppercase {
     text-transform: uppercase;
 }
 
@@ -33,13 +43,13 @@ a {
         margin-bottom: 10px;
         display: flex;
         flex-direction: row;
-        .preview{
+        .preview {
             overflow: hidden;
             margin: 2px 7px;
             width: 50px;
             height: 50px;
             flex-grow: 0;
-            img{
+            img {
                 width: 100%;
             }
         }
@@ -100,18 +110,20 @@ a {
 }
 
 // creates nested style like .comment .comment ... .comment{...}
-@mixin iterate($depth){
-    .comment{
-        @if $depth % 2 == 0{
+@mixin iterate($depth) {
+    .comment {
+        @if $depth % 2==0 {
             background-color: #f0f0f0;
-        } @else{
+        }
+        @else {
             background-color: white;
         }
-        @if $depth > 0{
+        @if $depth>0 {
             @include iterate($depth - 1)
         }
     }
 }
+
 .comment {
     border: 1px solid rgb(212, 212, 212);
     padding: 5px 0;
@@ -131,39 +143,90 @@ a {
         margin-left: 25px;
         margin-top: 10px;
     }
-    .vote-container{
+    .vote-container {
         width: 20px;
         padding: 0 5px;
-        .vote-button{
+        .vote-button {
             height: 10px;
         }
-        .vote-count{
+        .vote-count {
             font-size: 11px;
         }
     }
-    .toggle:before{
+    .toggle:before {
         content: "[-]"
     }
-    &.collapsed{
-        .text, .controlls, .replies{
+    &.collapsed {
+        .text,
+        .controlls,
+        .replies {
             display: none;
         }
-        .toggle:before{
+        .toggle:before {
             content: "[+]"
         }
     }
 }
 
-.tab-list{
+.tab-list {
     list-style: none;
     padding: 0;
-    li{
+    li {
         display: inline-block;
     }
 }
 
-.post-content{
-    .image{
+.post-content {
+    .image {
         height: 500px;
+    }
+}
+
+.header {
+    width: 100%;
+    background-color: $background-color;
+    .title-bar {
+        width: 100%;
+        max-width: 1000px;
+        margin: 10px auto;
+        display: flex;
+        flex-direction: row;
+        flex-wrap: nowrap;
+        justify-content: space-around;
+        align-items: center;
+        .title{
+            font-family: Hemera;
+            text-transform: lowercase;
+            font-size: 50px;
+            margin: 0;
+        }
+    }
+    .button-group {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        >button {
+            margin-left: 7px;
+            margin-right: 7px;
+        }
+    }
+}
+
+button.icon-button {
+    background: transparent;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    opacity: .6;
+    transition: opacity .2s;
+    display: inline-block;
+    &:hover {
+        opacity: 1;
+    }
+    &:active {
+        transform: none;
+    }
+    &.large {
+        font-size: 36px;
     }
 }
