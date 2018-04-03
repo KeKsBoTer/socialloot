@@ -1,4 +1,32 @@
 {{/* Header of every web page, needs root data (pass "." as data) */}}
+<div class="header">
+  <div class="title-bar">
+    <div>
+      <!--Left container-->
+    </div>
+    <div>
+      <a href="/" class="no-style">
+        <h1 class="title">social-loot</h1>
+      </a>
+    </div>
+    <div>
+      <div class="button-group">
+        <a href="/search">
+          <button class="icon-button ion-ios-search"></button>
+        </a>
+
+        {{if .IsLogin}}
+        <a href="{{URL .User}}">
+          {{else}}
+          <a href="{{urlfor " LoginController.LoginPage "}}">
+            {{end}}
+            <button class="icon-button large ion-ios-person-outline"></button>
+          </a>
+      </div>
+    </div>
+  </div>
+</div>
+<!--
 <div>
   <a href="/">Home</a>
   {{if .IsLogin}}
@@ -18,3 +46,4 @@
   {{end}}
   </div>
 </div> 
+-->
