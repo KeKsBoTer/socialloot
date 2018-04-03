@@ -3,6 +3,8 @@ package models
 import (
 	"time"
 
+	"github.com/astaxie/beego"
+
 	"github.com/astaxie/beego/orm"
 )
 
@@ -10,13 +12,29 @@ import (
 // Change in model tags!!
 const ItemIDLength = 11
 
+type PostType string
+
+const (
+	PostTypeImage = PostType("image")
+	PostTypeText  = PostType("text")
+	PostTypeLink  = PostType("link")
+)
+
 type Post struct {
-	Id      string    `orm:"pk;size(11)"`
-	User    *User     `orm:"rel(fk);null;on_delete(do_nothing)"`
-	Date    time.Time `orm:"auto_now_add"`
-	Title   string
+	Id    string    `orm:"pk;size(11)"`
+	User  *User     `orm:"rel(fk);null;on_delete(do_nothing)"`
+	Date  time.Time `orm:"auto_now_add"`
+	Title string
+
+	// Content depends on the type of the post.
+	// Text and Link is stored as plain text in the content field
+	// For images the image id (see table media) is saved in the field
 	Content string
-	Topic   *Topic `orm:"rel(fk);null;on_delete(do_nothing)"`
+
+	// Type of the post. Image, text, or link
+	Type  PostType
+	
+	Topic *Topic `orm:"rel(fk);null;on_delete(do_nothing)"`
 
 	// for html rendering
 	Votes    int           `orm:"-"`
@@ -37,10 +55,7 @@ func (p *Post) Insert() error {
 }
 
 func (p *Post) Read(fields ...string) error {
-	if err := orm.NewOrm().Read(p, fields...); err != nil {
-		return err
-	}
-	return nil
+	return orm.NewOrm().Read(p, fields...)
 }
 
 func (p *Post) ReadVoteData(u *User) error {
@@ -53,20 +68,10 @@ func (p *Post) ReadVoteData(u *User) error {
 	return p.ReadVoteSum()
 }
 
-// ReadVoteOnPost gets the users vote on the given post and safes the result in the post struct
-func (u *User) ReadVoteOnPost(p *Post) error {
-	var vote Vote
-	if err := getUserVoteOnPost(p.Id, u).One(&vote, "action"); err != nil {
-		return err
-	}
-	p.VoteDir = vote.Action
-	return nil
-}
-
 func (p *Post) ReadVoteSum() error {
 	var votes []*Vote
 	p.Votes = 0
-	if _, err := getVotesOnPost(p.Id).All(&votes); err != nil {
+	if _, err := getVotesOnItem(p.Id).All(&votes); err != nil {
 		return err
 	}
 	for _, v := range votes {
@@ -79,9 +84,17 @@ func (p *Post) ReadVoteSum() error {
 	return nil
 }
 
-func (p *Post) ReadComments() error {
-	if _, err := Comments().Filter("post", p).RelatedSel("user").All(&p.Comments); err != nil {
+func (p *Post) ReadComments(u *User) error {
+	if _, err := Comments().Filter("replyto", p.Id).RelatedSel("user").All(&p.Comments); err != nil {
 		return err
+	}
+	for _, c := range p.Comments {
+		if err := c.ReadVoteData(u); err != nil {
+			beego.Error(err)
+		}
+		if err := c.LoadReplies(u); err != nil {
+			beego.Error(err)
+		}
 	}
 	return nil
 }

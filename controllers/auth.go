@@ -33,7 +33,7 @@ func (c *AuthController) Prepare() {
 
 		c.Data["HeadStyles"] = []string{}
 		c.Data["HeadScripts"] = []string{}
-		c.Data["URL"] = c.Ctx.Input.URL()
+		c.Data["URL"] = c.Ctx.Input.URI()
 
 		c.Layout = "base.tpl"
 		c.LayoutSections = make(map[string]string)

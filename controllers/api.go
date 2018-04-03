@@ -16,7 +16,7 @@ type ApiController struct {
 func (c *ApiController) Vote() {
 	form := &models.VoteForm{}
 	handleForm(form, &c.AuthController, func(r *ApiResponse) {
-		err := lib.VoteOnPost(form.Direction, form.Item, c.User)
+		err := lib.VoteOnItem(form.Direction, form.Item, c.User)
 		if err != nil {
 			r.Fail(err)
 			return
@@ -24,6 +24,11 @@ func (c *ApiController) Vote() {
 		r.Success = true
 	})
 }
+
+// Size constants
+const (
+	MB = 1 << 20
+)
 
 func (c *ApiController) Submit() {
 	form := &models.SubmitForm{}
@@ -35,7 +40,24 @@ func (c *ApiController) Submit() {
 			r.Fail(errors.New("Topic not found"))
 			return
 		}
-		post, err := lib.Submit(form.Title, form.Content, &topic, c.User)
+		if form.Type == models.PostTypeImage {
+			file, header, err := c.GetFile("content")
+			if err != nil {
+				r.Fail(err)
+				return
+			}
+			if header.Size > 20*MB {
+				r.Fail(errors.New("Maximum file size is 20MB"))
+				return
+			}
+			img := make([]byte, header.Size)
+			if _, err := file.Read(img); err != nil {
+				r.Fail(err)
+				return
+			}
+			form.Content = string(img)
+		}
+		post, err := lib.Submit(form.Title, form.Content, form.Type, &topic, c.User)
 		if err != nil {
 			r.Fail(err)
 			return
@@ -61,15 +83,7 @@ func (c *ApiController) CreateTopic() {
 func (c *ApiController) Comment() {
 	form := &models.CommentForm{}
 	handleForm(form, &c.AuthController, func(r *ApiResponse) {
-		// get post from request (client sends post id)
-		post := models.Post{
-			Id: form.Post,
-		}
-		if err := post.Read("Id"); err != nil {
-			r.Fail(err)
-			return
-		}
-		if err := lib.CommentOnPost(form.Comment, &post, c.User); err != nil {
+		if err := lib.CommentOnPost(form.Comment, form.Item, c.User); err != nil {
 			r.Fail(err)
 			return
 		}
@@ -102,7 +116,6 @@ type FormHandlerFunc func(r *ApiResponse)
 func handleForm(form interface{}, c *AuthController, f FormHandlerFunc) {
 	r := NewApiResponse(&c.Controller)
 	defer c.ServeJSON(true)
-
 	if err := c.ParseForm(form); err != nil {
 		r.Fail(err)
 		return

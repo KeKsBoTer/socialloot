@@ -12,9 +12,10 @@ type SignUpForm struct {
 }
 
 type SubmitForm struct {
-	Title     string `form:"title" valid:"Required"`
-	Content   string `form:"content" valid:"Required"`
-	TopicName string `form:"topic" valid:"Required"`
+	Title     string   `form:"title" valid:"Required"`
+	Content   string   `form:"content"`
+	Type      PostType `form:"type" valid:"Required"`
+	TopicName string   `form:"topic" valid:"Required"`
 }
 
 type VoteForm struct {
@@ -29,6 +30,6 @@ type CreateTopicForm struct {
 }
 
 type CommentForm struct {
-	Post    string `form:"post" valid:"Required;Length(11)"`
+	Item    string `form:"item" valid:"Required;Length(11)"`
 	Comment string `form:"comment" valid:"Required"`
 }

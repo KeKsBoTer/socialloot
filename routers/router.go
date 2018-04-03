@@ -13,6 +13,7 @@ func init() {
 	beego.Router("/submit", &ctl.SubmitController{}, "get,post:Submit")
 	beego.Router("/createtopic", &ctl.SubmitController{}, "get,post:CreateTopic")
 	beego.Router("/user/:user", &ctl.UserController{})
+	beego.Router("/media/image/:size:string/:id:int", &ctl.MediaController{}, "get,post:Image")
 	beego.AutoRouter(&ctl.ApiController{})
 
 	topic := beego.NewNamespace("/topic",

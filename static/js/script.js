@@ -1,21 +1,33 @@
-$(function () {
 
+$(function () {
     // custom form handling
     $("form").submit(function (e) {
-        $form = $(this)
+        var form = $(this);
+        var formdata = false;
+        if (window.FormData) {
+            formdata = new FormData(form[0]);
+        }
+
         e.preventDefault();
         $.ajax({
-            type: $form.attr('method'),
-            url: $form.attr('action'),
-            data: $form.serialize(),
+            type: form.attr('method'),
+            url: form.attr('action'),
+            data: formdata ? formdata : form.serialize(),
+            cache: false,
+            contentType: false,
+            processData: false,
             success: function (data) {
                 if (data["success"] == true) {
-                    if ($form.hasClass("clear-on-submit"))
-                        $form.trigger("reset");
+                    var onSuccess = form.attr("onsuccess")
+                    if (onSuccess) {
+                        eval(onSuccess);
+                    }
+                    if (form.hasClass("clear-on-submit"))
+                        form.trigger("reset");
                     if (data["dest"])
                         window.location.href = data["dest"]
                 } else {
-                    $form.find(".message").text(data["message"])
+                    form.find(".message").text(data["message"])
                 }
             }
         });
@@ -74,8 +86,17 @@ function voteOnPost(id, dir, onSuccess) {
         },
         statusCode: {
             401: function () {
-                window.location="/login?dest="+encodeURIComponent(window.location.pathname);
+                window.location = "/login?dest=" + encodeURIComponent(window.location.pathname);
             }
         },
     });
+}
+
+function showCommentForm(elem) {
+    $(elem).next(".comment-box").show()
+}
+
+function toggleComment(elem) {
+    var button = $(elem);
+    button.closest(".comment").first().toggleClass("collapsed")
 }

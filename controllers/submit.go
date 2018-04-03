@@ -13,6 +13,13 @@ type SubmitController struct {
 func (c *SubmitController) Submit() {
 	c.TplName = "pages/submit/submit.tpl"
 	c.Data["Title"] = "Submit to Socialloot"
+
+	submitType := c.GetString("type")
+	if submitType != "text" && submitType != "link" && submitType != "image" {
+		submitType = "text"
+	}
+	c.Data["Type"] = submitType
+
 	topicName := c.GetString("topic")
 	if len(topicName) < 1 {
 		return
