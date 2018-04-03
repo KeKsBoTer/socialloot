@@ -23,9 +23,6 @@ type Vote struct {
 
 	// Item that is voted on
 	Item string `orm:"size(11)"`
-
-	// Type of the item which is voted on (post,comment etc.)
-	Type string
 }
 
 func (v *Vote) InsertOrUpdate() error {
@@ -50,9 +47,10 @@ func Votes() orm.QuerySeter {
 	return orm.NewOrm().QueryTable(table)
 }
 
-func getVotesOnPost(item string) orm.QuerySeter {
-	return Votes().Filter("type", "post").Filter("item", item)
+func getVotesOnItem(id string) orm.QuerySeter {
+	return Votes().Filter("item", id)
 }
-func getUserVoteOnPost(item string, u *User) orm.QuerySeter {
-	return getVotesOnPost(item).Filter("user", u)
+
+func (u *User) GetVoteOnItem(id string) orm.QuerySeter {
+	return getVotesOnItem(id).Filter("user", u)
 }

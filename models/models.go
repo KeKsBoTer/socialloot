@@ -11,5 +11,6 @@ func init() {
 		new(Post),
 		new(Vote),
 		new(Comment),
+		new(Media),
 	)
 }

@@ -35,7 +35,7 @@ func (this *PostController) Get() {
 	}
 
 	// loading comments
-	if err := post.ReadComments(); err != nil {
+	if err := post.ReadComments(this.User); err != nil {
 		beego.Error(err)
 	}
 

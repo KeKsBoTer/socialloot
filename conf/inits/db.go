@@ -17,7 +17,7 @@ func init() {
 
 	switch runmode {
 	case "dev":
-		orm.Debug = true
+		//orm.Debug = true
 		fallthrough
 	default:
 		orm.RegisterDriver("sqlite3", orm.DRSqlite)

@@ -83,4 +83,15 @@ func init() {
 	beego.AddFuncMap("URL", func(data interface{}) string {
 		return lib.URLForItem(data)
 	})
+
+	beego.AddFuncMap("ChangeParam", func(urlPath, key, value string) string {
+		urlParsed, err := url.Parse(urlPath)
+		if err != nil {
+			return urlPath
+		}
+		query := urlParsed.Query()
+		query.Set(key, value)
+		urlParsed.RawQuery = query.Encode()
+		return urlParsed.String()
+	})
 }

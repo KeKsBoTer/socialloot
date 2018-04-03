@@ -23,8 +23,5 @@ func (t *Topic) Insert() error {
 }
 
 func (m *Topic) Read(fields ...string) error {
-	if err := orm.NewOrm().Read(m, fields...); err != nil {
-		return err
-	}
-	return nil
+	return orm.NewOrm().Read(m, fields...)
 }
