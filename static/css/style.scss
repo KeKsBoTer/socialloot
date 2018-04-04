@@ -1,5 +1,6 @@
 @import "./normalize.css";
 $background-color: white;
+$second-color: #03a87c;
 @font-face {
     font-family: "Hemera";
     src: url("/static/fonts/Hemera.ttf");
@@ -17,7 +18,8 @@ a {
     text-decoration: underline;
     &.no-underline {
         text-decoration: none;
-    }&.no-style {
+    }
+    &.no-style {
         @extend .no-underline;
         color: inherit;
     }
@@ -62,6 +64,7 @@ a {
                 color: #16A;
                 font-size: 21px;
                 text-decoration: none;
+                user-select: none;
             }
             .tagline {
                 font-size: 12px;
@@ -185,48 +188,198 @@ a {
 .header {
     width: 100%;
     background-color: $background-color;
-    .title-bar {
+    .container {
         width: 100%;
         max-width: 1000px;
-        margin: 10px auto;
-        display: flex;
-        flex-direction: row;
-        flex-wrap: nowrap;
-        justify-content: space-around;
-        align-items: center;
-        .title{
-            font-family: Hemera;
-            text-transform: lowercase;
-            font-size: 50px;
-            margin: 0;
+        margin: 0 auto;
+        .title-bar {
+            height: 60px;
+            margin: 10px 0;
+            width: 100%;
+            display: flex;
+            flex-direction: row;
+            flex-wrap: nowrap;
+            justify-content: space-around;
+            align-items: center;
+            position: relative;
+            .title {
+                position: absolute;
+                font-family: Hemera;
+                text-transform: lowercase;
+                font-size: 50px;
+                margin: 0;
+                top: 0;
+                width:200px;
+                left: calc(50% - 100px);
+            }
         }
-    }
-    .button-group {
-        display: flex;
-        flex-direction: row;
-        align-items: center;
-        >button {
-            margin-left: 7px;
-            margin-right: 7px;
+        .button-group {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            >button {
+                margin-left: 7px;
+                margin-right: 7px;
+            }
         }
     }
 }
 
-button.icon-button {
+button {
     background: transparent;
     border: none;
-    font-size: 24px;
     cursor: pointer;
-    opacity: .6;
-    transition: opacity .2s;
     display: inline-block;
-    &:hover {
-        opacity: 1;
+    &.icon-button {
+        opacity: .6;
+        transition: opacity .2s;
+        font-size: 24px;
+        &:hover {
+            opacity: 1;
+        }
+        &:active {
+            transform: none;
+        }
+        &.large {
+            font-size: 36px;
+        }
     }
-    &:active {
-        transform: none;
+    &.text-button {
+        font-size: 14px;
+        padding: 5px 7px;
+        color: $second-color;
+        &:hover,
+        &:active {
+            color: darken($color: $second-color, $amount: 10%)
+        }
     }
-    &.large {
-        font-size: 36px;
+}
+
+.topic-list {
+    width: 100%;
+    background: $background-color;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    .list {
+        width: 100%;
+        overflow: hidden;
+        list-style: none;
+        display: flex;
+        flex-wrap: nowrap;
+        padding: 0;
+        li {
+            display: inline-block;
+            margin: 0 10px;
+            &:first-child {
+                margin-left: 0;
+            }
+            &:last-child {
+                margin-right: 0;
+            }
+            a {
+                font-size: 15px;
+                text-transform: uppercase;
+                opacity: .6;
+                &:hover {
+                    opacity: 1;
+                }
+            }
+        }
+    }
+    button {
+        &:first-child {
+            margin-right: 10px;
+        }
+        &:last-child {
+            margin-left: 10px;
+        }
+    }
+}
+
+.auth-form {
+    width: 100%;
+    max-width: 500px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    h1 {
+        text-align: center;
+        font-family: Hemera;
+        margin-bottom: 0;
+        font-size: 40px;
+    }
+    h2 {
+        font-size: 18px;
+        font-weight: normal;
+        max-width: 300px;
+        text-align: center;
+    }
+    form {
+        width: 100%;
+        text-align: center;
+        div {
+            margin: 10px 0;
+        }
+        label {
+            font-size: 14px;
+            opacity: .6;
+            padding-bottom: 10px;
+        }
+        input[type="text"],
+        input[type="password"] {
+            font-size: 20px;
+            margin-bottom: 10px;
+            border: none;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.3);
+            padding: 7px;
+            color: rgba(0, 0, 0, 0.8);
+        }
+        input[type="submit"] {
+            color: white;
+            background-color: black;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 15px;
+            font-size: 14px;
+            cursor: pointer;
+        }
+    }
+    .message {
+        color: rgb(199, 10, 10);
+        font-weight: bold;
+        text-transform: uppercase;
+    }
+    .info {
+        color: rgba(0, 0, 0, 0.788);
+        font-size: 14px;
+    }
+}
+
+#user-popup {
+    display: none;
+}
+
+.popup-list {
+    position: fixed;
+    background-color: $background-color;
+    border-radius: 3px;
+    border: 1px solid rgb(230, 230, 230);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, .25), 0 0 1px rgba(0, 0, 0, .35);
+    width: 260px;
+    .inner {
+        list-style: none;
+        padding: 7px 0;
+        margin: 0;
+        li {
+            a {
+                font-size: 14px;
+                opacity: .7;
+                display: block;
+                @extend .no-style;
+                padding: 7px 25px;
+            }
+        }
     }
 }

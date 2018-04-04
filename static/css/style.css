@@ -13,10 +13,10 @@ a {
   cursor: pointer;
   text-decoration: underline; }
 
-a.no-underline, a.no-style {
+a.no-underline, a.no-style, .popup-list .inner li a {
   text-decoration: none; }
 
-a.no-style {
+a.no-style, .popup-list .inner li a {
   color: inherit; }
 
 .uppercase {
@@ -58,7 +58,8 @@ a.no-style {
 .post-list .post .post-details .title {
   color: #16A;
   font-size: 21px;
-  text-decoration: none; }
+  text-decoration: none;
+  user-select: none; }
 
 .post-list .post .post-details .tagline {
   font-size: 12px;
@@ -215,39 +216,51 @@ a.no-style {
   width: 100%;
   background-color: white; }
 
-.header .title-bar {
+.header .container {
   width: 100%;
   max-width: 1000px;
-  margin: 10px auto;
+  margin: 0 auto; }
+
+.header .container .title-bar {
+  height: 60px;
+  margin: 10px 0;
+  width: 100%;
   display: flex;
   flex-direction: row;
   flex-wrap: nowrap;
   justify-content: space-around;
-  align-items: center; }
+  align-items: center;
+  position: relative; }
 
-.header .title-bar .title {
+.header .container .title-bar .title {
+  position: absolute;
   font-family: Hemera;
   text-transform: lowercase;
   font-size: 50px;
-  margin: 0; }
+  margin: 0;
+  top: 0;
+  width: 200px;
+  left: calc(50% - 100px); }
 
-.header .button-group {
+.header .container .button-group {
   display: flex;
   flex-direction: row;
   align-items: center; }
 
-.header .button-group > button {
+.header .container .button-group > button {
   margin-left: 7px;
   margin-right: 7px; }
 
-button.icon-button {
+button {
   background: transparent;
   border: none;
-  font-size: 24px;
   cursor: pointer;
+  display: inline-block; }
+
+button.icon-button {
   opacity: .6;
   transition: opacity .2s;
-  display: inline-block; }
+  font-size: 24px; }
 
 button.icon-button:hover {
   opacity: 1; }
@@ -257,3 +270,131 @@ button.icon-button:active {
 
 button.icon-button.large {
   font-size: 36px; }
+
+button.text-button {
+  font-size: 14px;
+  padding: 5px 7px;
+  color: #03a87c; }
+
+button.text-button:hover, button.text-button:active {
+  color: #027657; }
+
+.topic-list {
+  width: 100%;
+  background: white;
+  display: flex;
+  justify-content: space-around;
+  align-items: center; }
+
+.topic-list .list {
+  width: 100%;
+  overflow: hidden;
+  list-style: none;
+  display: flex;
+  flex-wrap: nowrap;
+  padding: 0; }
+
+.topic-list .list li {
+  display: inline-block;
+  margin: 0 10px; }
+
+.topic-list .list li:first-child {
+  margin-left: 0; }
+
+.topic-list .list li:last-child {
+  margin-right: 0; }
+
+.topic-list .list li a {
+  font-size: 15px;
+  text-transform: uppercase;
+  opacity: .6; }
+
+.topic-list .list li a:hover {
+  opacity: 1; }
+
+.topic-list button:first-child {
+  margin-right: 10px; }
+
+.topic-list button:last-child {
+  margin-left: 10px; }
+
+.auth-form {
+  width: 100%;
+  max-width: 500px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center; }
+
+.auth-form h1 {
+  text-align: center;
+  font-family: Hemera;
+  margin-bottom: 0;
+  font-size: 40px; }
+
+.auth-form h2 {
+  font-size: 18px;
+  font-weight: normal;
+  max-width: 300px;
+  text-align: center; }
+
+.auth-form form {
+  width: 100%;
+  text-align: center; }
+
+.auth-form form div {
+  margin: 10px 0; }
+
+.auth-form form label {
+  font-size: 14px;
+  opacity: .6;
+  padding-bottom: 10px; }
+
+.auth-form form input[type="text"],
+.auth-form form input[type="password"] {
+  font-size: 20px;
+  margin-bottom: 10px;
+  border: none;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.3);
+  padding: 7px;
+  color: rgba(0, 0, 0, 0.8); }
+
+.auth-form form input[type="submit"] {
+  color: white;
+  background-color: black;
+  border: none;
+  border-radius: 5px;
+  padding: 10px 15px;
+  font-size: 14px;
+  cursor: pointer; }
+
+.auth-form .message {
+  color: #c70a0a;
+  font-weight: bold;
+  text-transform: uppercase; }
+
+.auth-form .info {
+  color: rgba(0, 0, 0, 0.788);
+  font-size: 14px; }
+
+#user-popup {
+  display: none; }
+
+.popup-list {
+  position: fixed;
+  background-color: white;
+  border-radius: 3px;
+  border: 1px solid #e6e6e6;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.25), 0 0 1px rgba(0, 0, 0, 0.35);
+  width: 260px; }
+
+.popup-list .inner {
+  list-style: none;
+  padding: 7px 0;
+  margin: 0; }
+
+.popup-list .inner li a {
+  font-size: 14px;
+  opacity: .7;
+  display: block;
+  padding: 7px 25px; }
