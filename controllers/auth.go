@@ -34,6 +34,12 @@ func (c *AuthController) Prepare() {
 		c.Data["HeadStyles"] = []string{}
 		c.Data["HeadScripts"] = []string{}
 		c.Data["URL"] = c.Ctx.Input.URI()
+		var topics []*models.Topic
+		if _, err := models.Topics().All(&topics); err != nil {
+			c.Abort("505")
+			return
+		}
+		c.Data["Topics"] = topics
 
 		c.Layout = "base.tpl"
 		c.LayoutSections = make(map[string]string)

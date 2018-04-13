@@ -32,6 +32,28 @@ $(function () {
         });
     });
 
+    $("#user-popup-button").click(function () {
+        var $this = $(this)
+        var popup = $("#user-popup")
+        if (popup.css('display') == 'none') {
+            popup.css({
+                "top": $this.offset().top + $this.height() + "px",
+                "left": $this.offset().left + "px"
+            });
+            popup.show()
+        } else {
+            popup.hide();
+        }
+    });
+    $("#user-popup").click(function(e){
+        e.stopPropagation();
+    });
+
+    $(document).click(function (e) {
+        if (!$(e.target).parents().addBack().is('#user-popup-button')) {
+            $("#user-popup").hide();
+        }
+    });
 });
 
 const vote_container = ".vote-container";
@@ -98,18 +120,4 @@ function showCommentForm(elem) {
 function toggleComment(elem) {
     var button = $(elem);
     button.closest(".comment").first().toggleClass("collapsed")
-}
-
-function toggleUserPopup(elm) {
-    var $this = $(elm)
-    var popup = $("#user-popup")
-    if (popup.css('display') == 'none') {
-        popup.css({
-            "top": $this.offset().top+$this.height()+"px",
-            "left": $this.offset().left+"px"
-        });
-        popup.show();
-    } else {
-        popup.hide();
-    }
 }
