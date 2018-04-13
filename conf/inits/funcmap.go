@@ -94,4 +94,12 @@ func init() {
 		urlParsed.RawQuery = query.Encode()
 		return urlParsed.String()
 	})
+
+	beego.AddFuncMap("GetParam", func(urlPath, key string) string {
+		urlParsed, err := url.Parse(urlPath)
+		if err != nil {
+			return ""
+		}
+		return urlParsed.Query().Get(key)
+	})
 }

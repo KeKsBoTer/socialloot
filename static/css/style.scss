@@ -34,47 +34,48 @@ a {
 }
 
 .post-list {
-    padding: 5px;
+    padding: 0;
     margin: 0;
     list-style: none;
-    .post {
-        clear: both;
-        padding: 5px;
-        border: 1px dashed rgb(187, 187, 187);
-        background: rgb(240, 240, 240);
-        margin-bottom: 10px;
-        display: flex;
-        flex-direction: row;
-        .preview {
-            overflow: hidden;
-            margin: 2px 7px;
-            width: 50px;
-            height: 50px;
-            flex-grow: 0;
-            img {
-                width: 100%;
-            }
+}
+
+.post {
+    clear: both;
+    padding: 10px;
+    border: 1px solid darken($color: $background-color, $amount: 10%);
+    background: $background-color;
+    margin-bottom: 10px;
+    display: flex;
+    flex-direction: row;
+    .preview {
+        overflow: hidden;
+        margin: 2px 7px;
+        width: 50px;
+        height: 50px;
+        flex-grow: 0;
+        img {
+            width: 100%;
         }
-        .vote-container {
-            flex-grow: 0;
+    }
+    .vote-container {
+        flex-grow: 0;
+    }
+    .post-details {
+        flex-grow: 1;
+        .title {
+            color: #16A;
+            font-size: 21px;
+            text-decoration: none;
+            user-select: none;
         }
-        .post-details {
-            flex-grow: 1;
-            .title {
-                color: #16A;
-                font-size: 21px;
+        .tagline {
+            font-size: 12px;
+            color: rgb(122, 122, 122);
+            .user {
                 text-decoration: none;
-                user-select: none;
-            }
-            .tagline {
-                font-size: 12px;
-                color: rgb(122, 122, 122);
-                .user {
-                    text-decoration: none;
-                    color: #369;
-                    &:hover {
-                        text-decoration: underline;
-                    }
+                color: #369;
+                &:hover {
+                    text-decoration: underline;
                 }
             }
         }
@@ -209,8 +210,10 @@ a {
                 font-size: 50px;
                 margin: 0;
                 top: 0;
-                width:200px;
+                width: 200px;
                 left: calc(50% - 100px);
+                white-space: nowrap;
+                text-align: center;
             }
         }
         .button-group {
@@ -239,6 +242,8 @@ button {
         }
         &:active {
             transform: none;
+            opacity: 1;
+            color: black;
         }
         &.large {
             font-size: 36px;
@@ -328,13 +333,21 @@ button {
             padding-bottom: 10px;
         }
         input[type="text"],
-        input[type="password"] {
+        input[type="password"],
+        textarea {
             font-size: 20px;
             margin-bottom: 10px;
             border: none;
             border-bottom: 1px solid rgba(0, 0, 0, 0.3);
             padding: 7px;
             color: rgba(0, 0, 0, 0.8);
+            &:focus {
+                outline: none;
+            }
+        }
+        textarea {
+            width: 100%;
+            min-height: 150px;
         }
         input[type="submit"] {
             color: white;
@@ -344,6 +357,17 @@ button {
             padding: 10px 15px;
             font-size: 14px;
             cursor: pointer;
+        }
+    }
+    &.full-width {
+        input[type="text"] {
+            width: 100%;
+        }
+        input[type="password"] {
+            width: 100%;
+        }
+        textarea {
+            width: 100%;
         }
     }
     .message {
@@ -382,4 +406,58 @@ button {
             }
         }
     }
+}
+
+.tab-list {
+    width: 100%;
+    display: table;
+    margin-bottom: 20px;
+    padding: 0;
+    li {
+        display: table-cell;
+        width: 33.3%;
+        text-align: center;
+        opacity: .6;
+        padding: 10px 0;
+        &.active {
+            border-bottom: 1px solid $second-color;
+        }
+        a {
+            @extend .no-style;
+        }
+    }
+}
+
+.page {
+    width: 100%;
+    max-width: 1000px;
+    margin: 0 auto;
+    margin-top: 30px;
+    padding: 10px;
+}
+
+.topic-title {
+    font-size: 46px;
+    margin: 10px 0;
+    span {
+        padding-left: 3px;
+        font-size: 11px;
+        opacity: .5;
+    }
+}
+
+.topic-description {
+    font-size: 20px;
+    font-weight: normal;
+    margin: 5px 0;
+    opacity: .6;
+    margin-bottom: 10px;
+}
+
+hr {
+    color: lighten($color: black, $amount: 80%);
+    border-width: 1px;
+    border-top: 0;
+    border-style: solid;
+    margin: 20px 0;
 }

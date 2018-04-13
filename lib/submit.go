@@ -45,38 +45,48 @@ func Submit(title, content string, postType models.PostType, topic *models.Topic
 		}
 	case models.PostTypeImage:
 		fileType := http.DetectContentType([]byte(content))
+		var mediaImage *models.Media
+		var err error
 		// find the right decoder/encoder
 		var encodeFunc encodeImgFunc
 		var decodeFunc decodeImgFunc
 		switch fileType {
 		case "image/png":
-			encodeFunc = png.Encode
-			decodeFunc = png.Decode
+			encodeFunc = func(w io.Writer, img interface{}) error {
+				return png.Encode(w, img.(image.Image))
+			}
+			decodeFunc = func(r io.Reader) (interface{}, error) {
+				return png.Decode(r)
+			}
 		case "image/jpg", "image/jpeg":
-			encodeFunc = func(w io.Writer, img image.Image) error {
-				return jpeg.Encode(w, img, nil)
+			encodeFunc = func(w io.Writer, img interface{}) error {
+				return jpeg.Encode(w, img.(image.Image), nil)
 			}
-			decodeFunc = jpeg.Decode
+			decodeFunc = func(r io.Reader) (interface{}, error) {
+				return jpeg.Decode(r)
+			}
 		case "image/gif":
-			encodeFunc = func(w io.Writer, img image.Image) error {
-				return gif.Encode(w, img, nil)
+			encodeFunc = func(w io.Writer, img interface{}) error {
+				return gif.EncodeAll(w, img.(*gif.GIF))
 			}
-			decodeFunc = gif.Decode
+			decodeFunc = func(r io.Reader) (interface{}, error) {
+				return gif.DecodeAll(r)
+			}
 		}
-
-		image, err := createMedia(&content, decodeFunc, encodeFunc)
+		mediaImage, err = createMedia(&content, decodeFunc, encodeFunc)
 		if err != nil {
 			beego.Error(err)
 			return nil, errors.New("Cannot decode/encode image")
 		}
-		if err := image.Insert(); err != nil {
+
+		if err := mediaImage.Insert(); err != nil {
 			beego.Error(err)
 			return nil, errors.New("Cannot save image")
 		}
-		if image.Id == 0 {
+		if mediaImage.Id == 0 {
 			return nil, errors.New("Image Id not available")
 		}
-		post.Content = strconv.Itoa(image.Id)
+		post.Content = strconv.Itoa(mediaImage.Id)
 	default:
 		return nil, errors.New("Invalid post type")
 	}
@@ -151,8 +161,8 @@ func CommentOnPost(text string, replyTo string, user *models.User) error {
 	return comment.Insert()
 }
 
-type decodeImgFunc = func(io.Reader) (image.Image, error)
-type encodeImgFunc = func(io.Writer, image.Image) error
+type decodeImgFunc = func(io.Reader) (interface{}, error)
+type encodeImgFunc = func(io.Writer, interface{}) error
 
 func createMedia(file *string, decode decodeImgFunc, encode encodeImgFunc) (*models.Media, error) {
 	reader := strings.NewReader(*file)
@@ -162,20 +172,30 @@ func createMedia(file *string, decode decodeImgFunc, encode encodeImgFunc) (*mod
 		beego.Error(err)
 		return nil, errors.New("Cannot decode image")
 	}
-	image := models.Media{
+	mediaImage := models.Media{
 		Type: models.MediaImage,
 	}
 	if err := encode(buffer, img); err != nil {
 		beego.Error(err)
 		return nil, errors.New("Cannot encode image")
 	}
-	image.File = buffer.String()
+	mediaImage.File = buffer.String()
 	buffer.Reset()
-	thumbnail := resize.Resize(144, 144, img, resize.Lanczos3)
-	if err := encode(buffer, thumbnail); err != nil {
+	var decImage image.Image
+	if i, ok := img.(image.Image); ok {
+		decImage = i
+	} else if i, ok := img.(*gif.GIF); ok {
+		decImage = i.Image[0]
+	} else {
+		panic("invalid image object")
+	}
+
+	// create small png thumbnail
+	thumbnail := resize.Resize(144, 144, decImage, resize.Lanczos3)
+	if err := png.Encode(buffer, thumbnail); err != nil {
 		beego.Error(err)
 		return nil, errors.New("Cannot encode image")
 	}
-	image.Thumbnail = buffer.String()
-	return &image, nil
+	mediaImage.Thumbnail = buffer.String()
+	return &mediaImage, nil
 }

@@ -4,7 +4,7 @@
   <form method="POST" action='{{urlfor "LoginController.Login"}}'>
     <label for="inputName">Name</label>
     <div>
-      <input name="username" type="text" id="inputName" />
+      <input name="username" type="text" id="inputName" autofocus/>
     </div>
     <label for="inputPassword">Password</label>
     <div>
