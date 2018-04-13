@@ -1,18 +1,35 @@
 {{/* post item in list, data needs to be of type model.Post */}}
-<li class="post">
-    {{template "components/vote.tpl" .}}
-    {{if eq .Type "image"}}
-    <a class="title" href="{{URL .}}">
-        <div class="preview">
-            <img src="/media/image/small/{{.Content}}" alt=".Title"/>
+<li class="post {{.Type}}">
+    <div class="preview">
+        {{if eq .Type "image"}}
+        <a class="image" href="{{URL .}}" style="background-image: url('/media/image/small/{{.Content}}')"></a>
+        {{else if eq .Type "link"}}
+        <a class="link" href="{{.Content}}" target="_blank">
+            <img class="favicon" src="{{favicon .Content}}" />
+            <div class="host">
+                <div class="wrapper">
+                    <img class="icon" src="{{favicon .Content}}">
+                    <span>{{host .Content}}</span>
+                </div>
+            </div>
+        </a>
+        {{else if eq .Type "text"}}
+        <a class="text" href="{{URL .}}" >
+            <p>{{.Content}}</p>
+        </a>
+        {{end}}
+        <div class="overlay">
+            {{template "components/vote.tpl" .}}
         </div>
-    </a>
-    {{end}}
+    </div>
     <div class="post-details">
-        <a class="title" href="{{URL .}}">{{.Title}}</a>
-        <div class="tagline">
-            <span>submitted {{dateformat .Date}} by</span>
-            <a class="user" href="{{URL .User}}">{{.User.Name}}</a>
+        <div class="top-container">
+            <a class="title" href="{{URL .}}">{{.Title}} {{if eq .Type "link"}}
+                <span class="host">({{host .Content}})</span>
+                {{end}}
+            </a>
+            <p class="date">{{dateformat .Date}}</p>
         </div>
+        {{template "components/user.tpl" .User}} {{/*TODO tagline with comment amount etc.*/}}
     </div>
 </li>

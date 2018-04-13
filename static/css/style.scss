@@ -1,4 +1,5 @@
 @import "./normalize.css";
+@import "./mixins.scss";
 $background-color: white;
 $second-color: #03a87c;
 @font-face {
@@ -40,75 +41,223 @@ a {
 }
 
 .post {
-    clear: both;
-    padding: 10px;
     border: 1px solid darken($color: $background-color, $amount: 10%);
+    border-radius: 3px;
     background: $background-color;
     margin-bottom: 10px;
     display: flex;
     flex-direction: row;
+    height: 200px;
+    overflow: hidden;
     .preview {
         overflow: hidden;
-        margin: 2px 7px;
-        width: 50px;
-        height: 50px;
+        width: 250px;
+        height: 100%;
         flex-grow: 0;
-        img {
+        position: relative;
+        .image {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
             width: 100%;
+            height: 100%;
+            background-position: center;
+            background-size: cover;
+            background-repeat: no-repeat;
+            z-index: 1;
+            .overlay {
+                pointer-events: none;
+            }
         }
-    }
-    .vote-container {
-        flex-grow: 0;
+        .link {
+            width: 100%;
+            height: 100%;
+            display: block;
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+            img.favicon {
+                position: absolute;
+                width: 100%;
+                @include blur(10px);
+                opacity: .6;
+                z-index: 1;
+            }
+            .host {
+                position: relative;
+                z-index: 2;
+                display: inline-block;
+                margin: 0 auto;
+                .wrapper {
+                    @include box-shadow(0,
+                    0,
+                    20px,
+                    rgba(0, 0, 0, 0.212));
+                    padding: 5px 7px;
+                    border-radius: 5px;
+                    background-color: white;
+                    display: flex;
+                    flex-direction: row;
+                    align-items: center;
+                    .icon {
+                        width: 30px;
+                        height: 30px;
+                        border-radius: 50%;
+                    }
+                    span {
+                        font-weight: normal;
+                        font-size: 16px;
+                        opacity: .8;
+                        margin-left: 5px;
+                        color: black;
+                    }
+                }
+            }
+        }
+        .text {
+            box-sizing: border-box;
+            text-decoration: none;
+            color: black;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            p {
+                //@include blur(5px);
+                padding: 10px;
+                width: 100%;
+                height: 100%;
+                margin: 0;
+                white-space: pre-wrap;
+                font-size: 12px;
+                display: block;
+            }
+        }
+        .overlay {
+            position: absolute;
+            left: 5px;
+            right: 5px;
+            bottom: 10px;
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            z-index: 2;
+            pointer-events: none;
+            .vote-container {
+                background-color: white;
+                border-radius: 3px;
+            }
+        }
     }
     .post-details {
+        padding: 16px;
         flex-grow: 1;
-        .title {
-            color: #16A;
-            font-size: 21px;
-            text-decoration: none;
-            user-select: none;
-        }
-        .tagline {
-            font-size: 12px;
-            color: rgb(122, 122, 122);
-            .user {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        .top-container {
+            margin-bottom: 10px;
+            .title {
+                margin: 0;
+                font-weight: bold;
+                color: lighten(black, 10%);
+                font-size: 21px;
                 text-decoration: none;
-                color: #369;
-                &:hover {
-                    text-decoration: underline;
+                user-select: none;
+                width: 100%;
+                max-width: 400px;
+                span.host {
+                    font-size: 12px;
+                    opacity: .5;
                 }
+            }
+            hr {
+                margin: 0;
+                opacity: .4;
+            }
+            .date {
+                margin: 0;
+                font-size: 12px;
+                opacity: .4;
+                color: black;
             }
         }
     }
 }
 
 .vote-container {
+    pointer-events: all;
     padding: 2px 10px;
     text-align: center;
     display: inline-block;
     vertical-align: top;
-    min-width: 20px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
     .vote-count {
         font-weight: bold;
-        color: rgb(80, 80, 80)
+        color: rgb(80, 80, 80);
+        font-family: "Arial", sans-serif;
+        margin: 0 5px;
+        font-size: 18px;
+        min-width: 30px;
+        vertical-align: bottom;
     }
     .vote-button {
-        width: 100%;
-        height: 20px;
+        display: block;
+        font-size: 21px;
         cursor: pointer;
-        background-image: url("/static/img/vote.png");
-        transform-origin: center center;
-        background-size: cover;
-        background-position: center center;
-        background-repeat: no-repeat;
-        &.up {
-            // background-color: green;
-        }
-        &.down {
-            transform: rotateZ(180deg)
+        color: lighten(black, 40%);
+        &.down:before {
+            transform: translateY(1px);
         }
         &.voted {
-            background-image: url("/static/img/vote_active.png");
+            color: $second-color;
+        }
+    }
+}
+
+.user-preview {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    .icon {
+        overflow: hidden;
+        text-decoration: none;
+        color: white;
+        width: 40px;
+        height: 40px;
+        background-color: grey;
+        border-radius: 50%;
+        text-align: center;
+        img {
+            width: 100%;
+            height: 100%;
+        }
+    }
+    .details {
+        padding: 5px 10px;
+        a {
+            text-decoration: none;
+            color: inherit;
+            display: inline;
+        }
+        p {
+            line-height: 16px;
+        }
+        .name {
+            margin: 0;
+            font-weight: 300;
+            opacity: .8;
+            font-size: 16px;
+        }
+        .link {
+            font-weight: 300;
+            margin: 0;
+            opacity: .5;
+            font-size: 14px;
         }
     }
 }
@@ -181,6 +330,9 @@ a {
 }
 
 .post-content {
+    p {
+        white-space: pre-wrap;
+    }
     .image {
         height: 500px;
     }
@@ -253,6 +405,7 @@ button {
         font-size: 14px;
         padding: 5px 7px;
         color: $second-color;
+        letter-spacing: .2pt;
         &:hover,
         &:active {
             color: darken($color: $second-color, $amount: 10%)
