@@ -164,6 +164,8 @@ func CommentOnPost(text string, replyTo string, user *models.User) error {
 type decodeImgFunc = func(io.Reader) (interface{}, error)
 type encodeImgFunc = func(io.Writer, interface{}) error
 
+const thumbnailSize = 255
+
 func createMedia(file *string, decode decodeImgFunc, encode encodeImgFunc) (*models.Media, error) {
 	reader := strings.NewReader(*file)
 	buffer := new(bytes.Buffer)
@@ -191,7 +193,16 @@ func createMedia(file *string, decode decodeImgFunc, encode encodeImgFunc) (*mod
 	}
 
 	// create small png thumbnail
-	thumbnail := resize.Resize(144, 144, decImage, resize.Lanczos3)
+	size := decImage.Bounds().Size()
+	var width, height uint
+	if size.X > size.Y {
+		width = thumbnailSize
+		height = uint(thumbnailSize * float64(size.Y) / float64(size.X))
+	} else {
+		height = thumbnailSize
+		width = uint(thumbnailSize * float64(size.X) / float64(size.Y))
+	}
+	thumbnail := resize.Resize(width, height, decImage, resize.Lanczos3)
 	if err := png.Encode(buffer, thumbnail); err != nil {
 		beego.Error(err)
 		return nil, errors.New("Cannot encode image")

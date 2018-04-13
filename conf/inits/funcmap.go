@@ -102,4 +102,19 @@ func init() {
 		}
 		return urlParsed.Query().Get(key)
 	})
+
+	beego.AddFuncMap("host", func(urlPath string) string {
+		urlParsed, err := url.Parse(urlPath)
+		if err != nil {
+			return ""
+		}
+		return urlParsed.Host
+	})
+	beego.AddFuncMap("favicon", func(urlPath string) string {
+		urlParsed, err := url.Parse(urlPath)
+		if err != nil {
+			return ""
+		}
+		return "https://" + urlParsed.Host + "/favicon.ico"
+	})
 }
