@@ -49,12 +49,23 @@ a {
     flex-direction: row;
     height: 200px;
     overflow: hidden;
+    @media (max-width: 650px) {
+        flex-direction: column;
+        height: auto;
+    }
     .preview {
         overflow: hidden;
-        width: 250px;
+        width: 25%;
+        max-width: 250px;
         height: 100%;
         flex-grow: 0;
         position: relative;
+        flex-shrink: 0;
+        @media (max-width: 650px) {
+            width: 100%;
+            max-width: none;
+            height: 250px;
+        }
         .image {
             position: absolute;
             top: 0;
@@ -126,11 +137,9 @@ a {
             p {
                 text-align: justify;
                 @include blur(1px);
-                padding: 10px;
-                //width: 100%;
+                padding: 10px; //width: 100%;
                 height: 100%;
-                margin: 0;
-                //white-space: pre-wrap;
+                margin: 0; //white-space: pre-wrap;
                 font-size: 12px;
                 display: block;
             }
@@ -159,6 +168,7 @@ a {
         justify-content: space-between;
         .top-container {
             margin-bottom: 10px;
+            overflow: hidden;
             .title {
                 margin: 0;
                 font-weight: bold;
@@ -182,6 +192,15 @@ a {
                 font-size: 12px;
                 opacity: .4;
                 color: black;
+            }
+            .text-preview {
+                font-size: 12px;
+                opacity: .7;
+                margin: 0;
+                float: left;
+                @media (max-width: 800px) {
+                    display: none;
+                }
             }
         }
     }
