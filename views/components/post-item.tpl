@@ -24,11 +24,15 @@
     </div>
     <div class="post-details">
         <div class="top-container">
-            <a class="title" href="{{URL .}}">{{.Title}} {{if eq .Type "link"}}
+            <a class="title" href="{{URL .}}">{{.Title}} 
+                {{if eq .Type "link"}}
                 <span class="host">({{host .Content}})</span>
                 {{end}}
             </a>
             <p class="date">{{dateformat .Date}}</p>
+            {{if eq .Type "text"}}
+            <p class="text-preview" >{{cut .Content 200}}...</p>
+            {{end}}
         </div>
         {{template "components/user.tpl" .User}} {{/*TODO tagline with comment amount etc.*/}}
     </div>
