@@ -124,12 +124,13 @@ a {
             height: 100%;
             overflow: hidden;
             p {
-                //@include blur(5px);
+                text-align: justify;
+                @include blur(1px);
                 padding: 10px;
-                width: 100%;
+                //width: 100%;
                 height: 100%;
                 margin: 0;
-                white-space: pre-wrap;
+                //white-space: pre-wrap;
                 font-size: 12px;
                 display: block;
             }
