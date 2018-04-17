@@ -14,6 +14,7 @@ body {
 }
 
 a {
+    outline: 0;
     color: rgb(85, 26, 139);
     cursor: pointer;
     text-decoration: underline;
@@ -40,7 +41,7 @@ a {
     list-style: none;
 }
 
-.post {
+.post-preview {
     border: 1px solid darken($color: $background-color, $amount: 10%);
     border-radius: 3px;
     background: $background-color;
@@ -116,6 +117,22 @@ a {
                         width: 30px;
                         height: 30px;
                         border-radius: 50%;
+                        position: relative;
+                        &::after {
+                            border-radius: 50%;
+                            position: absolute;
+                            top: 0;
+                            left: 0;
+                            display: block;
+                            width: 100%;
+                            height: 100%;
+                            content: '\f1fe';
+                            font-family: "Ionicons";
+                            font-size: 25px;
+                            color: white;
+                            text-align: center;
+                            background: $second-color;
+                        }
                     }
                     span {
                         font-weight: normal;
@@ -317,13 +334,11 @@ a {
         margin-top: 10px;
     }
     .vote-container {
-        width: 20px;
-        padding: 0 5px;
-        .vote-button {
-            height: 10px;
-        }
-        .vote-count {
-            font-size: 11px;
+        padding: 0;
+        display: inline-block;
+        margin-top: 3px;
+        * {
+            font-size: 14px;
         }
     }
     .toggle:before {
@@ -349,12 +364,79 @@ a {
     }
 }
 
-.post-content {
-    p {
-        white-space: pre-wrap;
+.post {
+    width: 100%;
+    padding: 10px;
+    max-width: 1000px;
+    margin: 0 auto;
+    a {
+        @extend .no-style;
     }
-    .image {
-        height: 500px;
+    .date {
+        font-size: 12px;
+        opacity: .4;
+    }
+    .header {
+        display: flex;
+        flex-direction: row;
+        position: relative;
+        left: -110px;
+        @media (max-width: 1250px) {
+            position: static;
+            flex-direction: column-reverse !important;
+        }
+        .vote-container {
+            padding: 0;
+            box-sizing: border-box;
+            width: 110px;
+            padding-right: 10px;
+        }
+        .title {
+            font-family: "Lucida Grande", sans-serif;
+            font-size: 42px;
+            font-weight: 600;
+            letter-spacing: -2px;
+            line-height: 43.6833px;
+            overflow-wrap: break-word;
+            color: black;
+            text-decoration: none;
+            margin: 10px 0;
+        }
+        &.link {
+            .title {
+                color: $second-color;
+                &:after {
+                    content: "\f1fe";
+                    display: inline-block;
+                    font-family: "Ionicons";
+                    padding-left: 10px;
+                    color: black;
+                    opacity: .3;
+                    font-weight: 100;
+                }
+            }
+        }
+    }
+    .user-preview {
+        margin: 10px 0;
+    }
+    .post-content {
+        p {
+            white-space: pre-wrap;
+            --x-height-multiplier: 0.375;
+            --baseline-multiplier: 0.17;
+            font-family: medium-content-serif-font, Georgia, Cambria, "Times New Roman", Times, serif;
+            letter-spacing: .01rem;
+            font-weight: 400;
+            font-style: normal;
+            font-size: 21px;
+            line-height: 1.58;
+            letter-spacing: -.003em;
+            opacity: .8;
+        }
+        .image {
+            width: 100%;
+        }
     }
 }
 
