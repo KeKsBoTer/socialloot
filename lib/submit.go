@@ -196,11 +196,11 @@ func createMedia(file *string, decode decodeImgFunc, encode encodeImgFunc) (*mod
 	size := decImage.Bounds().Size()
 	var width, height uint
 	if size.X > size.Y {
-		width = thumbnailSize
-		height = uint(thumbnailSize * float64(size.Y) / float64(size.X))
-	} else {
-		height = thumbnailSize
 		width = uint(thumbnailSize * float64(size.X) / float64(size.Y))
+		height = thumbnailSize
+	} else {
+		height = uint(thumbnailSize * float64(size.Y) / float64(size.X))
+		width = thumbnailSize
 	}
 	thumbnail := resize.Resize(width, height, decImage, resize.Lanczos3)
 	if err := png.Encode(buffer, thumbnail); err != nil {

@@ -1,20 +1,20 @@
 {{/* post item in list, data needs to be of type model.Post */}}
-<li class="post {{.Type}}">
+<li class="post-preview {{.Type}}">
     <div class="preview">
         {{if eq .Type "image"}}
-        <a class="image" href="{{URL .}}" style="background-image: url('/media/image/small/{{.Content}}')"></a>
+        <a class="image" href="{{URL .}}" style="background-image: url('/media/image/small/{{.Content}}')" target="_blank"></a>
         {{else if eq .Type "link"}}
         <a class="link" href="{{.Content}}" target="_blank">
             <img class="favicon" src="{{favicon .Content}}" />
             <div class="host">
                 <div class="wrapper">
-                    <img class="icon" src="{{favicon .Content}}">
+                    <object class="icon" data="{{favicon .Content}}" type="image/jpg"></object>
                     <span>{{host .Content}}</span>
                 </div>
             </div>
         </a>
         {{else if eq .Type "text"}}
-        <a class="text" href="{{URL .}}" >
+        <a class="text" href="{{URL .}}" target="_blank">
             <p>{{.Content}}</p>
         </a>
         {{end}}
@@ -24,14 +24,15 @@
     </div>
     <div class="post-details">
         <div class="top-container">
-            <a class="title" href="{{URL .}}">{{.Title}} 
+            <a class="title" href="{{URL .}}" target="_blank">
+                {{.Title}}
                 {{if eq .Type "link"}}
                 <span class="host">({{host .Content}})</span>
                 {{end}}
             </a>
             <p class="date">{{dateformat .Date}}</p>
             {{if eq .Type "text"}}
-            <p class="text-preview" >{{cut .Content 200}}...</p>
+            <p class="text-preview">{{cut .Content 200}}...</p>
             {{end}}
         </div>
         {{template "components/user.tpl" .User}} {{/*TODO tagline with comment amount etc.*/}}

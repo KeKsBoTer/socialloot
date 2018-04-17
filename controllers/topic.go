@@ -33,7 +33,7 @@ func (this *TopicController) Get() {
 
 func getPostsForTopic(topic *models.Topic, c *TopicController) (*[]*models.Post, error) {
 	var posts []*models.Post
-	if _, err := models.Posts().Filter("Topic", topic.Id).RelatedSel().All(&posts); err != nil {
+	if _, err := models.Posts().Filter("Topic", topic.Id).OrderBy("-Date").RelatedSel().All(&posts); err != nil {
 		return nil, err
 	}
 	for i := range posts {
