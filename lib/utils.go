@@ -16,7 +16,7 @@ import (
 	"github.com/astaxie/beego"
 )
 
-func URLForItem(data interface{}) string {
+func URLForItem(data interface{}, values ...string) string {
 	rv := reflect.ValueOf(data)
 	// if data is a pointer, get the value to make type switching possible
 	for rv.Kind() == reflect.Ptr || rv.Kind() == reflect.Interface {
@@ -29,7 +29,7 @@ func URLForItem(data interface{}) string {
 		return beego.URLFor("PostController.Get", ":topic", post.Topic.Name, ":post", post.Id)
 	case models.Topic:
 		topic := data.(models.Topic)
-		return beego.URLFor("TopicController.Get", ":topic", topic.Name)
+		return beego.URLFor("TopicController.Get", ":topic", topic.Name, ":choice", "")
 	case models.User:
 		user := data.(models.User)
 		return beego.URLFor("UserController.Get", ":user", user.Name)

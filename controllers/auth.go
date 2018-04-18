@@ -35,7 +35,7 @@ func (c *AuthController) Prepare() {
 		c.Data["HeadScripts"] = []string{}
 		c.Data["URL"] = c.Ctx.Input.URI()
 		var topics []*models.Topic
-		if _, err := models.Topics().All(&topics); err != nil {
+		if _, err := models.Topics().OrderBy("name").All(&topics); err != nil {
 			c.Abort("505")
 			return
 		}

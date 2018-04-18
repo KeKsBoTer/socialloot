@@ -16,10 +16,10 @@ func init() {
 	beego.Router("/media/image/:size:string/:id:int", &ctl.MediaController{}, "get,post:Image")
 	beego.AutoRouter(&ctl.ApiController{})
 
-	topic := beego.NewNamespace("/topic",
-		beego.NSNamespace(":topic",
-			beego.NSRouter("/", &ctl.TopicController{}),
-			beego.NSRouter("/:post", &ctl.PostController{}),
+	topic := beego.NewNamespace("/t",
+		beego.NSNamespace("/:topic",
+			beego.NSRouter("/p/:post", &ctl.PostController{}),
+			beego.NSRouter("/?:choice", &ctl.TopicController{}),
 		),
 	)
 	beego.AddNamespace(topic)
