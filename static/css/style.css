@@ -1,4 +1,4 @@
-@import url(c:\Users\Simon\go\src\github.com\KeKsBoTer\socialloot\static\css\normalize.css);
+@import url(/Users/simon/Go/src/github.com/KeKsBoTer/socialloot/static/css/normalize.css);
 @font-face {
   font-family: "Hemera";
   src: url("/static/fonts/Hemera.ttf");
@@ -477,15 +477,6 @@ a.no-style, .post a, .popup-list .inner li a, .tab-list li a {
   content: "[+]";
 }
 
-.tab-list {
-  list-style: none;
-  padding: 0;
-}
-
-.tab-list li {
-  display: inline-block;
-}
-
 .post {
   width: 100%;
   padding: 10px;
@@ -836,6 +827,23 @@ button.text-button:hover, button.text-button:active {
 
 .tab-list li.active {
   border-bottom: 1px solid #03a87c;
+}
+
+.tab-list.small {
+  display: flex;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.tab-list.small li {
+  margin-bottom: -1px;
+  display: block;
+  width: auto;
+  padding-right: 20px;
+  padding-left: 20px;
+}
+
+.tab-list.small li.active {
+  font-weight: bold;
 }
 
 .page {

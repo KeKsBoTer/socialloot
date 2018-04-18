@@ -12,7 +12,7 @@
             <h1 class="title">{{.Post.Title}}</h1>
         </a>
     </div>
-    {{template "components/user.tpl" .User}}
+    {{template "components/user.tpl" .Post.User}}
     <div class="post-content">
         {{if eq .Post.Type "text"}}
         <p>{{.Post.Content}}</p>
@@ -23,7 +23,8 @@
         {{end}}
     </div>
     <h3>Comments</h3>
-    <hr/> {{if .User}} {{template "components/comment_form.tpl" .Post.Id}} {{end}}
+    <hr/> 
+    {{if .User}} {{template "components/comment_form.tpl" .Post.Id}} {{end}}
     <div class="comments-section">
         {{range $c := .Post.Comments}} {{template "components/comment.tpl" $c}} {{end}}
     </div>
