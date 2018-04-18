@@ -67,7 +67,7 @@ func NumberDecode(token string, alphabet []byte) string {
 	return x.String()
 }
 
-// Random generate string
+// GetRandomString generate string
 func GetRandomString(n int) string {
 	const alphanum = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
 	var bytes = make([]byte, n)

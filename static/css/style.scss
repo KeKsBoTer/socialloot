@@ -356,13 +356,6 @@ a {
     }
 }
 
-.tab-list {
-    list-style: none;
-    padding: 0;
-    li {
-        display: inline-block;
-    }
-}
 
 .post {
     width: 100%;
@@ -679,6 +672,20 @@ button {
         }
         a {
             @extend .no-style;
+        }
+    }
+    &.small{
+        display: flex;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+        li{
+            margin-bottom: -1px;
+            display: block;
+            width: auto;
+            padding-right: 20px;
+            padding-left: 20px;
+            &.active{
+                font-weight: bold;
+            }
         }
     }
 }
