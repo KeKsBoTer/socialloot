@@ -45,7 +45,7 @@ $(function () {
             popup.hide();
         }
     });
-    $("#user-popup").click(function(e){
+    $("#user-popup").click(function (e) {
         e.stopPropagation();
     });
 
@@ -103,7 +103,10 @@ function voteOnPost(id, dir, onSuccess) {
             dir: parseInt(dir)
         },
         success: function (data) {
-            onSuccess && onSuccess()
+            if (data["success"])
+                onSuccess && onSuccess()
+            else
+                console.error(data["message"])
         },
         statusCode: {
             401: function () {
@@ -120,4 +123,33 @@ function showCommentForm(elem) {
 function toggleComment(elem) {
     var button = $(elem);
     button.closest(".comment").first().toggleClass("collapsed")
+}
+
+function scrollList(button, dir) {
+    var container = $(button).siblings().filter(".list-container")
+    var list = container.find(".list");
+    if (list.width() > container.width()) {
+        var transformMatrix = list.css("-webkit-transform") ||
+            list.css("-moz-transform") ||
+            list.css("-ms-transform") ||
+            list.css("-o-transform") ||
+            list.css("transform");
+        var matrix = transformMatrix.replace(/[^0-9\-.,]/g, '').split(',');
+        var x = parseInt(matrix[12] || matrix[4] || 0);
+        var amount = 100;
+        switch (dir) {
+            case "left":
+                x -= amount
+                break;
+            case "right":
+                x += amount
+                break;
+        }
+        var max = list.width() - container.width()
+        if (x > 0)
+            x = 0;
+        else if (x < -max)
+            x = -max
+        list.css("transform", "translateX(" + x + "px)")
+    }
 }

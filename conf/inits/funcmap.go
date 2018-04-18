@@ -4,7 +4,6 @@ import (
 	"html/template"
 	"net/url"
 	"reflect"
-	"regexp"
 	"strings"
 	"time"
 
@@ -123,17 +122,5 @@ func init() {
 			return text
 		}
 		return text[:length]
-	})
-	beego.AddFuncMap("choice", func(path string) string {
-		urlParsed, err := url.Parse(path)
-		if err != nil {
-			return ""
-		}
-		matched, err := regexp.MatchString("*/topic/[a-z0-9]/[a-z]", urlParsed.Path)
-		if !matched || err != nil {
-			return ""
-		}
-		splitted := strings.Split(urlParsed.Path, "/")
-		return splitted[0]
 	})
 }

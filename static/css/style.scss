@@ -514,13 +514,16 @@ button {
     display: flex;
     justify-content: space-around;
     align-items: center;
-    .list {
+    .list-container{
         width: 100%;
         overflow: hidden;
+    }
+    .list {
         list-style: none;
-        display: flex;
+        display: inline-flex;
         flex-wrap: nowrap;
         padding: 0;
+        transition: transform .2s;
         li {
             display: inline-block;
             margin: 0 10px;

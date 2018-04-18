@@ -1,4 +1,4 @@
-@import url(/Users/simon/Go/src/github.com/KeKsBoTer/socialloot/static/css/normalize.css);
+@import url(c:\Users\Simon\go\src\github.com\KeKsBoTer\socialloot\static\css\normalize.css);
 @font-face {
   font-family: "Hemera";
   src: url("/static/fonts/Hemera.ttf");
@@ -651,13 +651,17 @@ button.text-button:hover, button.text-button:active {
   align-items: center;
 }
 
-.topic-list .list {
+.topic-list .list-container {
   width: 100%;
   overflow: hidden;
+}
+
+.topic-list .list {
   list-style: none;
-  display: flex;
+  display: inline-flex;
   flex-wrap: nowrap;
   padding: 0;
+  transition: transform .2s;
 }
 
 .topic-list .list li {

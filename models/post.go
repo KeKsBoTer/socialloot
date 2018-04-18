@@ -32,8 +32,8 @@ type Post struct {
 	Content string
 
 	// Type of the post. Image, text, or link
-	Type  PostType
-	
+	Type PostType
+
 	Topic *Topic `orm:"rel(fk);null;on_delete(do_nothing)"`
 
 	// for html rendering
