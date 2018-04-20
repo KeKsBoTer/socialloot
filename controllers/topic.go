@@ -5,8 +5,6 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/davecgh/go-spew/spew"
-
 	"github.com/astaxie/beego/orm"
 
 	"github.com/KeKsBoTer/socialloot/models"
@@ -75,7 +73,6 @@ func getPostsForTopic(topic *models.Topic, user *models.User, choice Choice) (*[
 			LEFT OUTER JOIN votes v on (p.id = v.item)
 			WHERE p.topic_id = ?
 			ORDER BY ifnull(v.votes,0) desc`, topic.Id).QueryRows(&posts)
-		spew.Dump(posts)
 		for _, p := range posts {
 			o := orm.NewOrm()
 			o.LoadRelated(p, "topic")
