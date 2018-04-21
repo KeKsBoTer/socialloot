@@ -1,4 +1,7 @@
 $(function () {
+    // autofocus work around
+    $("input[autofocus]").focus();
+
     // custom form handling
     $("form").submit(function (e) {
         var form = $(this);
@@ -151,5 +154,18 @@ function scrollList(button, dir) {
         else if (x < -max)
             x = -max
         list.css("transform", "translateX(" + x + "px)")
+    }
+}
+
+function previewURL(input, previewNode) {
+    if (input.files && input.files[0]) {
+        var reader = new FileReader();
+
+        reader.onload = function (e) {
+            previewNode.attr('src', e.target.result);
+            previewNode.addClass("loaded")
+        }
+
+        reader.readAsDataURL(input.files[0]);
     }
 }

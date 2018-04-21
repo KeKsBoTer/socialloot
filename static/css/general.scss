@@ -1,0 +1,77 @@
+/* general not element specific style*/
+
+body {
+    font-family: medium-content-sans-serif-font, "Lucida Grande", "Lucida Sans Unicode", "Lucida Sans", Geneva, Arial, sans-serif;
+    letter-spacing: -.42px;
+    background-color: $background-color;
+}
+
+a {
+    outline: 0;
+    color: rgb(85, 26, 139);
+    cursor: pointer;
+    text-decoration: underline;
+    &.no-underline {
+        text-decoration: none;
+    }
+    &.no-style {
+        @extend .no-underline;
+        color: inherit;
+    }
+}
+
+.uppercase {
+    text-transform: uppercase;
+}
+
+.right {
+    float: right;
+}
+
+// children are displayed in reversed vertical order
+.reverse-order{
+    display: flex;
+    flex-direction: column-reverse;
+    align-items: center;
+}
+
+hr {
+    color: lighten($color: black, $amount: 80%);
+    border-width: 1px;
+    border-top: 0;
+    border-style: solid;
+    margin: 20px 0;
+}
+
+button {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    display: inline-block;
+    &.icon-button {
+        opacity: .6;
+        transition: opacity .2s;
+        font-size: 24px;
+        &:hover {
+            opacity: 1;
+        }
+        &:active {
+            transform: none;
+            opacity: 1;
+            color: black;
+        }
+        &.large {
+            font-size: 36px;
+        }
+    }
+    &.text-button {
+        font-size: 14px;
+        padding: 5px 7px;
+        color: $second-color;
+        letter-spacing: .2pt;
+        &:hover,
+        &:active {
+            color: darken($color: $second-color, $amount: 10%)
+        }
+    }
+}

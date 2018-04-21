@@ -2,9 +2,9 @@
 <li class="post-preview {{.Type}}">
     <div class="preview">
         {{if eq .Type "image"}}
-        <a class="image" href="{{URL .}}" style="background-image: url('/media/image/small/{{.Content}}')" target="_blank"></a>
+        <a class="image" href="{{URL .}}" style="background-image: url('/media/image/small/{{.Content}}')"></a>
         {{else if eq .Type "link"}}
-        <a class="link" href="{{.Content}}" target="_blank">
+        <a class="link" href="{{.Content}}">
             <img class="favicon" src="{{favicon .Content}}" />
             <div class="host">
                 <div class="wrapper">
@@ -14,7 +14,7 @@
             </div>
         </a>
         {{else if eq .Type "text"}}
-        <a class="text" href="{{URL .}}" target="_blank">
+        <a class="text" href="{{URL .}}">
             <p>{{.Content}}</p>
         </a>
         {{end}}
@@ -24,7 +24,7 @@
     </div>
     <div class="post-details">
         <div class="top-container">
-            <a class="title" href="{{URL .}}" target="_blank">
+            <a class="title" href="{{URL .}}">
                 {{.Title}}
                 {{if eq .Type "link"}}
                 <span class="host">({{host .Content}})</span>

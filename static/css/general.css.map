@@ -2,8 +2,8 @@
     "version": 3,
     "mappings": "AAAA,uCAAuC",
     "sources": [
-        "mixins.scss"
+        "general.scss"
     ],
     "names": [],
-    "file": "mixins.css"
+    "file": "general.css"
 }

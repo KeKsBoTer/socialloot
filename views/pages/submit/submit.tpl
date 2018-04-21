@@ -21,7 +21,9 @@
        {{else if eq .Type "link"}}
       <input type="text" name="content" placeholder="Insert URL e.g. http://google.de" /> 
       {{else if eq .Type "image"}}
-      <input type="file" name="content" title="Upload image" accept="image/*" /> 
+      <input type="file" name="content" title="Upload image" accept="image/*" 
+              onchange="previewURL(this,$('#image-preview'));"/> 
+      <img id="image-preview" src="#"/>
       {{end}}
     </div>
 

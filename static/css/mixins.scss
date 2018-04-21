@@ -1,3 +1,5 @@
+/* mixins for cross browser suppport */
+
 @mixin blur($radius) {
   -webkit-filter: blur($radius);
   -moz-filter: blur($radius);
