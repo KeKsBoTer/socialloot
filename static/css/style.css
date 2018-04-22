@@ -30,6 +30,13 @@ a.no-style, .post a, .popup-list .inner li a, .tab-list li a {
   float: right;
 }
 
+.page {
+  width: 100%;
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 10px;
+}
+
 .reverse-order {
   display: flex;
   flex-direction: column-reverse;
@@ -149,14 +156,6 @@ button.text-button:hover, button.text-button:active {
 .header .container .button-group > button {
   margin-left: 7px;
   margin-right: 7px;
-}
-
-.page {
-  width: 100%;
-  max-width: 1000px;
-  margin: 0 auto;
-  margin-top: 30px;
-  padding: 10px;
 }
 
 .post-list {
@@ -372,9 +371,9 @@ button.text-button:hover, button.text-button:active {
 }
 
 .post-preview .post-details .top-container .text-preview {
-  font-size: 12px;
+  font-size: 14px;
   opacity: .7;
-  margin: 0;
+  margin: 10px 0;
   float: left;
 }
 
@@ -471,143 +470,8 @@ button.text-button:hover, button.text-button:active {
   font-size: 14px;
 }
 
-.comment {
-  border: 1px solid #d4d4d4;
-  padding: 5px 0;
-  background-color: white;
-  margin-bottom: 10px;
-}
-
-.comment .comment {
-  background-color: #f0f0f0;
-}
-
-.comment .comment .comment {
-  background-color: white;
-}
-
-.comment .comment .comment .comment {
-  background-color: #f0f0f0;
-}
-
-.comment .comment .comment .comment .comment {
-  background-color: white;
-}
-
-.comment .comment .comment .comment .comment .comment {
-  background-color: #f0f0f0;
-}
-
-.comment .comment .comment .comment .comment .comment .comment {
-  background-color: white;
-}
-
-.comment .comment .comment .comment .comment .comment .comment .comment {
-  background-color: #f0f0f0;
-}
-
-.comment .comment .comment .comment .comment .comment .comment .comment .comment {
-  background-color: white;
-}
-
-.comment .comment .comment .comment .comment .comment .comment .comment .comment .comment {
-  background-color: #f0f0f0;
-}
-
-.comment .comment .comment .comment .comment .comment .comment .comment .comment .comment .comment {
-  background-color: white;
-}
-
-.comment .comment .comment .comment .comment .comment .comment .comment .comment .comment .comment .comment {
-  background-color: #f0f0f0;
-}
-
-.comment .comment .comment .comment .comment .comment .comment .comment .comment .comment .comment .comment .comment {
-  background-color: white;
-}
-
-.comment .comment .comment .comment .comment .comment .comment .comment .comment .comment .comment .comment .comment .comment {
-  background-color: #f0f0f0;
-}
-
-.comment .comment .comment .comment .comment .comment .comment .comment .comment .comment .comment .comment .comment .comment .comment {
-  background-color: white;
-}
-
-.comment .comment .comment .comment .comment .comment .comment .comment .comment .comment .comment .comment .comment .comment .comment .comment {
-  background-color: #f0f0f0;
-}
-
-.comment .comment .comment .comment .comment .comment .comment .comment .comment .comment .comment .comment .comment .comment .comment .comment .comment {
-  background-color: white;
-}
-
-.comment .comment .comment .comment .comment .comment .comment .comment .comment .comment .comment .comment .comment .comment .comment .comment .comment .comment {
-  background-color: #f0f0f0;
-}
-
-.comment .comment .comment .comment .comment .comment .comment .comment .comment .comment .comment .comment .comment .comment .comment .comment .comment .comment .comment {
-  background-color: white;
-}
-
-.comment .comment .comment .comment .comment .comment .comment .comment .comment .comment .comment .comment .comment .comment .comment .comment .comment .comment .comment .comment {
-  background-color: #f0f0f0;
-}
-
-.comment .comment .comment .comment .comment .comment .comment .comment .comment .comment .comment .comment .comment .comment .comment .comment .comment .comment .comment .comment .comment {
-  background-color: white;
-}
-
-.comment .comment .comment .comment .comment .comment .comment .comment .comment .comment .comment .comment .comment .comment .comment .comment .comment .comment .comment .comment .comment .comment {
-  background-color: #f0f0f0;
-}
-
-.comment .wrapper {
-  display: flex;
-}
-
-.comment .wrapper .content {
-  display: inline-block;
-}
-
-.comment .wrapper .content .text {
-  margin: 3px 0;
-}
-
-.comment .replies {
-  margin-left: 25px;
-  margin-top: 10px;
-}
-
-.comment .vote-container {
-  padding: 0;
-  display: inline-block;
-  margin-top: 3px;
-}
-
-.comment .vote-container * {
-  font-size: 14px;
-}
-
-.comment .toggle:before {
-  content: "[-]";
-}
-
-.comment.collapsed .text,
-.comment.collapsed .controlls,
-.comment.collapsed .replies {
-  display: none;
-}
-
-.comment.collapsed .toggle:before {
-  content: "[+]";
-}
-
 .post {
   width: 100%;
-  padding: 10px;
-  max-width: 1000px;
-  margin: 0 auto;
 }
 
 .post .date {
@@ -620,11 +484,14 @@ button.text-button:hover, button.text-button:active {
   flex-direction: row;
   position: relative;
   left: -110px;
+  width: calc(100% + 110px);
+  padding: 0;
 }
 
 @media (max-width: 1250px) {
   .post .header {
-    position: static;
+    width: 100%;
+    left: 0;
     flex-direction: column-reverse !important;
   }
 }
@@ -646,6 +513,7 @@ button.text-button:hover, button.text-button:active {
   color: black;
   text-decoration: none;
   margin: 10px 0;
+  padding-right: 50px;
 }
 
 .post .header.link .title {
@@ -660,6 +528,28 @@ button.text-button:hover, button.text-button:active {
   color: black;
   opacity: .3;
   font-weight: 100;
+}
+
+.post .header .delete-post {
+  position: absolute;
+  right: 0;
+  top: 0;
+  font-size: 28px;
+  border: 1px solid #03a87c;
+  color: #03a87c;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  padding: 10px;
+  text-align: center;
+  display: block;
+  box-sizing: content-box;
+  background: white;
+}
+
+.post .header .delete-post i {
+  transform: translateY(-3px);
+  display: block;
 }
 
 .post .user-preview {
@@ -921,5 +811,256 @@ button.text-button:hover, button.text-button:active {
   margin: 5px 0;
   opacity: .6;
   margin-bottom: 10px;
+}
+
+.comment {
+  border-radius: 3px;
+  border: 1px solid #d4d4d4;
+  padding: 15px;
+  background-color: white;
+}
+
+.comment .comment {
+  background-color: #f0f0f0;
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+  border-right: 0;
+}
+
+.comment .comment .comment {
+  background-color: white;
+}
+
+.comment .comment .comment .comment {
+  background-color: #f0f0f0;
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+  border-right: 0;
+}
+
+.comment .comment .comment .comment .comment {
+  background-color: white;
+}
+
+.comment .comment .comment .comment .comment .comment {
+  background-color: #f0f0f0;
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+  border-right: 0;
+}
+
+.comment .comment .comment .comment .comment .comment .comment {
+  background-color: white;
+}
+
+.comment .comment .comment .comment .comment .comment .comment .comment {
+  background-color: #f0f0f0;
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+  border-right: 0;
+}
+
+.comment .comment .comment .comment .comment .comment .comment .comment .comment {
+  background-color: white;
+}
+
+.comment .comment .comment .comment .comment .comment .comment .comment .comment .comment {
+  background-color: #f0f0f0;
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+  border-right: 0;
+}
+
+.comment .comment .comment .comment .comment .comment .comment .comment .comment .comment .comment {
+  background-color: white;
+}
+
+.comment .comment .comment .comment .comment .comment .comment .comment .comment .comment .comment .comment {
+  background-color: #f0f0f0;
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+  border-right: 0;
+}
+
+.comment .comment .comment .comment .comment .comment .comment .comment .comment .comment .comment .comment .comment {
+  background-color: white;
+}
+
+.comment .comment .comment .comment .comment .comment .comment .comment .comment .comment .comment .comment .comment .comment {
+  background-color: #f0f0f0;
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+  border-right: 0;
+}
+
+.comment .comment .comment .comment .comment .comment .comment .comment .comment .comment .comment .comment .comment .comment .comment {
+  background-color: white;
+}
+
+.comment .comment .comment .comment .comment .comment .comment .comment .comment .comment .comment .comment .comment .comment .comment .comment {
+  background-color: #f0f0f0;
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+  border-right: 0;
+}
+
+.comment .comment .comment .comment .comment .comment .comment .comment .comment .comment .comment .comment .comment .comment .comment .comment .comment {
+  background-color: white;
+}
+
+.comment .comment .comment .comment .comment .comment .comment .comment .comment .comment .comment .comment .comment .comment .comment .comment .comment .comment {
+  background-color: #f0f0f0;
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+  border-right: 0;
+}
+
+.comment .comment .comment .comment .comment .comment .comment .comment .comment .comment .comment .comment .comment .comment .comment .comment .comment .comment .comment {
+  background-color: white;
+}
+
+.comment .comment .comment .comment .comment .comment .comment .comment .comment .comment .comment .comment .comment .comment .comment .comment .comment .comment .comment .comment {
+  background-color: #f0f0f0;
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+  border-right: 0;
+}
+
+.comment .comment .comment .comment .comment .comment .comment .comment .comment .comment .comment .comment .comment .comment .comment .comment .comment .comment .comment .comment .comment {
+  background-color: white;
+}
+
+.comment .comment .comment .comment .comment .comment .comment .comment .comment .comment .comment .comment .comment .comment .comment .comment .comment .comment .comment .comment .comment .comment {
+  background-color: #f0f0f0;
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+  border-right: 0;
+}
+
+.comment .content .text {
+  margin: 15px 0;
+  font-size: 18px;
+  opacity: .8;
+}
+
+.comment .content .user {
+  color: #03a87c;
+  font-size: 14px;
+}
+
+.comment .content .time {
+  font-size: 10px;
+  opacity: .5;
+}
+
+.comment .comment-form {
+  display: none;
+}
+
+.comment .controlls {
+  display: flex;
+  align-items: center;
+  margin-top: 10px;
+}
+
+.comment .controlls .vote-container {
+  padding: 0;
+  margin-right: 15px;
+}
+
+.comment .controlls .reply {
+  color: #03a87c;
+  text-transform: capitalize;
+  font-size: 16px;
+}
+
+.comment .replies {
+  margin-left: 25px;
+}
+
+.comment .toggle:before {
+  content: "[-]";
+}
+
+.comment.collapsed .text,
+.comment.collapsed .controlls,
+.comment.collapsed .replies {
+  display: none;
+}
+
+.comment.collapsed .toggle:before {
+  content: "[+]";
+}
+
+.comments-section h3 {
+  font-size: 16px;
+  font-weight: bold;
+  opacity: .8;
+  font-family: "Segoe UI", sans-serif;
+}
+
+.comments-section .comment-box {
+  width: 100%;
+}
+
+.comments-section .comment-form {
+  box-sizing: border-box;
+  margin: 10px 0;
+  border-radius: 3px;
+  border: 1px solid rgba(27, 9, 9, 0.2);
+  background-color: white;
+  padding: 15px;
+  width: 100%;
+  overflow: hidden;
+}
+
+.comments-section .comment-form .message {
+  color: rebeccapurple;
+  color: #c70a0a;
+}
+
+.comments-section .comment-form .message:empty {
+  margin: 0;
+}
+
+.comments-section .comment-form textarea {
+  width: 100%;
+  background: none;
+  border: none;
+  resize: none;
+  font-size: 18px;
+  line-height: 25px;
+}
+
+.comments-section .comment-form textarea.filled ~ .send {
+  max-height: initial;
+  display: initial;
+}
+
+.comments-section .comment-form .send {
+  display: none;
+  padding-top: 10px;
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height .3s;
+}
+
+.comments-section .comment-form input[type="submit"] {
+  color: #03a87c;
+  background-color: transparent;
+  border-radius: 5px;
+  padding: 0;
+  font-size: 14px;
+  cursor: pointer;
+  border: 1px solid #03a87c;
+  padding: 7px 15px;
+  margin-top: 10px;
+}
+
+.comments-section .comment {
+  margin-top: 10px;
+  width: 100%;
+  box-sizing: border-box;
+  padding-right: 0;
 }
 /*# sourceMappingURL=style.css.map */

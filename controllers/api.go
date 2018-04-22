@@ -91,6 +91,18 @@ func (c *ApiController) Comment() {
 	})
 }
 
+func (c *ApiController) Delete() {
+	form := &models.DeleteForm{}
+	handleForm(form, &c.AuthController, func(r *ApiResponse) {
+		if err := lib.DeletePost(form.Item, c.User); err != nil {
+			r.Fail(err)
+			return
+		}
+		r.Success = true
+		r.Dest = "/"
+	})
+}
+
 type ApiResponse struct {
 	Success bool   `json:"success"`
 	Message string `json:"message"`

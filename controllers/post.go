@@ -45,6 +45,7 @@ func (this *PostController) Get() {
 	}
 
 	this.Data["Post"] = post
+	this.Data["CanDelete"] = this.User != nil && post.User.Id == this.User.Id
 	this.Layout = "base.tpl"
 	this.TplName = "pages/posts/post.tpl"
 }

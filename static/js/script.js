@@ -1,6 +1,31 @@
+(function ($) {
+    $.each(['show', 'hide'], function (i, ev) {
+        var el = $.fn[ev];
+        $.fn[ev] = function () {
+            this.trigger(ev);
+            return el.apply(this, arguments);
+        };
+    });
+})(jQuery);
+
 $(function () {
     // autofocus work around
     $("input[autofocus]").focus();
+    $('textarea').on("show", function () {
+        var me = $(this)
+        me.attr('style', 'height:' + (this.scrollHeight) + 'px;overflow-y:hidden;');
+        if (this.value.length > 0)
+            me.addClass("filled")
+        else
+            me.removeClass("filled")
+    }).on('input', function () {
+        this.style.height = 'auto';
+        this.style.height = (this.scrollHeight) + 'px';
+        if (this.value.length > 0)
+            $(this).addClass("filled")
+        else
+            $(this).removeClass("filled")
+    }).filter(":visible").trigger("show")
 
     // custom form handling
     $("form").submit(function (e) {
@@ -120,7 +145,7 @@ function voteOnPost(id, dir, onSuccess) {
 }
 
 function showCommentForm(elem) {
-    $(elem).next(".comment-box").show()
+    $(elem).parents(".content").children(".comment-form").show()
 }
 
 function toggleComment(elem) {

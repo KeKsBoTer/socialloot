@@ -33,3 +33,7 @@ type CommentForm struct {
 	Item    string `form:"item" valid:"Required;Length(11)"`
 	Comment string `form:"comment" valid:"Required"`
 }
+
+type DeleteForm struct {
+	Item string `form:"item" valid:"Required;Length(11)"`
+}
