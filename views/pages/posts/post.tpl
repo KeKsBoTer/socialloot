@@ -9,8 +9,17 @@
                                 {{else if eq .Post.Type "link"}}
                                     {{.Post.Content}}
                                 {{end}}'>
+
             <h1 class="title">{{.Post.Title}}</h1>
         </a>
+        {{if .CanDelete}}
+        <form method="POST" action="{{urlfor "ApiController.Delete"}}">
+            <input type="hidden" name="item"  value="{{.Post.Id}}"/>
+            <button class="delete-post" type="submit">
+                <i class="ion-ios-trash"></i>
+            </button>
+        </form>
+        {{end}}
     </div>
     {{template "components/user.tpl" .Post.User}}
     <div class="post-content">
@@ -22,10 +31,13 @@
         </a>
         {{end}}
     </div>
-    <h3>Comments</h3>
-    <hr/> 
-    {{if .User}} {{template "components/comment_form.tpl" .Post.Id}} {{end}}
     <div class="comments-section">
-        {{range $c := .Post.Comments}} {{template "components/comment.tpl" $c}} {{end}}
+        <h3>Comments</h3>
+        {{if .User}}
+            {{template "components/comment_form.tpl" .Post.Id}} 
+        {{end}} 
+        {{range $c := .Post.Comments}} 
+            {{template "components/comment.tpl" $c}}
+        {{end}}
     </div>
 </div>

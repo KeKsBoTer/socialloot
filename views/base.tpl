@@ -16,7 +16,9 @@
  </head>
 <body>
     {{.BaseHeader}}
-    {{.LayoutContent}}
+    <div class="page">
+        {{.LayoutContent}}
+    </div>  
     {{range .HeadScripts}}
         <script src="{{.}}"></script>
     {{end}}

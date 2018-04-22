@@ -54,6 +54,13 @@ func (p *Post) Insert() error {
 	return nil
 }
 
+func (p *Post) Delete() error {
+	if _, err := orm.NewOrm().Delete(p); err != nil {
+		return err
+	}
+	return nil
+}
+
 func (p *Post) Read(fields ...string) error {
 	return orm.NewOrm().Read(p, fields...)
 }

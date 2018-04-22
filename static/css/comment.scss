@@ -1,0 +1,138 @@
+// creates nested style like .comment .comment ... .comment{...}
+@mixin iterate($depth) {
+    .comment {
+        @if $depth % 2==0 {
+            background-color: #f0f0f0;
+            border-top-right-radius: 0;
+            border-bottom-right-radius: 0;
+            border-right: 0;
+        }
+        @else {
+            background-color: white;
+        }
+        @if $depth>0 {
+            @include iterate($depth - 1)
+        }
+    }
+}
+
+.comment {
+    border-radius: 3px;
+    border: 1px solid rgb(212, 212, 212);
+    padding: 15px;
+    background-color: white;
+    @include iterate(20);
+    .content {
+        .text {
+            margin: 15px 0;
+            font-size: 18px;
+            opacity: .8;
+        }
+        .user {
+            color: $second-color;
+            font-size: 14px;
+        }
+        .time {
+            font-size: 10px;
+            opacity: .5;
+        }
+    }
+    .comment-form {
+        display: none;
+    }
+    .controlls {
+        display: flex;
+        align-items: center;
+        margin-top: 10px;
+        .vote-container {
+            padding: 0;
+            margin-right: 15px;
+        }
+        .reply {
+            color: $second-color;
+            text-transform: capitalize;
+            font-size: 16px;
+        }
+    }
+    .replies {
+        margin-left: 25px;
+    }
+    .toggle:before {
+        content: "[-]"
+    }
+    &.collapsed {
+        .text,
+        .controlls,
+        .replies {
+            display: none;
+        }
+        .toggle:before {
+            content: "[+]"
+        }
+    }
+}
+
+.comments-section {
+    h3 {
+        font-size: 16px;
+        font-weight: bold;
+        opacity: .8;
+        font-family: "Segoe UI", sans-serif;
+    }
+    .comment-box {
+        width: 100%;
+    }
+    .comment-form {
+        box-sizing: border-box;
+        margin: 10px 0;
+        border-radius: 3px;
+        border: 1px solid rgba(27, 9, 9, 0.2);
+        background-color: white;
+        padding: 15px;
+        width: 100%; //max-width: 500px;
+        overflow: hidden;
+        .message {
+            color: rebeccapurple;
+            color: rgb(199, 10, 10);
+            &:empty {
+                margin: 0;
+            }
+        }
+        textarea {
+            width: 100%;
+            background: none;
+            border: none;
+            resize: none;
+            font-size: 18px;
+            line-height: 25px;
+            &.filled~.send {
+                max-height: initial;
+                display: initial;
+            }
+        }
+        .send {
+            display: none;
+            padding-top: 10px;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height .3s;
+        }
+        input[type="submit"] {
+            color: $second-color;
+            background-color: transparent;
+            border-radius: 5px;
+            padding: 0;
+            font-size: 14px;
+            cursor: pointer;
+            border: 1px solid $second-color;
+            padding: 7px 15px;
+            margin-top: 10px;
+        }
+    }
+    .comment {
+        margin-top: 10px;
+        width: 100%;
+        box-sizing: border-box;
+        padding-right: 0;
+    }
+}

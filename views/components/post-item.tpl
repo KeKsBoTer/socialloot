@@ -8,7 +8,7 @@
             <img class="favicon" src="{{favicon .Content}}" />
             <div class="host">
                 <div class="wrapper">
-                    <object class="icon" data="{{favicon .Content}}" type="image/jpg"></object>
+                    <img class="icon" src="{{favicon .Content}}" onerror="this.src='/static/img/link_icon.png';"/>
                     <span>{{host .Content}}</span>
                 </div>
             </div>

@@ -28,6 +28,15 @@ a {
     float: right;
 }
 
+.page {
+    width: 100%;
+    max-width: 1000px;
+    margin: 0 auto;
+    //margin-top: 30px;
+    padding: 10px;
+}
+
+
 // children are displayed in reversed vertical order
 .reverse-order{
     display: flex;
