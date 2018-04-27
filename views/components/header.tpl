@@ -21,7 +21,7 @@
       </div>
       <div>
         <div class="button-group">
-          <a href="/search">
+          <a href="{{urlfor "SearchController.Get"}}">
             <button class="icon-button ion-ios-search"></button>
           </a>
           {{if .IsLogin}}

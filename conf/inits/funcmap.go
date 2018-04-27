@@ -115,7 +115,11 @@ func init() {
 		if err != nil {
 			return ""
 		}
-		return "https://" + urlParsed.Host + "/favicon.ico"
+		scheme := urlParsed.Scheme
+		if len(scheme) < 1 {
+			scheme = "http"
+		}
+		return scheme + "://" + urlParsed.Host + "/favicon.ico"
 	})
 	beego.AddFuncMap("cut", func(text string, length int) string {
 		if len(text) < length {

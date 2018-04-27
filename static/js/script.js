@@ -30,6 +30,8 @@ $(function () {
     // custom form handling
     $("form").submit(function (e) {
         var form = $(this);
+        if(form.attr('method')==="GET")
+            return
         var formdata = false;
         if (window.FormData) {
             formdata = new FormData(form[0]);

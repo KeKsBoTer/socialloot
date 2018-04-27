@@ -15,7 +15,7 @@
         </a>
         {{else if eq .Type "text"}}
         <a class="text" href="{{URL .}}">
-            <p>{{.Content}}</p>
+            <!--<p>{{.Content}}</p>-->
         </a>
         {{end}}
         <div class="overlay">
