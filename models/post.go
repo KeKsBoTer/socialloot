@@ -38,6 +38,7 @@ type Post struct {
 
 	// for html rendering
 	Votes    int           `orm:"-"`
+	Rank     float64       `orm:"-"`
 	VoteDir  VoteDirection `orm:"-"`
 	Comments []*Comment    `orm:"-"`
 }
