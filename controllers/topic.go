@@ -1,12 +1,10 @@
 package controllers
 
 import (
-	"errors"
 	"log"
 	"net/http"
 
-	"github.com/astaxie/beego/orm"
-
+	"github.com/KeKsBoTer/socialloot/lib"
 	"github.com/KeKsBoTer/socialloot/models"
 )
 
@@ -43,7 +41,7 @@ func (this *TopicController) Get() {
 		return
 	}
 	this.Data["Topic"] = topic
-	posts, err := getPostsForTopic(topic, this.User, choice)
+	posts, err := getPostsForTopic(this.User, topic, choice)
 	if err != nil {
 		log.Println(err)
 		this.Abort("505")
@@ -54,38 +52,24 @@ func (this *TopicController) Get() {
 	this.TplName = "pages/posts/topic.tpl"
 }
 
-func getPostsForTopic(topic *models.Topic, user *models.User, choice Choice) (*[]*models.Post, error) {
+func getPostsForTopic(user *models.User, topic *models.Topic, choice Choice) (*[]*models.Post, error) {
 	var posts []*models.Post
-	switch choice {
-	case New:
-		if _, err := models.Posts().Filter("Topic", topic.Id).OrderBy("-Date").RelatedSel().All(&posts); err != nil {
-			return nil, err
-		}
-	case Hot:
-		_, err := orm.NewOrm().Raw(`
-			WITH votes AS(
-				SELECT item,sum(action) as votes
-				FROM vote
-				GROUP BY item
-			)
-			SELECT p.*, ifnull(v.votes,0) as votes
-			FROM post p
-			LEFT OUTER JOIN votes v on (p.id = v.item)
-			WHERE p.topic_id = ?
-			ORDER BY ifnull(v.votes,0) desc`, topic.Id).QueryRows(&posts)
-		for _, p := range posts {
-			o := orm.NewOrm()
-			o.LoadRelated(p, "topic")
-			o.LoadRelated(p, "user")
-		}
-		if err != nil {
-			return nil, err
-		}
-	default:
-		return nil, errors.New("invalid choice")
+	all := models.Posts()
+	if topic != nil {
+		all = all.Filter("topic", topic.Id)
+	}
+	// hot ranking algorithm is heavily based on date, so ordering by date on select will speed up sorting
+	if _, err := all.OrderBy("-Date").RelatedSel().All(&posts); err != nil {
+		return nil, err
 	}
 	for _, p := range posts {
 		p.ReadVoteData(user)
+	}
+	switch choice {
+	case New:
+		// allready sorted
+	case Hot:
+		lib.SortByRank(posts)
 	}
 	return &posts, nil
 }

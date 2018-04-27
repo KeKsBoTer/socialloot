@@ -28,7 +28,7 @@ func init() {
 
 	beego.AddFuncMap("dateformat", func(in time.Time) string {
 		in = in.Add(time.Duration(9) * time.Hour)
-		return in.Format("01/02/2006 15:04")
+		return in.Format("02.01.2006 15:04")
 	})
 
 	beego.AddFuncMap("qescape", func(in string) string {
@@ -117,7 +117,7 @@ func init() {
 		}
 		scheme := urlParsed.Scheme
 		if len(scheme) < 1 {
-			scheme = "http"
+			scheme = "https" // use https as default
 		}
 		return scheme + "://" + urlParsed.Host + "/favicon.ico"
 	})
