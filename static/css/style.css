@@ -35,6 +35,7 @@ a.no-style, .post a, .popup-list .inner li a, .tab-list li a {
   max-width: 1000px;
   margin: 0 auto;
   padding: 10px;
+  box-sizing: border-box;
 }
 
 .reverse-order {
@@ -296,6 +297,10 @@ button.text-button:hover, button.text-button:active {
   width: 100%;
   height: 100%;
   overflow: hidden;
+  background: url(/static/img/text_preview_icon.png);
+  background-size: 100% 100%;
+  display: block;
+  opacity: .1;
 }
 
 .post-preview .preview .text p {

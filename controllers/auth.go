@@ -31,6 +31,8 @@ func (c *AuthController) Prepare() {
 			c.Data["Dest"] = dst
 		}
 
+		c.Data["xsrf_token"] = c.XSRFToken()
+
 		c.Data["HeadStyles"] = []string{}
 		c.Data["HeadScripts"] = []string{}
 		c.Data["URL"] = c.Ctx.Input.URI()

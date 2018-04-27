@@ -183,6 +183,10 @@ $second-color: #03a87c;
             width: 100%;
             height: 100%;
             overflow: hidden;
+            background: url(/static/img/text_preview_icon.png);
+            background-size: 100% 100%;
+            display: block;
+            opacity: .1;
             p {
                 text-align: justify;
                 @include blur(1px);

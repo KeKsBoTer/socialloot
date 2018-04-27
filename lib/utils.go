@@ -26,6 +26,10 @@ func URLForItem(data interface{}, values ...string) string {
 	switch data.(type) {
 	case models.Post:
 		post := data.(models.Post)
+		if post.Topic == nil {
+			beego.Error("Cannot create URL for post (empty topic):", reflect.TypeOf(data))
+			return "/"
+		}
 		return beego.URLFor("PostController.Get", ":topic", post.Topic.Name, ":post", post.Id)
 	case models.Topic:
 		topic := data.(models.Topic)

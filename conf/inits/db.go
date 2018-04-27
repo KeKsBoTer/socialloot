@@ -30,5 +30,5 @@ func init() {
 		panic(err)
 	}
 
-	// orm.RunCommand()
+	//orm.RunCommand()
 }
