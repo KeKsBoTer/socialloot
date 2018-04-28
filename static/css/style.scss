@@ -644,4 +644,29 @@ $second-color: #03a87c;
     margin-bottom: 10px;
 }
 
+.user-large .user-preview {
+    .icon {
+        width: 75px;
+        height: 75px;
+    }
+    .name {
+        font-size: 36px;
+        margin: 5px 0;
+        font-weight: bold;
+    }
+}
+
+.comments-list {
+    padding: 0;
+    margin: 0;
+    .comment {
+        &:not(:last-child) {
+            margin-bottom: 10px;
+        }
+        .reply{
+            display: none;
+        }
+    }
+}
+
 @import "./comment.scss";

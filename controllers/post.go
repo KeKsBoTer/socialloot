@@ -1,6 +1,9 @@
 package controllers
 
 import (
+	"net/http"
+
+	"github.com/KeKsBoTer/socialloot/lib"
 	"github.com/KeKsBoTer/socialloot/models"
 	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/orm"
@@ -48,4 +51,19 @@ func (this *PostController) Get() {
 	this.Data["CanDelete"] = this.User != nil && post.User.Id == this.User.Id
 	this.Layout = "base.tpl"
 	this.TplName = "pages/posts/post.tpl"
+}
+
+func (this *PostController) Redirect() {
+	id := this.Ctx.Input.Param(":post")
+	if len(id) == models.ItemIDLength {
+		post := models.Post{
+			Id: id,
+		}
+		if err := post.Read(); err == nil {
+			orm.NewOrm().LoadRelated(&post, "topic")
+			this.Ctx.Redirect(http.StatusTemporaryRedirect, lib.URLForItem(post))
+			return
+		}
+	}
+	this.Abort("404")
 }

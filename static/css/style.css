@@ -818,6 +818,30 @@ button.text-button:hover, button.text-button:active {
   margin-bottom: 10px;
 }
 
+.user-large .user-preview .icon {
+  width: 75px;
+  height: 75px;
+}
+
+.user-large .user-preview .name {
+  font-size: 36px;
+  margin: 5px 0;
+  font-weight: bold;
+}
+
+.comments-list {
+  padding: 0;
+  margin: 0;
+}
+
+.comments-list .comment:not(:last-child) {
+  margin-bottom: 10px;
+}
+
+.comments-list .comment .reply {
+  display: none;
+}
+
 .comment {
   border-radius: 3px;
   border: 1px solid #d4d4d4;
