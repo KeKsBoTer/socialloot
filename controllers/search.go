@@ -15,7 +15,7 @@ func (this *SearchController) Get() {
 	pageTitle := "Search"
 	if len(query) > 0 {
 		pageTitle += ": " + query
-		if posts, err := search(query); err == nil {
+		if posts, err := search(query); err == nil && len(*posts) > 0 {
 			this.Data["Posts"] = posts
 		}
 	}

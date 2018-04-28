@@ -1,6 +1,6 @@
 <div class="user-preview">
     <a class="icon" href="{{URL .}}">
-        <img src="/static/img/user_icon.jpg"/>
+        <img src="https://api.adorable.io/avatars/{{.Name}}/"/>
     </a>
     <div class="details">
         <a href="{{URL .}}">
