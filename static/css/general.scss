@@ -8,7 +8,7 @@ body {
 
 a {
     outline: 0;
-    color: rgb(85, 26, 139);
+    color: $second-color;
     cursor: pointer;
     text-decoration: underline;
     &.no-underline {
@@ -84,4 +84,49 @@ button {
             color: darken($color: $second-color, $amount: 10%)
         }
     }
+}
+
+input[type="text"],
+input[type="password"],
+textarea {
+    font-size: 20px;
+    margin-bottom: 10px;
+    border: none;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.3);
+    padding: 7px;
+    color: rgba(0, 0, 0, 0.8);
+    &:focus {
+        outline: none;
+        ~.description {
+            display: block !important;
+            height: 50px;
+        }
+    }
+}
+textarea {
+    width: 100%;
+    min-height: 150px;
+}
+input[type="submit"] {
+    color: white;
+    background-color: black;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 15px;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.item-list {
+    padding: 0;
+    margin: 0;
+    list-style: none;
+    >*:not(:last-child){
+        margin-bottom: 10px;
+    }
+}
+
+.no-results{
+    font-size: 21px;
+    color: lighten($color: #000000, $amount: 50%);
 }

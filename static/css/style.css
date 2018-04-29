@@ -9,7 +9,7 @@ body {
 
 a {
   outline: 0;
-  color: #551a8b;
+  color: #03a87c;
   cursor: pointer;
   text-decoration: underline;
 }
@@ -90,6 +90,60 @@ button.text-button:hover, button.text-button:active {
   color: #027657;
 }
 
+input[type="text"],
+input[type="password"],
+textarea {
+  font-size: 20px;
+  margin-bottom: 10px;
+  border: none;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.3);
+  padding: 7px;
+  color: rgba(0, 0, 0, 0.8);
+}
+
+input[type="text"]:focus,
+input[type="password"]:focus,
+textarea:focus {
+  outline: none;
+}
+
+input[type="text"]:focus ~ .description,
+input[type="password"]:focus ~ .description,
+textarea:focus ~ .description {
+  display: block !important;
+  height: 50px;
+}
+
+textarea {
+  width: 100%;
+  min-height: 150px;
+}
+
+input[type="submit"] {
+  color: white;
+  background-color: black;
+  border: none;
+  border-radius: 5px;
+  padding: 10px 15px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.item-list {
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.item-list > *:not(:last-child) {
+  margin-bottom: 10px;
+}
+
+.no-results, .nothing-here p {
+  font-size: 21px;
+  color: gray;
+}
+
 @font-face {
   font-family: "Hemera";
   src: url("/static/fonts/Hemera.ttf");
@@ -159,17 +213,10 @@ button.text-button:hover, button.text-button:active {
   margin-right: 7px;
 }
 
-.post-list {
-  padding: 0;
-  margin: 0;
-  list-style: none;
-}
-
 .post-preview {
   border: 1px solid #e6e6e6;
   border-radius: 3px;
   background: white;
-  margin-bottom: 10px;
   display: flex;
   flex-direction: row;
   height: 200px;
@@ -679,45 +726,6 @@ button.text-button:hover, button.text-button:active {
   padding-bottom: 10px;
 }
 
-.auth-form form input[type="text"],
-.auth-form form input[type="password"],
-.auth-form form textarea {
-  font-size: 20px;
-  margin-bottom: 10px;
-  border: none;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.3);
-  padding: 7px;
-  color: rgba(0, 0, 0, 0.8);
-}
-
-.auth-form form input[type="text"]:focus,
-.auth-form form input[type="password"]:focus,
-.auth-form form textarea:focus {
-  outline: none;
-}
-
-.auth-form form input[type="text"]:focus ~ .description,
-.auth-form form input[type="password"]:focus ~ .description,
-.auth-form form textarea:focus ~ .description {
-  display: block !important;
-  height: 50px;
-}
-
-.auth-form form textarea {
-  width: 100%;
-  min-height: 150px;
-}
-
-.auth-form form input[type="submit"] {
-  color: white;
-  background-color: black;
-  border: none;
-  border-radius: 5px;
-  padding: 10px 15px;
-  font-size: 14px;
-  cursor: pointer;
-}
-
 .auth-form.full-width input[type="text"] {
   width: 100%;
 }
@@ -840,6 +848,21 @@ button.text-button:hover, button.text-button:active {
 
 .comments-list .comment .reply {
   display: none;
+}
+
+.search-form {
+  margin: 10px 0;
+}
+
+.search-form input[type="text"] {
+  font-size: 42px;
+  width: 100%;
+}
+
+.nothing-here {
+  padding: 20px 0;
+  width: 100%;
+  text-align: center;
 }
 
 .comment {

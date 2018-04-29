@@ -1,15 +1,22 @@
 <div class="auth-form">
   <h1>Only one step away.</h1>
-  <h2>Sign up to share your intrests,comment on posts and rate other useres content. </h2>
+  <h2>Sign up to share your intrests,comment on posts and rate other users content. </h2>
   <form method="POST" action='{{urlfor "LoginController.Signup"}}'>
-    <label for="inputName">Name</label>
-    <div>
+    
+    <label for="inputName">Username</label>
+    <div class="reverse-order">
       <input name="username" value="" type="text" id="inputName" autofocus/>
+      <p class="description">
+        Only alpha characters, numerics,"-" and "_" are allowed
+        <br>
+        Length must be between 3 and 15 characters
+      </p> 
     </div>
     <label for="inputPassword">Password</label>
-    <div>
+    <div class="reverse-order">
       <input name="password" type="password" value="" title="Password" id="inputPassword" />
-       </div>
+      <p class="description">Your password's length must be between 8 and 30 characters</p> 
+    </div>
     <label for="reinputPassword">Reenter Password</label>
     <div>
       <input name="passwordre" type="password" title="Password" id="reinputPassword"/>

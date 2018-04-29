@@ -1,5 +1,5 @@
 <div class="auth-form">
-  <h1>Wellcome back.</h1>
+  <h1>Welcome back.</h1>
   <h2>Sign in to share your intrests,comment on posts and rate other useres content. </h2>
   <form method="POST" action='{{urlfor "LoginController.Login"}}'>
     <label for="inputName">Name</label>

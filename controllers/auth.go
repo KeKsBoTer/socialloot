@@ -93,7 +93,7 @@ func (c *NeedsAuthController) Prepare() {
 		if c.Ctx.Input.IsGet() {
 			c.RedirectForm()
 			if !c.Ctx.Output.IsRedirect() {
-				c.Ctx.Redirect(http.StatusUnauthorized, c.URLFor("IndexController.Index"))
+				c.Ctx.Redirect(http.StatusSeeOther, c.LoginPath())
 			}
 		} else if c.Ctx.Input.IsPost() {
 			r := ApiResponse{

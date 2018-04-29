@@ -48,6 +48,7 @@ func (this *UserController) Get() {
 			this.Data["Posts"] = posts
 		} else {
 			this.Abort("500")
+			return
 		}
 	case Comments:
 		// get all the posts the user published
@@ -55,6 +56,7 @@ func (this *UserController) Get() {
 			this.Data["Comments"] = comments
 		} else {
 			this.Abort("500")
+			return
 		}
 	}
 
