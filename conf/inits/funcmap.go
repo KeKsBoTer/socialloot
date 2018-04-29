@@ -127,4 +127,17 @@ func init() {
 		}
 		return text[:length]
 	})
+	beego.AddFuncMap("isempty", func(item interface{}) bool {
+		if item == nil {
+			return true
+		}
+		value := reflect.ValueOf(item)
+		for value.Kind() == reflect.Ptr || value.Kind() == reflect.Interface {
+			value = value.Elem()
+		}
+		if value.Len() < 1 {
+			return true
+		}
+		return false
+	})
 }

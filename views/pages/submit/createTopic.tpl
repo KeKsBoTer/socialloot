@@ -20,6 +20,6 @@
     </div>
     <p class="message"></p>
 
-    <input type="submit" value="Create">
+    <input type="submit" value="Create Topic">
   </form>
 </div>

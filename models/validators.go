@@ -18,5 +18,10 @@ func (form *SubmitForm) Valid(v *validation.Validation) {
 	} else if form.Type != PostTypeImage {
 		v.AddError("Type", "Invalid post type")
 	}
+}
 
+func (form *VoteForm) Valid(v *validation.Validation) {
+	if form.Direction != VoteDirectionUp && form.Direction != VoteDirectionDown {
+		v.SetError("direction", "Direction must be up or downvote")
+	}
 }

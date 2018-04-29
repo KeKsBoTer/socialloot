@@ -5,9 +5,15 @@
       <div>
           {{if .IsLogin}}
           <div class="button-group">
-              <a href="{{urlfor "SubmitController.Submit"}}{{if .Topic}}?topic={{.Topic.Name}}{{end}}">
-                <button class="text-button">Submit {{if .Topic}}to {{.Topic.Name}}{{end}}</button>
-              </a>
+              {{if .Topic}}
+                <a href="{{urlfor "SubmitController.Submit" "topic" .Topic.Name}}">
+                  <button class="text-button">Submit to {{.Topic.Name}}</button>
+                </a>
+              {{else}}
+                <a href="{{urlfor "SubmitController.Submit"}}">
+                  <button class="text-button">Submit</button>
+                </a>
+              {{end}}
               <a href="{{urlfor "SubmitController.CreateTopic"}}">
                 <button class="text-button">Create Topic</button>
               </a>

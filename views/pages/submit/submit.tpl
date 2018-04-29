@@ -38,6 +38,6 @@
     <input type="hidden" name="type" value="{{.Type}}" />
 
     <p class="message"></p>
-    <input type="submit" value="Submit">
+    <input type="submit" value="Submit{{if .Topic}} to {{.Topic.Name}}{{end}}">
   </form>
 </div>

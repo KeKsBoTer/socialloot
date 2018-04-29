@@ -35,6 +35,6 @@
             <p class="text-preview">{{cut .Content 200}}...</p>
             {{end}}
         </div>
-        {{template "components/user.tpl" .User}} {{/*TODO tagline with comment amount etc.*/}}
+        {{template "components/user.tpl" .User}}
     </div>
 </li>

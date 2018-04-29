@@ -67,17 +67,10 @@ $second-color: #03a87c;
     }
 }
 
-.post-list {
-    padding: 0;
-    margin: 0;
-    list-style: none;
-}
-
 .post-preview {
     border: 1px solid darken($color: $background-color, $amount: 10%);
     border-radius: 3px;
     background: $background-color;
-    margin-bottom: 10px;
     display: flex;
     flex-direction: row;
     height: 200px;
@@ -516,36 +509,6 @@ $second-color: #03a87c;
             opacity: .6;
             padding-bottom: 10px;
         }
-        input[type="text"],
-        input[type="password"],
-        textarea {
-            font-size: 20px;
-            margin-bottom: 10px;
-            border: none;
-            border-bottom: 1px solid rgba(0, 0, 0, 0.3);
-            padding: 7px;
-            color: rgba(0, 0, 0, 0.8);
-            &:focus {
-                outline: none;
-                ~.description {
-                    display: block !important;
-                    height: 50px;
-                }
-            }
-        }
-        textarea {
-            width: 100%;
-            min-height: 150px;
-        }
-        input[type="submit"] {
-            color: white;
-            background-color: black;
-            border: none;
-            border-radius: 5px;
-            padding: 10px 15px;
-            font-size: 14px;
-            cursor: pointer;
-        }
     }
     &.full-width {
         input[type="text"] {
@@ -666,6 +629,23 @@ $second-color: #03a87c;
         .reply{
             display: none;
         }
+    }
+}
+
+.search-form{
+    margin: 10px 0;
+    input[type="text"]{
+        font-size: 42px;
+        width: 100%;
+    }
+}
+
+.nothing-here{
+    padding: 20px 0;
+    width: 100%;
+    text-align: center;
+    p{
+        @extend .no-results;
     }
 }
 

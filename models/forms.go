@@ -6,7 +6,7 @@ type LoginForm struct {
 }
 
 type SignUpForm struct {
-	UserName   string `form:"username" valid:"Required;"`
+	UserName   string `form:"username" valid:"Required;MinSize(3);MaxSize(15);Match(^[a-zA-Z0-9_\\-]+$)"`
 	Password   string `form:"password" valid:"Required;MinSize(8);MaxSize(30)"`
 	PasswordRe string `form:"passwordre" valid:"Required;MinSize(8);MaxSize(30)"`
 }

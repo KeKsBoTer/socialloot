@@ -1,12 +1,3 @@
-(function ($) {
-    $.each(['show', 'hide'], function (i, ev) {
-        var el = $.fn[ev];
-        $.fn[ev] = function () {
-            this.trigger(ev);
-            return el.apply(this, arguments);
-        };
-    });
-})(jQuery);
 
 $(function () {
     // autofocus work around
@@ -53,9 +44,12 @@ $(function () {
                     }
                     if (form.hasClass("clear-on-submit"))
                         form.trigger("reset");
+                    // redirect to given location
                     if (data["dest"])
                         window.location.href = data["dest"]
                 } else {
+                    if(!data["message"])
+                        data["message"] = "Somthing went wrong"
                     form.find(".message").text(data["message"])
                 }
             }
