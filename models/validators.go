@@ -12,9 +12,7 @@ func (form *SignUpForm) Valid(v *validation.Validation) {
 
 func (form *SubmitForm) Valid(v *validation.Validation) {
 	if form.Type == PostTypeLink || form.Type == PostTypeText {
-		if len(form.Content) < 1 {
-			v.AddError("Content", "Content cannot be emtpy")
-		}
+		v.MaxSize(form, 40000, form.Content)
 	} else if form.Type != PostTypeImage {
 		v.AddError("Type", "Invalid post type")
 	}

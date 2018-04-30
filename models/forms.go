@@ -12,8 +12,8 @@ type SignUpForm struct {
 }
 
 type SubmitForm struct {
-	Title     string   `form:"title" valid:"Required"`
-	Content   string   `form:"content"`
+	Title     string   `form:"title" valid:"Required;MinSize(3);MaxSize(300)"`
+	Content   string   `form:"content" valid:"Required"`
 	Type      PostType `form:"type" valid:"Required"`
 	TopicName string   `form:"topic" valid:"Required"`
 }
@@ -24,14 +24,14 @@ type VoteForm struct {
 }
 
 type CreateTopicForm struct {
-	Name        string `form:"name" valid:"Required"`
-	Title       string `form:"title" valid:"Required"`
-	Description string `form:"description" valid:"Required"`
+	Name        string `form:"name" valid:"Required;MinSize(3);MaxSize(21);Match(^[[:alnum:]][[:alnum:]_]+$)"`
+	Title       string `form:"title" valid:"Required;MinSize(3);MaxSize(200)"`
+	Description string `form:"description" valid:"Required;MinSize(3);MaxSize(2000)"`
 }
 
 type CommentForm struct {
 	Item    string `form:"item" valid:"Required;Length(11)"`
-	Comment string `form:"comment" valid:"Required"`
+	Comment string `form:"comment" valid:"Required;MaxSize(40000)"`
 }
 
 type DeleteForm struct {
