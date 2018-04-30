@@ -33,15 +33,17 @@ $second-color: #03a87c;
         max-width: 1000px;
         margin: 0 auto;
         .title-bar {
-            height: 60px;
             margin: 10px 0;
             width: 100%;
-            display: flex;
-            flex-direction: row;
-            flex-wrap: nowrap;
-            justify-content: space-around;
-            align-items: center;
             position: relative;
+            .lower-container{
+                display: flex;
+                flex-direction: row;
+                flex-wrap: nowrap;
+                justify-content: space-between;
+                align-items: center;
+                padding: 10px 0; 
+            }
             .title {
                 position: absolute;
                 font-family: Hemera;
@@ -53,15 +55,31 @@ $second-color: #03a87c;
                 left: calc(50% - 100px);
                 white-space: nowrap;
                 text-align: center;
+                @media screen and (max-width:930px) {
+                    position: static;
+                    text-align: center;
+                    width: 100%;
+                }
             }
         }
         .button-group {
             display: flex;
             flex-direction: row;
             align-items: center;
-            >button {
+            button {
                 margin-left: 7px;
                 margin-right: 7px;
+                display: inline-block;
+                span{
+                    display: inline-block;
+                    vertical-align: middle;
+                }
+                .limit-chars{
+                    white-space: nowrap;
+                    text-overflow: ellipsis;
+                    max-width: 200px;
+                    overflow: hidden;
+                }
             }
         }
     }
@@ -592,10 +610,13 @@ $second-color: #03a87c;
 .topic-title {
     font-size: 46px;
     margin: 10px 0;
+    overflow-wrap: break-word;
     span {
         padding-left: 3px;
         font-size: 11px;
         opacity: .5;
+        overflow-wrap: normal;
+        display: inline-block;
     }
 }
 
@@ -604,6 +625,7 @@ $second-color: #03a87c;
     font-weight: normal;
     margin: 5px 0;
     opacity: .6;
+    overflow-wrap: break-word;
     margin-bottom: 10px;
 }
 

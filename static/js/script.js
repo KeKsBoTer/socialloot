@@ -60,9 +60,14 @@ $(function () {
         var $this = $(this)
         var popup = $("#user-popup")
         if (popup.css('display') == 'none') {
+            var left = $this.offset().left
+            // make sure popup is not going out of screen
+            var max = window.innerWidth-popup.outerWidth()-5;
+            if(left>max)
+                left = max
             popup.css({
                 "top": $this.offset().top + $this.height() + "px",
-                "left": $this.offset().left + "px"
+                "left": left + "px"
             });
             popup.show()
         } else {
