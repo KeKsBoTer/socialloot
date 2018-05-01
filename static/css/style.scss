@@ -659,6 +659,10 @@ $second-color: #03a87c;
     input[type="text"]{
         font-size: 42px;
         width: 100%;
+        box-sizing: border-box;
+        @media screen and (max-width:600px){
+            font-size: 7vw;
+        }
     }
 }
 

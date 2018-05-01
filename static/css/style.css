@@ -885,6 +885,13 @@ input[type="submit"] {
 .search-form input[type="text"] {
   font-size: 42px;
   width: 100%;
+  box-sizing: border-box;
+}
+
+@media screen and (max-width: 600px) {
+  .search-form input[type="text"] {
+    font-size: 7vw;
+  }
 }
 
 .nothing-here {
