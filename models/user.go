@@ -52,7 +52,7 @@ func Users() orm.QuerySeter {
 }
 
 // ReadVoteOnPost gets the users vote on the given post and safes the result in the post struct
-func (u *User) ReadVoteOnPost(p *Post) error {
+func (u *User) ReadVoteOnPost(p *PostMetaData) error {
 	var vote Vote
 	if err := u.GetVoteOnItem(p.Id).One(&vote, "action"); err != nil {
 		if err != orm.ErrNoRows {
@@ -64,7 +64,7 @@ func (u *User) ReadVoteOnPost(p *Post) error {
 }
 
 // ReadVoteOnComment gets the users vote on the given post and safes the result in the post struct
-func (u *User) ReadVoteOnComment(c *Comment) error {
+func (u *User) ReadVoteOnComment(c *CommentMetaData) error {
 	var vote Vote
 	if err := u.GetVoteOnItem(c.Id).One(&vote, "action"); err != nil {
 		if err != orm.ErrNoRows {

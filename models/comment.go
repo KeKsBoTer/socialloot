@@ -20,10 +20,6 @@ type Comment struct {
 
 	// Post that is commented on
 	ReplyTo string
-
-	Votes   int           `orm:"-"`
-	VoteDir VoteDirection `orm:"-"`
-	Replies []*Comment    `orm:"-"`
 }
 
 func Comments() orm.QuerySeter {
@@ -60,27 +56,51 @@ func (c *Comment) Valid(v *validation.Validation) {
 	}
 }
 
-func (c *Comment) ReadVoteData(u *User) error {
-	if u != nil {
-		// Get user vote on post
-		if err := u.ReadVoteOnComment(c); err != nil {
-			return err
-		}
+type CommentList []*Comment
+type CommentMetaDataList []*CommentMetaData
+
+func (c *CommentList) ToMetaData() *CommentMetaDataList {
+	metas := make(CommentMetaDataList, len(*c))
+	for i, comment := range *c {
+		metas[i] = comment.NewMetaData()
 	}
-	return c.ReadVoteSum()
+	return &metas
 }
 
-// ReadVoteOnPost gets the users vote on the given post and safes the result in the post struct
-func (c *Comment) ReadVoteOnPost(p *Post) error {
-	var vote Vote
-	if err := getVotesOnItem(c.Id).One(&vote, "action"); err != nil {
+type CommentMetaData struct {
+	*Comment
+	Votes   int
+	VoteDir VoteDirection
+	Replies []*CommentMetaData
+}
+
+// NewMetaData creates a new MetaData wrapper from a comment
+// This sould be the only way new meta data objects are created!
+func (c *Comment) NewMetaData() *CommentMetaData {
+	return &CommentMetaData{
+		Comment: c,
+	}
+}
+
+func (c *CommentMetaData) LoadReplies(u *User) error {
+	var replies CommentList
+	if _, err := Comments().Filter("replyto", c.Id).RelatedSel("user").OrderBy("date").All(&replies); err != nil {
 		return err
 	}
-	p.VoteDir = vote.Action
+	if err := c.ReadVoteData(u); err != nil {
+		beego.Error(err)
+	}
+	c.Replies = *replies.ToMetaData()
+	// load replies recursively
+	for i := range c.Replies {
+		if err := c.Replies[i].LoadReplies(u); err != nil {
+			beego.Error(err)
+		}
+	}
 	return nil
 }
 
-func (c *Comment) ReadVoteSum() error {
+func (c *CommentMetaData) ReadVoteSum() error {
 	var votes []*Vote
 	c.Votes = 0
 	if _, err := getVotesOnItem(c.Id).All(&votes); err != nil {
@@ -96,20 +116,22 @@ func (c *Comment) ReadVoteSum() error {
 	return nil
 }
 
-func (c *Comment) LoadReplies(u *User) error {
-	var replies []*Comment
-	if _, err := Comments().Filter("replyto", c.Id).RelatedSel("user").OrderBy("date").All(&replies); err != nil {
+// ReadVoteOnPost gets the users vote on the given post and safes the result in the post struct
+func (c *CommentMetaData) ReadVoteOnPost(p *PostMetaData) error {
+	var vote Vote
+	if err := getVotesOnItem(c.Id).One(&vote, "action"); err != nil {
 		return err
 	}
-	if err := c.ReadVoteData(u); err != nil {
-		beego.Error(err)
-	}
-	c.Replies = replies
-	// load replies recursively
-	for i := range c.Replies {
-		if err := c.Replies[i].LoadReplies(u); err != nil {
-			beego.Error(err)
+	p.VoteDir = vote.Action
+	return nil
+}
+
+func (c *CommentMetaData) ReadVoteData(u *User) error {
+	if u != nil {
+		// Get user vote on post
+		if err := u.ReadVoteOnComment(c); err != nil {
+			return err
 		}
 	}
-	return nil
+	return c.ReadVoteSum()
 }

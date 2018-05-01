@@ -1,33 +1,31 @@
 package controllers
 
 import (
-	"log"
-	"net/http"
+	"github.com/astaxie/beego"
 )
 
 type IndexController struct {
 	AuthController
 }
 
-func (this *IndexController) Get() {
-
-	choice := Choice(this.Ctx.Input.Param(":choice"))
+func (c *IndexController) Get() {
+	choice := Choice(c.Ctx.Input.Param(":choice"))
 	if len(choice) < 1 {
 		choice = Hot
 	}
 	if !choice.IsValid() {
-		this.CustomAbort(http.StatusBadRequest, "invalid choice")
+		c.Abort("404")
 		return
 	}
-	posts, err := getPostsForTopic(this.User, nil, choice)
+	posts, err := getPostsForTopic(c.User, nil, choice)
 	if err != nil {
-		log.Println(err)
-		this.Abort("505")
+		beego.Error(err)
+		c.Abort("500")
 		return
 	}
-	this.Data["Posts"] = posts
-	this.Data["Choice"] = choice
+	c.Data["Posts"] = posts
+	c.Data["Choice"] = choice
 
-	this.Data["Title"] = "Socailloot: like reddit but different"
-	this.TplName = "pages/index.tpl"
+	c.Data["Title"] = "Socailloot: like reddit but different"
+	c.TplName = "pages/index.tpl"
 }

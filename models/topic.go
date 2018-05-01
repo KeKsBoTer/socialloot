@@ -10,6 +10,11 @@ type Topic struct {
 	Posts       []*Post `orm:"reverse(many)"`
 }
 
+func ReadTopic(name string) (*Topic, error) {
+	t := Topic{Name: name}
+	return &t, t.Read("name")
+}
+
 func Topics() orm.QuerySeter {
 	var table Topic
 	return orm.NewOrm().QueryTable(table).OrderBy("-Id")

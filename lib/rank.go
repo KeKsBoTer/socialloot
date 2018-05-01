@@ -8,9 +8,9 @@ import (
 	"github.com/KeKsBoTer/socialloot/models"
 )
 
-// Sort a list of post by their rank
+// SortByRank a list of post by their rank
 // see rank(...) function for closer explanation
-func SortByRank(posts []*models.Post) {
+func SortByRank(posts []*models.PostMetaData) {
 	for _, p := range posts {
 		p.Rank = rank(p.Date, p.Votes)
 	}

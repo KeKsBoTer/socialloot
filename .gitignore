@@ -5,3 +5,5 @@
 socialloot
 tmp/*
 .vscode/*
+swagger/*
+*.tmp

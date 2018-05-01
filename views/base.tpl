@@ -12,18 +12,11 @@
     <script type="text/javascript"  src="/static/js/jquery-3.3.1.min.js"></script>
     <script src="/static/js/utlis.js"></script>
     <script src="/static/js/script.js"></script>
-    {{range .HeadStyles}}
-        <link rel="stylesheet" href="{{.}}">
-    {{end}}
  </head>
 <body>
     {{.BaseHeader}}
     <div class="page">
         {{.LayoutContent}}
     </div>  
-    {{range .HeadScripts}}
-        <script src="{{.}}"></script>
-    {{end}}
-
 </body>
 </html>

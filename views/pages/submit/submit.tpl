@@ -13,31 +13,37 @@
   </ul>
   <form method="POST" action='{{urlfor "ApiController.Submit"}}' enctype="multipart/form-data">
     <div>
+      <label for="inputTitle" class="message"></label>
       <input autofocus placeholder="Insert a title" name="title" value="" type="text" id="inputTitle"/>
     </div>
     <div>
       {{if eq .Type "text"}}
+      <label for="inputContent" class="message"></label>
       <textarea placeholder="Write your text here..." name="content" type="text" id="inputContent"></textarea>
        {{else if eq .Type "link"}}
-      <input type="text" name="content" placeholder="Insert URL e.g. http://google.de" /> 
+       <label for="insertLink" class="message"></label>
+      <input type="text" name="content" placeholder="Insert URL e.g. http://google.de" / id="insertLink"> 
       {{else if eq .Type "image"}}
-      <input type="file" name="content" title="Upload image" accept="image/*" 
+      <label for="insertImage" class="message"></label>
+      <input type="file" name="content" id="insertImage" title="Upload image" accept="image/*" 
               onchange="previewURL(this,$('#image-preview'));"/> 
       <img id="image-preview" src="#"/>
       {{end}}
     </div>
 
     {{if .Topic}}
-    <input name="topic" value="{{.Topic.Name}}" type="hidden" id="inputTopic" /> {{else}}
+      <input name="topic" value="{{.Topic.Name}}" type="hidden" id="inputTopic" /> 
+    {{else}}
     <label for="inputTopic">Topic</label>
     <div>
+      <label for="inputTopic" class="message"></label>
       <input style="width:auto" name="topic" value="" type="text" id="inputTopic" />
     </div>
     {{end}}
 
     <input type="hidden" name="type" value="{{.Type}}" />
 
-    <p class="message"></p>
+    <p class="global-message"></p>
     <input type="submit" value="Submit{{if .Topic}} to {{.Topic.Name}}{{end}}">
   </form>
 </div>

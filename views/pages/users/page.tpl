@@ -20,7 +20,7 @@
         </ul>
     {{end}}
 {{else if eq .Choice "comments"}}
-    {{if isempty .Posts}}
+    {{if isempty .Comments}}
         <p class="no-results">The user has not commented anything yet.</p>
     {{else}}
         <ul class="comments-list">

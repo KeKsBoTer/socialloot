@@ -13,19 +13,22 @@ type MediaController struct {
 func (c *MediaController) Image() {
 	id, err := strconv.Atoi(c.Ctx.Input.Param(":id"))
 	if err != nil {
-		c.CustomAbort(400, "id musst be number")
+		// invalid image id
+		c.Abort("404")
 		return
 	}
 	size := c.Ctx.Input.Param(":size")
 	if size != "small" && size != "original" {
-		c.CustomAbort(400, "invalid image size (small or original)")
+		// invalid image size
+		c.Abort("404")
 		return
 	}
 	media := models.Media{
 		Id: id,
 	}
 	if err := media.Read("Id"); err != nil {
-		c.CustomAbort(400, "image does not exist")
+		// image not found
+		c.Abort("404")
 		return
 	}
 	switch size {

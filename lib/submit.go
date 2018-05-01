@@ -104,7 +104,7 @@ func CommentOnPost(text string, replyTo string, user *models.User) error {
 		post := models.Post{
 			Id: replyTo,
 		}
-		if err := post.Read("Id"); err != nil {
+		if err := post.Read(false); err != nil {
 			return errors.New("Cannot comment on non existent item")
 		}
 	}

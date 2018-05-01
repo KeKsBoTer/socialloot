@@ -27,18 +27,18 @@ func (c *AuthController) Prepare() {
 	if c.Ctx.Input.IsGet() {
 		c.Data["IsLogin"] = isLogin
 		c.Data["User"] = c.User
+
+		// redirect destination in http get request
 		if dst := c.GetString("dest"); len(dst) > 1 {
 			c.Data["Dest"] = dst
 		}
 
 		c.Data["xsrf_token"] = c.XSRFToken()
 
-		c.Data["HeadStyles"] = []string{}
-		c.Data["HeadScripts"] = []string{}
 		c.Data["URL"] = c.Ctx.Input.URI()
 		var topics []*models.Topic
 		if _, err := models.Topics().OrderBy("name").All(&topics); err != nil {
-			c.Abort("505")
+			c.Abort("500")
 			return
 		}
 		c.Data["Topics"] = topics
@@ -104,6 +104,7 @@ func (c *NeedsAuthController) Prepare() {
 			j, _ := json.Marshal(r)
 			c.CustomAbort(http.StatusUnauthorized, string(j))
 		} else {
+			// only HTTP get and post are allowed
 			c.Abort("401")
 		}
 	}

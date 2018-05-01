@@ -22,38 +22,38 @@ type TopicController struct {
 	AuthController
 }
 
-func (this *TopicController) Get() {
-	topicName := this.Ctx.Input.Param(":topic")
-	choice := Choice(this.Ctx.Input.Param(":choice"))
+func (c *TopicController) Get() {
+	topicName := c.Ctx.Input.Param(":topic")
+	choice := Choice(c.Ctx.Input.Param(":choice"))
 	if len(choice) < 1 {
 		choice = Hot
 	}
 	if !choice.IsValid() {
-		this.CustomAbort(http.StatusBadRequest, "invalid choice")
+		c.CustomAbort(http.StatusBadRequest, "invalid choice")
 		return
 	}
-	this.Data["Choice"] = choice
+	c.Data["Choice"] = choice
 	topic := &models.Topic{
 		Name: topicName,
 	}
 	if err := topic.Read("name"); err != nil {
-		this.Abort("404")
+		c.Abort("404")
 		return
 	}
-	this.Data["Topic"] = topic
-	posts, err := getPostsForTopic(this.User, topic, choice)
+	c.Data["Topic"] = topic
+	posts, err := getPostsForTopic(c.User, topic, choice)
 	if err != nil {
 		log.Println(err)
-		this.Abort("505")
+		c.Abort("505")
 		return
 	}
-	this.Data["Posts"] = posts
-	this.Layout = "base.tpl"
-	this.TplName = "pages/posts/topic.tpl"
+	c.Data["Posts"] = posts
+	c.Layout = "base.tpl"
+	c.TplName = "pages/posts/topic.tpl"
 }
 
-func getPostsForTopic(user *models.User, topic *models.Topic, choice Choice) (*[]*models.Post, error) {
-	var posts []*models.Post
+func getPostsForTopic(user *models.User, topic *models.Topic, choice Choice) (*models.PostMetaDataList, error) {
+	var posts models.PostList
 	all := models.Posts()
 	if topic != nil {
 		all = all.Filter("topic", topic.Id)
@@ -62,16 +62,17 @@ func getPostsForTopic(user *models.User, topic *models.Topic, choice Choice) (*[
 	if _, err := all.OrderBy("-Date").RelatedSel().All(&posts); err != nil {
 		return nil, err
 	}
-	for _, p := range posts {
-		p.ReadVoteData(user)
+	metas := posts.ToMetaData()
+	for _, m := range *metas {
+		m.ReadVoteData(user)
 	}
 	switch choice {
 	case New:
 		// allready sorted
 	case Hot:
-		lib.SortByRank(posts)
+		lib.SortByRank(*metas)
 	}
-	return &posts, nil
+	return metas, nil
 }
 
 // IsValid checks if choice is hot or new
