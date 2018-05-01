@@ -1,6 +1,7 @@
 package models
 
 import (
+	"strconv"
 	"time"
 
 	"github.com/astaxie/beego/orm"
@@ -12,6 +13,17 @@ const (
 	VoteDirectionUp   = VoteDirection(1)
 	VoteDirectionDown = VoteDirection(-1)
 )
+
+func (v *VoteDirection) String() string {
+	switch *v {
+	case VoteDirectionUp:
+		return "upvote"
+	case VoteDirectionDown:
+		return "downvote"
+	default:
+		return strconv.Itoa(int(*v))
+	}
+}
 
 type Vote struct {
 	Id   int       `orm:"pk;auto"`

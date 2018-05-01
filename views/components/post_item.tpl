@@ -4,7 +4,7 @@
         {{if eq .Type "image"}}
         <a class="image" href="{{URL .}}" style="background-image: url('/media/image/small/{{.Content}}')"></a>
         {{else if eq .Type "link"}}
-        <a class="link" href="{{.Content}}">
+        <a class="link" href="{{.Content}}" target="_blank">
             <img class="favicon" src="{{favicon .Content}}" />
             <div class="host">
                 <div class="wrapper">

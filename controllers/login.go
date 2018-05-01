@@ -28,7 +28,7 @@ func (c *LoginController) Login() {
 	handleForm(form, &c.AuthController, func(r *ApiResponse) {
 		user, err := lib.Authenticate(form.UserName, form.Password)
 		if err != nil {
-			r.Fail(err)
+			r.Fail("", err)
 			return
 		}
 		c.SetLogin(user)
@@ -51,7 +51,7 @@ func (c *LoginController) Signup() {
 	handleForm(form, &c.AuthController, func(r *ApiResponse) {
 		user, err := lib.SignupUser(form.UserName, form.Password)
 		if err != nil {
-			r.Fail(err)
+			r.Fail("", err)
 			return
 		}
 		c.SetLogin(user)

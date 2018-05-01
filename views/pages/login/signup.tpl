@@ -6,6 +6,7 @@
     <label for="inputName">Username</label>
     <div class="reverse-order">
       <input name="username" value="" type="text" id="inputName" autofocus/>
+      <label for="inputName" class="message"></label>
       <p class="description">
         Only alpha characters, numerics,"-" and "_" are allowed
         <br>
@@ -15,15 +16,17 @@
     <label for="inputPassword">Password</label>
     <div class="reverse-order">
       <input name="password" type="password" value="" title="Password" id="inputPassword" />
+      <label for="inputPassword" class="message"></label>
       <p class="description">Your password's length must be between 8 and 30 characters</p> 
     </div>
     <label for="reinputPassword">Reenter Password</label>
     <div>
+      <label for="reinputPassword" class="message"></label>
       <input name="passwordre" type="password" title="Password" id="reinputPassword"/>
     </div>
     {{if .Dest}}
     <input type="hidden" name="dest" value="{{.Dest}}" /> {{end}}
-    <p class="message"></p>
+    <p class="global-message"></p>
     <input type="submit" value="signup">
     <input type="hidden" name="dest" value="/" />
   </form>

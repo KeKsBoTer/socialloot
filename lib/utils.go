@@ -24,13 +24,12 @@ func URLForItem(data interface{}) string {
 	}
 	data = rv.Interface()
 	switch data.(type) {
+	case models.PostMetaData:
+		post := data.(models.PostMetaData).Post
+		return urlForPost(post)
 	case models.Post:
 		post := data.(models.Post)
-		if post.Topic == nil {
-			beego.Error("Cannot create URL for post (empty topic):", reflect.TypeOf(data))
-			return "/"
-		}
-		return beego.URLFor("PostController.Get", ":topic", post.Topic.Name, ":post", post.Id)
+		return urlForPost(&post)
 	case models.Topic:
 		topic := data.(models.Topic)
 		return beego.URLFor("TopicController.Get", ":topic", topic.Name, ":choice", "")
@@ -41,6 +40,14 @@ func URLForItem(data interface{}) string {
 		beego.Error("Cannot create URL for:", reflect.TypeOf(data))
 		return "/"
 	}
+}
+
+func urlForPost(post *models.Post) string {
+	if post.Topic == nil {
+		beego.Error("Cannot create URL for post (empty topic):", *post)
+		return "/"
+	}
+	return beego.URLFor("PostController.Get", ":topic", post.Topic.Name, ":post", post.Id)
 }
 
 func NumberEncode(number string, alphabet []byte) string {

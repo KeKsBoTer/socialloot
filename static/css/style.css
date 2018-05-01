@@ -114,6 +114,12 @@ textarea:focus ~ .description {
   height: 50px;
 }
 
+input[type="text"].invalid,
+input[type="password"].invalid,
+textarea.invalid {
+  border-color: #c70a0a;
+}
+
 textarea {
   width: 100%;
   min-height: 150px;
@@ -748,6 +754,7 @@ input[type="submit"] {
   font-size: 14px;
   opacity: .6;
   padding-bottom: 10px;
+  display: block;
 }
 
 .auth-form.full-width input[type="text"] {
@@ -762,10 +769,10 @@ input[type="submit"] {
   width: 100%;
 }
 
-.auth-form .message {
+.auth-form .message,
+.auth-form .global-message {
   color: #c70a0a;
-  font-weight: bold;
-  text-transform: uppercase;
+  opacity: 1;
 }
 
 .auth-form .info {

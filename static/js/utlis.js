@@ -13,7 +13,6 @@ $.extend({
         var domain = document.domain.replace(/\./ig, '\\.');
         if (!/^(http:|https:).*/.test(url) || eval('/^(http:|https:)\\/\\/(.+\\.)*' + domain + '.*/').test(url)) {
             headers = $.extend(headers, {'X-Xsrftoken':xsrftoken});
-            console.log("replaced")
         }
         options.headers = headers;
         return ajax(url, options);

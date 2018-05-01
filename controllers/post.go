@@ -6,64 +6,62 @@ import (
 	"github.com/KeKsBoTer/socialloot/lib"
 	"github.com/KeKsBoTer/socialloot/models"
 	"github.com/astaxie/beego"
-	"github.com/astaxie/beego/orm"
 )
 
 type PostController struct {
 	AuthController
 }
 
-func (this *PostController) Get() {
-	topicName := this.Ctx.Input.Param(":topic")
-	topic := models.Topic{
-		Name: topicName,
-	}
-	if err := topic.Read("Name"); err != nil {
-		this.Abort("404")
-		return
-	}
-	this.Data["Topic"] = topic
-
-	postID := this.Ctx.Input.Param(":post")
-	post := models.Post{
-		Id: postID,
-	}
-	if err := post.Read(); err != nil {
-		this.Abort("404")
-		return
-	}
-	if _, err := orm.NewOrm().LoadRelated(&post, "user"); err != nil {
-		this.Abort("505")
+func (c *PostController) Get() {
+	topicName := c.Ctx.Input.Param(":topic")
+	topic, err := models.ReadTopic(topicName)
+	if err != nil {
+		// topic not found
+		c.Abort("404")
 		return
 	}
 
+	postID := c.Ctx.Input.Param(":post")
+	post, err := models.ReadPost(postID, true)
+	if err != nil {
+		// post not found
+		c.Abort("404")
+		return
+	}
+	meta := post.NewMetaData()
 	// loading comments
-	if err := post.ReadComments(this.User); err != nil {
+	if err := meta.ReadComments(c.User); err != nil {
 		beego.Error(err)
 	}
 
 	// loading total votes count and user vote
-	if err := post.ReadVoteData(this.User); err != nil {
+	if err := meta.ReadVoteData(c.User); err != nil {
 		beego.Error(err)
 	}
 
-	this.Data["Post"] = post
-	this.Data["CanDelete"] = this.User != nil && post.User.Id == this.User.Id
-	this.Layout = "base.tpl"
-	this.TplName = "pages/posts/post.tpl"
+	// check is user created the post, so he can delete it
+	c.Data["CanDelete"] = c.User != nil && post.User.Id == c.User.Id
+	c.Data["Topic"] = topic
+	c.Data["Post"] = meta
+
+	c.Layout = "base.tpl"
+	c.TplName = "pages/posts/post.tpl"
 }
 
-func (this *PostController) Redirect() {
-	id := this.Ctx.Input.Param(":post")
-	if len(id) == models.ItemIDLength {
-		post := models.Post{
-			Id: id,
-		}
-		if err := post.Read(); err == nil {
-			orm.NewOrm().LoadRelated(&post, "topic")
-			this.Ctx.Redirect(http.StatusTemporaryRedirect, lib.URLForItem(post))
-			return
-		}
+func (c *PostController) Redirect() {
+	id := c.Ctx.Input.Param(":post")
+	post := models.Post{
+		Id: id,
 	}
-	this.Abort("404")
+	if err := post.Read(true); err == nil {
+		url := lib.URLForItem(post)
+		if len(url) > 0 {
+			c.Ctx.Redirect(http.StatusTemporaryRedirect, url)
+		} else {
+			// invalid post item
+			c.Abort("500")
+		}
+		return
+	}
+	c.Abort("404")
 }

@@ -35,12 +35,12 @@ type Post struct {
 	Type PostType
 
 	Topic *Topic `orm:"rel(fk);null;on_delete(do_nothing)"`
+}
 
-	// for html rendering
-	Votes    int           `orm:"-"`
-	Rank     float64       `orm:"-"`
-	VoteDir  VoteDirection `orm:"-"`
-	Comments []*Comment    `orm:"-"`
+// ReadPost reads given post from database
+func ReadPost(id string, loadRelated bool) (*Post, error) {
+	p := Post{Id: id}
+	return &p, p.Read(loadRelated, "id")
 }
 
 func Posts() orm.QuerySeter {
@@ -62,11 +62,67 @@ func (p *Post) Delete() error {
 	return nil
 }
 
-func (p *Post) Read(fields ...string) error {
-	return orm.NewOrm().Read(p, fields...)
+func (p *Post) Read(loadRelated bool, fields ...string) error {
+	o := orm.NewOrm()
+	if err := o.Read(p, fields...); err != nil {
+		return err
+	}
+	// read user and topic data for post
+	if loadRelated {
+		if _, err := o.LoadRelated(p, "user"); err != nil {
+			return err
+		}
+		if _, err := o.LoadRelated(p, "topic"); err != nil {
+			return err
+		}
+	}
+	return nil
 }
 
-func (p *Post) ReadVoteData(u *User) error {
+// PostList is a list of posts
+type PostList []*Post
+
+// PostMetaDataList is a list of post meta data
+type PostMetaDataList []*PostMetaData
+
+// ToMetaData turns a list of posts into a list of  PostMetaData
+// Important: None of the meta data is loaded!
+func (p *PostList) ToMetaData() *PostMetaDataList {
+	metas := make(PostMetaDataList, len(*p))
+	for i, post := range *p {
+		metas[i] = post.NewMetaData()
+	}
+	return &metas
+}
+
+func (p *PostMetaDataList) ReadVoteData(u *User) error {
+	for _, i := range *p {
+		if err := i.ReadVoteData(u); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+// PostMetaData is a wrapper for the post model and adds additional fields like votes and a list of comments to the model.
+// All added fields are not stored in the database and are calculated at runtime
+type PostMetaData struct {
+	*Post
+	Votes    int
+	Rank     float64
+	VoteDir  VoteDirection
+	Comments []*CommentMetaData
+}
+
+// NewMetaData creates a new MetaData wrapper from a post
+// This sould be the only way new meta data objects are created!
+func (p *Post) NewMetaData() *PostMetaData {
+	return &PostMetaData{
+		Post: p,
+	}
+}
+
+func (p *PostMetaData) ReadVoteData(u *User) error {
 	if u != nil {
 		// Get user vote on post
 		if err := u.ReadVoteOnPost(p); err != nil {
@@ -76,7 +132,7 @@ func (p *Post) ReadVoteData(u *User) error {
 	return p.ReadVoteSum()
 }
 
-func (p *Post) ReadVoteSum() error {
+func (p *PostMetaData) ReadVoteSum() error {
 	var votes []*Vote
 	p.Votes = 0
 	if _, err := getVotesOnItem(p.Id).All(&votes); err != nil {
@@ -87,15 +143,19 @@ func (p *Post) ReadVoteSum() error {
 			p.Votes++
 		} else if v.Action == VoteDirectionDown {
 			p.Votes--
+		} else {
+			beego.Error("Invalid vote direction for vote", v.Id, ":", v.Action)
 		}
 	}
 	return nil
 }
 
-func (p *Post) ReadComments(u *User) error {
-	if _, err := Comments().Filter("replyto", p.Id).RelatedSel("user").All(&p.Comments); err != nil {
+func (p *PostMetaData) ReadComments(u *User) error {
+	var comments CommentList
+	if _, err := Comments().Filter("replyto", p.Id).RelatedSel("user").All(&comments); err != nil {
 		return err
 	}
+	p.Comments = *comments.ToMetaData()
 	for _, c := range p.Comments {
 		if err := c.ReadVoteData(u); err != nil {
 			beego.Error(err)

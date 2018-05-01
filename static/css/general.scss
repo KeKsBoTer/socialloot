@@ -102,6 +102,9 @@ textarea {
             height: 50px;
         }
     }
+    &.invalid{
+        border-color: rgb(199, 10, 10);
+    }
 }
 textarea {
     width: 100%;

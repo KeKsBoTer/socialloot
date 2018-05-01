@@ -1,4 +1,3 @@
-
 $(function () {
     // autofocus work around
     $("input[autofocus]").focus();
@@ -21,8 +20,16 @@ $(function () {
     // custom form handling
     $("form").submit(function (e) {
         var form = $(this);
-        if (form.attr('method') === "GET")
+        if (form.attr('method') === "GET") {
+            var input = form.find("input[name=\"query\"]")
+            // trim whitespace from input
+            var query = input.val().trim()
+            input.val(query)
+            // don't send form if query is empty
+            if (query.length < 1)
+                e.preventDefault();
             return
+        }
         var formdata = false;
         if (window.FormData) {
             formdata = new FormData(form[0]);
@@ -37,6 +44,8 @@ $(function () {
             contentType: false,
             processData: false,
             success: function (data) {
+                form.find(".invalid").removeClass("invalid")
+                form.find(".message, .global-message").text("")
                 if (data["success"] == true) {
                     var onSuccess = form.attr("onsuccess")
                     if (onSuccess) {
@@ -48,9 +57,18 @@ $(function () {
                     if (data["dest"])
                         window.location.href = data["dest"]
                 } else {
-                    if(!data["message"])
+                    if (data["field"]) {
+                        var field = form.find("[name=\"" + data["field"] + "\"]")
+                        field.addClass("invalid")
+                        var label = field.siblings(".message")
+                        if (label.length)
+                            label.text(data["message"])
+                        else
+                            form.find(".global-message").text(data["message"])
+                    } else if (data["message"])
+                        form.find(".global-message").text(data["message"])
+                    else
                         data["message"] = "Somthing went wrong"
-                    form.find(".message").text(data["message"])
                 }
             }
         });
@@ -62,8 +80,8 @@ $(function () {
         if (popup.css('display') == 'none') {
             var left = $this.offset().left
             // make sure popup is not going out of screen
-            var max = window.innerWidth-popup.outerWidth()-5;
-            if(left>max)
+            var max = window.innerWidth - popup.outerWidth() - 5;
+            if (left > max)
                 left = max
             popup.css({
                 "top": $this.offset().top + $this.height() + "px",

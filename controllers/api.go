@@ -2,6 +2,9 @@ package controllers
 
 import (
 	"errors"
+	"reflect"
+
+	"github.com/astaxie/beego/validation"
 
 	"github.com/astaxie/beego"
 
@@ -18,7 +21,7 @@ func (c *ApiController) Vote() {
 	handleForm(form, &c.AuthController, func(r *ApiResponse) {
 		err := lib.VoteOnItem(form.Direction, form.Item, c.User)
 		if err != nil {
-			r.Fail(err)
+			r.Fail("", err)
 			return
 		}
 		r.Success = true
@@ -33,33 +36,31 @@ const (
 func (c *ApiController) Submit() {
 	form := &models.SubmitForm{}
 	handleForm(form, &c.AuthController, func(r *ApiResponse) {
-		topic := models.Topic{
-			Name: form.TopicName,
-		}
-		if err := topic.Read("name"); err != nil {
-			r.Fail(errors.New("Topic not found"))
+		topic, err := models.ReadTopic(form.TopicName)
+		if err != nil {
+			r.Fail("topic", errors.New("Topic not found"))
 			return
 		}
 		if form.Type == models.PostTypeImage {
 			file, header, err := c.GetFile("content")
 			if err != nil {
-				r.Fail(err)
+				r.Fail("content", err)
 				return
 			}
 			if header.Size > 20*MB {
-				r.Fail(errors.New("Maximum file size is 20MB"))
+				r.Fail("content", errors.New("Maximum file size is 20MB"))
 				return
 			}
 			img := make([]byte, header.Size)
 			if _, err := file.Read(img); err != nil {
-				r.Fail(err)
+				r.Fail("content", errors.New("cannot read image"))
 				return
 			}
 			form.Content = string(img)
 		}
-		post, err := lib.Submit(form.Title, form.Content, form.Type, &topic, c.User)
+		post, err := lib.Submit(form.Title, form.Content, form.Type, topic, c.User)
 		if err != nil {
-			r.Fail(err)
+			r.Fail("", err)
 			return
 		}
 		r.Success = true
@@ -72,7 +73,7 @@ func (c *ApiController) CreateTopic() {
 	handleForm(form, &c.AuthController, func(r *ApiResponse) {
 		topic, err := lib.CreateTopic(form.Name, form.Title, form.Description)
 		if err != nil {
-			r.Fail(err)
+			r.Fail("", err)
 			return
 		}
 		r.Success = true
@@ -84,7 +85,7 @@ func (c *ApiController) Comment() {
 	form := &models.CommentForm{}
 	handleForm(form, &c.AuthController, func(r *ApiResponse) {
 		if err := lib.CommentOnPost(form.Comment, form.Item, c.User); err != nil {
-			r.Fail(err)
+			r.Fail("", err)
 			return
 		}
 		r.Success = true
@@ -95,7 +96,7 @@ func (c *ApiController) Delete() {
 	form := &models.DeleteForm{}
 	handleForm(form, &c.AuthController, func(r *ApiResponse) {
 		if err := lib.DeletePost(form.Item, c.User); err != nil {
-			r.Fail(err)
+			r.Fail("", err)
 			return
 		}
 		r.Success = true
@@ -107,6 +108,7 @@ type ApiResponse struct {
 	Success bool   `json:"success"`
 	Message string `json:"message"`
 	Dest    string `json:"dest"`
+	Field   string `json:"field"`
 }
 
 func NewApiResponse(c *beego.Controller) *ApiResponse {
@@ -118,8 +120,9 @@ func NewApiResponse(c *beego.Controller) *ApiResponse {
 	return &r
 }
 
-func (a *ApiResponse) Fail(err error) {
+func (a *ApiResponse) Fail(field string, err error) {
 	a.Success = false
+	a.Field = field
 	a.Message = err.Error()
 }
 
@@ -129,12 +132,34 @@ func handleForm(form interface{}, c *AuthController, f FormHandlerFunc) {
 	r := NewApiResponse(&c.Controller)
 	defer c.ServeJSON(true)
 	if err := c.ParseForm(form); err != nil {
-		r.Fail(err)
+		r.Fail("", err)
 		return
 	}
-	if err := models.IsValid(form); err != nil {
-		r.Fail(err)
+	valid := validation.Validation{}
+	b, err := valid.Valid(form)
+	if err != nil {
+		r.Fail("", errors.New("unexpected error"))
 		return
 	}
+	if !b {
+		// output first error
+		first := valid.Errors[0]
+		elm := reflect.TypeOf(form)
+		// get struct not pointer
+		if elm.Kind() == reflect.Ptr {
+			elm = elm.Elem()
+		}
+		var formField string
+		if field, found := elm.FieldByName(first.Field); found {
+			// get field name from tag
+			formField = field.Tag.Get("form")
+		} else {
+			// use struct field name
+			formField = first.Field
+		}
+		r.Fail(formField, first)
+		return
+	}
+	// handle form
 	f(r)
 }

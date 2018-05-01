@@ -1,4 +1,4 @@
-<form class="search-form" method="GET" action="{{urlfor "SearchController.Get"}}" >
+<form class="search-form" method="GET" action="{{urlfor "SearchController.Get"}}">
     <input  type="text" 
             name="query" 
             placeholder="What are you looking for?" 

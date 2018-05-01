@@ -13,7 +13,7 @@ type SignUpForm struct {
 
 type SubmitForm struct {
 	Title     string   `form:"title" valid:"Required;MinSize(3);MaxSize(300)"`
-	Content   string   `form:"content" valid:"Required"`
+	Content   string   `form:"content"`
 	Type      PostType `form:"type" valid:"Required"`
 	TopicName string   `form:"topic" valid:"Required"`
 }

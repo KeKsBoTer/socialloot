@@ -11,7 +11,7 @@ func DeletePost(item string, user *models.User) error {
 	post := models.Post{
 		Id: item,
 	}
-	if err := post.Read(); err != nil {
+	if err := post.Read(false); err != nil {
 		beego.Error(err)
 		return errors.New("Cannot read topic")
 	}

@@ -22,47 +22,47 @@ const (
 	Posts UserChoice = "posts"
 )
 
-func (this *UserController) Get() {
-	choice := UserChoice(this.Ctx.Input.Param(":choice"))
+func (c *UserController) Get() {
+	choice := UserChoice(c.Ctx.Input.Param(":choice"))
 	if len(choice) < 1 {
 		choice = Posts
 	}
 	if !choice.IsValid() {
-		this.CustomAbort(http.StatusBadRequest, "invalid choice")
+		c.CustomAbort(http.StatusBadRequest, "invalid choice")
 		return
 	}
 
-	userName := this.Ctx.Input.Param(":user")
+	userName := c.Ctx.Input.Param(":user")
 	user := &models.User{
 		Name: userName,
 	}
 	if err := user.Read("Name"); err != nil {
-		this.Abort("404")
+		c.Abort("404")
 		return
 	}
 
 	switch choice {
 	case Posts:
 		// get all the posts the user published
-		if posts, err := getPostsForUser(user, this.User); err == nil {
-			this.Data["Posts"] = posts
+		if posts, err := getPostsForUser(user, c.User); err == nil {
+			c.Data["Posts"] = posts
 		} else {
-			this.Abort("500")
+			c.Abort("500")
 			return
 		}
 	case Comments:
 		// get all the posts the user published
 		if comments, err := getCommentsForUser(user); err == nil {
-			this.Data["Comments"] = comments
+			c.Data["Comments"] = comments
 		} else {
-			this.Abort("500")
+			c.Abort("500")
 			return
 		}
 	}
 
-	this.Data["Choice"] = choice
-	this.Data["User"] = user
-	this.TplName = "pages/users/page.tpl"
+	c.Data["Choice"] = choice
+	c.Data["User"] = user
+	c.TplName = "pages/users/page.tpl"
 }
 
 // IsValid checks if choice is hot or new
@@ -70,26 +70,28 @@ func (c UserChoice) IsValid() bool {
 	return c == Comments || c == Posts
 }
 
-func getPostsForUser(user, viewer *models.User) (*[]*models.Post, error) {
-	var posts []*models.Post
+func getPostsForUser(user, viewer *models.User) (*models.PostMetaDataList, error) {
+	var posts models.PostList
 	if _, err := models.Posts().Filter("user", user).OrderBy("-Date").RelatedSel().All(&posts); err != nil {
 		return nil, err
 	}
-	for _, p := range posts {
+	metas := posts.ToMetaData()
+	for _, p := range *metas {
 		p.ReadVoteData(viewer)
 	}
-	return &posts, nil
+	return metas, nil
 }
 
-func getCommentsForUser(user *models.User) (*[]*models.Comment, error) {
-	var comments []*models.Comment
+func getCommentsForUser(user *models.User) (*models.CommentMetaDataList, error) {
+	var comments models.CommentList
 	if _, err := models.Comments().Filter("user", user).OrderBy("-Date").RelatedSel().All(&comments); err != nil {
 		return nil, err
 	}
-	for _, c := range comments {
+	metas := comments.ToMetaData()
+	for _, c := range *metas {
 		if err := c.ReadVoteData(user); err != nil {
 			beego.Error("Cannot read user vote data on post:", err)
 		}
 	}
-	return &comments, nil
+	return metas, nil
 }

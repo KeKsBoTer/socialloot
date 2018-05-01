@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"net/http"
+	"strings"
 
 	"github.com/astaxie/beego"
 
@@ -27,59 +28,60 @@ func (c SearchChoice) IsValid() bool {
 	return c == SearchPosts || c == SearchTopics || c == SearchUsers
 }
 
-func (this *SearchController) Get() {
-	query := this.GetString("query")
-	choice := SearchChoice(this.GetString("choice"))
+func (c *SearchController) Get() {
+	query := strings.Trim(c.GetString("query"), " ")
+	choice := SearchChoice(c.GetString("choice"))
 
 	if len(choice) < 1 {
 		choice = SearchPosts
 	}
 	if !choice.IsValid() {
-		this.CustomAbort(http.StatusBadRequest, "invalid choice")
+		c.CustomAbort(http.StatusBadRequest, "invalid choice")
 		return
 	}
 
 	pageTitle := "Search"
 	if len(query) > 0 {
 		pageTitle += ": " + query
+
 		var err error
 		var result interface{}
 		switch choice {
 		case SearchPosts:
-			if posts, err := searchPosts(query); err == nil {
-				result = posts
-			}
+			result, err = searchPosts(query, c.User)
 		case SearchTopics:
-			if topics, err := searchTopics(query); err == nil {
-				result = topics
-			}
+			result, err = searchTopics(query)
 		case SearchUsers:
-			if users, err := searchUsers(query); err == nil {
-				result = users
-			}
+			result, err = searchUsers(query)
 		}
-		if err != nil {
-			beego.Error("Error searching for ", choice, ". Query:", query)
-			beego.Error(err)
+		if err == nil {
+			c.Data["SearchResult"] = result
 		} else {
-			this.Data["SearchResult"] = result
+			beego.Error("Error searching for ", choice, ". Query:", query, "\n", err)
 		}
 	}
-	this.Data["SearchQuery"] = query
-	this.Data["Title"] = pageTitle
-	this.Data["Choice"] = choice
-	this.TplName = "pages/search.tpl"
+	c.Data["SearchQuery"] = query
+	c.Data["Title"] = pageTitle
+	c.Data["Choice"] = choice
+	c.TplName = "pages/search.tpl"
 }
 
-func searchPosts(key string) (*[]*models.Post, error) {
+func searchPosts(key string, viewer *models.User) (*models.PostMetaDataList, error) {
+	// check if post is of type text or link
 	isNotImage := orm.NewCondition().Or("type", models.PostTypeText).Or("type", models.PostTypeLink)
+	// check if search query is in text or link
+	// no searching in images
 	inText := orm.NewCondition().AndCond(isNotImage).And("content__icontains", key)
+	// check if query is in title or text
 	cond := orm.NewCondition().Or("title__icontains", key).OrCond(inText)
-	var posts []*models.Post
+
+	var posts models.PostList
 	if _, err := models.Posts().SetCond(cond).Limit(20).RelatedSel("topic").RelatedSel("user").All(&posts); err != nil {
 		return nil, err
 	}
-	return &posts, nil
+	meta := posts.ToMetaData()
+	meta.ReadVoteData(viewer)
+	return meta, nil
 }
 
 func searchTopics(key string) (*[]*models.Topic, error) {
