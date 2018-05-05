@@ -1,3 +1,4 @@
+{{/* This is shown if a post list is empty */}}
 <div class="nothing-here">
     <p> There is nothing here yet. 
         <br>

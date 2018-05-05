@@ -59,6 +59,10 @@ button {
   display: inline-block;
 }
 
+button:focus {
+  outline: 0 !important;
+}
+
 button.icon-button {
   opacity: .6;
   transition: opacity .2s;
@@ -96,9 +100,11 @@ textarea {
   font-size: 20px;
   margin-bottom: 10px;
   border: none;
+  border-radius: 0;
   border-bottom: 1px solid rgba(0, 0, 0, 0.3);
   padding: 7px;
   color: rgba(0, 0, 0, 0.8);
+  box-sizing: border-box;
 }
 
 input[type="text"]:focus,
@@ -214,9 +220,13 @@ input[type="submit"] {
 @media screen and (max-width: 930px) {
   .header .container .title-bar .title {
     position: static;
-    text-align: center;
     width: 100%;
   }
+}
+
+.header .container .title-bar .title.static {
+  position: static;
+  width: initial;
 }
 
 .header .container .button-group {
@@ -595,6 +605,7 @@ input[type="submit"] {
   color: black;
   text-decoration: none;
   margin: 10px 0;
+  display: inline-block;
   padding-right: 50px;
 }
 
@@ -907,6 +918,68 @@ input[type="submit"] {
   text-align: center;
 }
 
+.error-page .info {
+  display: flex;
+  flex-direction: row;
+  font-family: "Segoe UI", sans-serif;
+  opacity: .8;
+  align-items: baseline;
+  justify-content: center;
+  margin-bottom: 50px;
+}
+
+@media screen and (max-width: 900px) {
+  .error-page .info {
+    flex-wrap: wrap;
+    text-align: center;
+  }
+}
+
+.error-page .info .code {
+  margin: 0;
+  font-weight: 700;
+  font-size: 200px;
+  margin-right: 40px;
+}
+
+@media screen and (max-width: 500px) {
+  .error-page .info .code {
+    font-size: 40vw;
+  }
+}
+
+.error-page .info .message {
+  margin: 0;
+  opacity: .5;
+  font-size: 75px;
+}
+
+@media screen and (max-width: 500px) {
+  .error-page .info .message {
+    font-size: 15vw;
+  }
+}
+
+.error-page .home {
+  text-align: left;
+  font-size: 20px;
+  margin-top: 20px;
+}
+
+@media screen and (max-width: 500px) {
+  .error-page .home {
+    font-size: 100%;
+  }
+}
+
+.error-page .home a:before {
+  content: "\f3d5";
+  font-family: Ionicons, sans-serif;
+  font-size: 1em;
+  padding-right: .5em;
+  font-weight: bold;
+}
+
 .comment {
   border-radius: 3px;
   border: 1px solid #d4d4d4;
@@ -1118,6 +1191,7 @@ input[type="submit"] {
 }
 
 .comments-section .comment-form textarea {
+  min-height: initial;
   width: 100%;
   background: none;
   border: none;
@@ -1126,17 +1200,11 @@ input[type="submit"] {
   line-height: 25px;
 }
 
-.comments-section .comment-form textarea.filled ~ .send {
-  max-height: initial;
-  display: initial;
-}
-
 .comments-section .comment-form .send {
-  display: none;
   padding-top: 10px;
-  max-height: 0;
   overflow: hidden;
   transition: max-height .3s;
+  opacity: 1;
 }
 
 .comments-section .comment-form input[type="submit"] {
@@ -1149,6 +1217,13 @@ input[type="submit"] {
   border: 1px solid #03a87c;
   padding: 7px 15px;
   margin-top: 10px;
+}
+
+.comments-section .comment-form input[type="submit"]:disabled {
+  opacity: .5;
+  color: black;
+  border-color: black;
+  cursor: initial;
 }
 
 .comments-section .comment {

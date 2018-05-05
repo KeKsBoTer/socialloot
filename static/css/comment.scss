@@ -99,23 +99,19 @@
             }
         }
         textarea {
+            min-height: initial;
             width: 100%;
             background: none;
             border: none;
             resize: none;
             font-size: 18px;
             line-height: 25px;
-            &.filled~.send {
-                max-height: initial;
-                display: initial;
-            }
         }
         .send {
-            display: none;
             padding-top: 10px;
-            max-height: 0;
             overflow: hidden;
             transition: max-height .3s;
+            opacity: 1;
         }
         input[type="submit"] {
             color: $second-color;
@@ -127,6 +123,12 @@
             border: 1px solid $second-color;
             padding: 7px 15px;
             margin-top: 10px;
+            &:disabled{
+                opacity: .5;
+                color: black;
+                border-color: black;
+                cursor: initial;
+            }
         }
     }
     .comment {

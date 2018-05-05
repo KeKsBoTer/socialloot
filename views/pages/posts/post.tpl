@@ -2,18 +2,20 @@
     <span class="date">{{dateformat .Post.Date}}</span>
     <div class="header {{.Post.Type}}">
         {{template "components/vote.tpl" .Post}}
-        <a target="_blank" href='{{if eq .Post.Type "text"}}
-                                    {{.URL}}
-                                {{else if eq .Post.Type "image"}}
-                                    /media/image/original/{{.Post.Content}}
-                                {{else if eq .Post.Type "link"}}
-                                    {{.Post.Content}}
-                                {{end}}'>
-
-            <h1 class="title">{{.Post.Title}}</h1>
-        </a>
+        <div>
+            <a {{if eq .Post.Type "link"}} target="_blank"{{end}} 
+                  href='{{if eq .Post.Type "text"}}
+                            {{.URL}}
+                        {{else if eq .Post.Type "image"}}
+                            /media/image/original/{{.Post.Content}}
+                        {{else if eq .Post.Type "link"}}
+                            {{.Post.Content}}
+                        {{end}}'>
+                <h1 class="title">{{.Post.Title}}</h1>
+            </a>
+        </div>
         {{if .CanDelete}}
-        <form method="POST" action="{{urlfor "ApiController.Delete"}}">
+        <form method="POST" action="{{urlfor "ApiController.Delete"}}" class="submit" message="Delete?">
             <input type="hidden" name="item"  value="{{.Post.Id}}"/>
             <button class="delete-post" type="submit">
                 <i class="ion-ios-trash"></i>

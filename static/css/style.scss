@@ -57,8 +57,11 @@ $second-color: #03a87c;
                 text-align: center;
                 @media screen and (max-width: 930px) {
                     position: static;
-                    text-align: center;
                     width: 100%;
+                }
+                &.static {
+                    position: static;
+                    width: initial;
                 }
             }
         }
@@ -383,6 +386,7 @@ $second-color: #03a87c;
             color: black;
             text-decoration: none;
             margin: 10px 0;
+            display: inline-block;
             padding-right: 50px;
         }
         &.link {
@@ -673,6 +677,54 @@ $second-color: #03a87c;
     text-align: center;
     p {
         @extend .no-results;
+    }
+}
+
+.error-page {
+    .info {
+        display: flex;
+        flex-direction: row;
+        font-family: "Segoe UI", sans-serif;
+        opacity: .8;
+        align-items: baseline;
+        justify-content: center;
+        margin-bottom: 50px;
+        @media screen and (max-width: 900px) {
+            flex-wrap: wrap;
+            text-align: center;
+        }
+        .code {
+            margin: 0;
+            font-weight: 700;
+            font-size: 200px;
+            margin-right: 40px;
+            @media screen and (max-width: 500px) {
+                font-size: 40vw;
+            }
+        }
+        .message {
+            margin: 0;
+            opacity: .5;
+            font-size: 75px;
+            @media screen and (max-width: 500px) {
+                font-size: 15vw;
+            }
+        }
+    }
+    .home {
+        text-align: left;
+        font-size: 20px;
+        margin-top: 20px;
+        @media screen and (max-width: 500px) {
+            font-size: 100%;
+        }
+        a:before {
+            content: "\f3d5";
+            font-family: Ionicons, sans-serif;
+            font-size: 1em;
+            padding-right: .5em;
+            font-weight: bold;
+        }
     }
 }
 

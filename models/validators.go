@@ -17,7 +17,7 @@ func (form *SubmitForm) Valid(v *validation.Validation) {
 	case PostTypeLink:
 		v.Required(form.Content, "Content.Required").Message("Please enter a link")
 		v.MaxSize(form.Content, 40000, "Content.MaxSize")
-		if _, err := url.ParseRequestURI(form.Content); err != nil {
+		if u, err := url.ParseRequestURI(form.Content); err != nil || !u.IsAbs() {
 			v.AddError("Content.Match", "Invalid url format for link")
 		}
 	case PostTypeText:

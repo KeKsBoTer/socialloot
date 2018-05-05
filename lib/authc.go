@@ -9,11 +9,9 @@ import (
 	"github.com/KeKsBoTer/socialloot/models"
 )
 
-/*
- Get authenticated user and update logintime
-*/
+// Get authenticated user and update logintime
 func Authenticate(name string, password string) (user *models.User, err error) {
-	msg := "invalid name or password."
+	msg := "Invalid name or password."
 	user = &models.User{Name: name}
 	if err := user.Read("Name"); err != nil {
 		if err.Error() == "<QuerySeter> no row found" {

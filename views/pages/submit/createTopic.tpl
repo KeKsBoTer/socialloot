@@ -21,8 +21,8 @@
       <label for="inputDescription" class="message"></label>
       <p class="description">Short description for the topic</p>
     </div>
-    <p class="message"></p>
 
+    <p class="global-message"></p>
     <input type="submit" value="Create Topic">
   </form>
 </div>

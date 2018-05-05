@@ -4,10 +4,8 @@ import (
 	"github.com/astaxie/beego/validation"
 )
 
-/*
-	Get form error
-*/
-func IsValid(model interface{}) (err error) {
+// IsValid checks if a given model passes the validation and returns the first occurring error
+func IsValid(model interface{}) error {
 	valid := validation.Validation{}
 	b, err := valid.Valid(model)
 	if !b {

@@ -8,6 +8,10 @@ import (
 	"github.com/astaxie/beego"
 )
 
+type NestPreparer interface {
+	NestPrepare()
+}
+
 type AuthController struct {
 	beego.Controller
 
@@ -37,7 +41,7 @@ func (c *AuthController) Prepare() {
 
 		c.Data["URL"] = c.Ctx.Input.URI()
 		var topics []*models.Topic
-		if _, err := models.Topics().OrderBy("name").All(&topics); err != nil {
+		if _, err := models.Topics().OrderBy("name").Limit(20).All(&topics); err != nil {
 			c.Abort("500")
 			return
 		}
@@ -46,6 +50,9 @@ func (c *AuthController) Prepare() {
 		c.Layout = "base.tpl"
 		c.LayoutSections = make(map[string]string)
 		c.LayoutSections["BaseHeader"] = "components/header.tpl"
+	}
+	if app, ok := c.AppController.(NestPreparer); ok {
+		app.NestPrepare()
 	}
 }
 
@@ -87,15 +94,19 @@ type NeedsAuthController struct {
 	AuthController
 }
 
+// Prepare checks if the user is authorized.
+// If not an error is returned
+// The user is redirected to the login page
 func (c *NeedsAuthController) Prepare() {
-	c.AuthController.Prepare()
-	if !c.IsLogin() {
-		if c.Ctx.Input.IsGet() {
+	isLogin := c.GetSession(UserInfoKey) != nil
+	if !isLogin {
+		switch {
+		case c.Ctx.Input.IsGet():
 			c.RedirectForm()
 			if !c.Ctx.Output.IsRedirect() {
 				c.Ctx.Redirect(http.StatusSeeOther, c.LoginPath())
 			}
-		} else if c.Ctx.Input.IsPost() {
+		case c.Ctx.Input.IsPost():
 			r := ApiResponse{
 				Success: false,
 				Message: "unauthorized",
@@ -103,9 +114,11 @@ func (c *NeedsAuthController) Prepare() {
 			}
 			j, _ := json.Marshal(r)
 			c.CustomAbort(http.StatusUnauthorized, string(j))
-		} else {
+		default:
 			// only HTTP get and post are allowed
-			c.Abort("401")
+			c.Abort("405")
 		}
+	} else {
+		c.AuthController.Prepare()
 	}
 }
