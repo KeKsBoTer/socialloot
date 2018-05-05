@@ -36,5 +36,5 @@ func rank(date time.Time, votes int) float64 {
 		y = -1
 		z = -x
 	}
-	return math.Log10(z)*y + float64(t)/45000.0
+	return math.Log10(z+1)*y + float64(t)/45000.0
 }
