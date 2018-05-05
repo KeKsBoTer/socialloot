@@ -22,25 +22,27 @@ type Comment struct {
 	ReplyTo string
 }
 
+// Comments creates orm object to get comments from database
 func Comments() orm.QuerySeter {
 	var table Comment
 	return orm.NewOrm().QueryTable(table)
 }
 
+// Insert writes the comment to the database
 func (c *Comment) Insert() error {
-	if _, err := orm.NewOrm().Insert(c); err != nil {
-		return err
-	}
-	return nil
+	_, err := orm.NewOrm().Insert(c)
+	return err
 }
 
+// Read searches the comment in the database by the given field
+// If no field is provided the primary key is used
+// The result is written to the comment struct
 func (c *Comment) Read(fields ...string) error {
-	if err := orm.NewOrm().Read(c, fields...); err != nil {
-		return err
-	}
-	return nil
+	return orm.NewOrm().Read(c, fields...)
 }
 
+// Valid checks if the comment struct has valid data
+// it only checks the syntax and does not access the database
 func (c *Comment) Valid(v *validation.Validation) {
 	if c.User == nil {
 		v.AddError("User", "Missing user")
@@ -56,9 +58,13 @@ func (c *Comment) Valid(v *validation.Validation) {
 	}
 }
 
+// CommentList is a slice of comments
 type CommentList []*Comment
+
+// CommentMetaDataList is a slice of meta data for comments
 type CommentMetaDataList []*CommentMetaData
 
+// ToMetaData turns a comment list into a list of meta data
 func (c *CommentList) ToMetaData() *CommentMetaDataList {
 	metas := make(CommentMetaDataList, len(*c))
 	for i, comment := range *c {
@@ -82,6 +88,8 @@ func (c *Comment) NewMetaData() *CommentMetaData {
 	}
 }
 
+// LoadReplies loads all replies to the comment recursively
+// The replies are ordererd by date
 func (c *CommentMetaData) LoadReplies(u *User) error {
 	var replies CommentList
 	if _, err := Comments().Filter("replyto", c.Id).RelatedSel("user").OrderBy("date").All(&replies); err != nil {
@@ -100,6 +108,7 @@ func (c *CommentMetaData) LoadReplies(u *User) error {
 	return nil
 }
 
+// ReadVoteSum reads the sum of votes (upvotes-downvotes) on the comment
 func (c *CommentMetaData) ReadVoteSum() error {
 	var votes []*Vote
 	c.Votes = 0
@@ -126,6 +135,7 @@ func (c *CommentMetaData) ReadVoteOnPost(p *PostMetaData) error {
 	return nil
 }
 
+// ReadVoteData reads the sum of votes and the users vote on the comment
 func (c *CommentMetaData) ReadVoteData(u *User) error {
 	if u != nil {
 		// Get user vote on post

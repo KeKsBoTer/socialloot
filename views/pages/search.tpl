@@ -22,28 +22,24 @@
     {{if isempty .SearchResult}}
         <p class="no-results">No search results.</p>
     {{else}}
+    <ul class="item-list">
         {{if or (eq .Choice "posts") (eq .Choice "")}}
-            <ul class="item-list">
-                {{range $post := .SearchResult}} 
-                    {{template "components/post_item.tpl" $post}}
-                {{end}}
-            </ul>
+            {{range $post := .SearchResult}} 
+                {{template "components/post_item.tpl" $post}}
+            {{end}}
         {{else if eq .Choice "topics"}}
-            <ul class="item-list">
-                {{range $topic := .SearchResult}} 
-                    <a href="{{URL $topic}}">
-                        <p>{{$topic.Name}}</p>
-                    </a>
-                {{end}}
-            </ul>
+            {{range $topic := .SearchResult}} 
+                <a href="{{URL $topic}}">
+                    <p>{{$topic.Name}}</p>
+                </a>
+            {{end}}
         {{else if eq .Choice "users"}}
-        <ul class="item-list">
             {{range $user := .SearchResult}}
                 <div class="user-large">
                     {{template "components/user.tpl" $user}}
                 </div>
             {{end}}
-        </ul>
         {{end}}
+    </ul>
     {{end}}
 {{end}}

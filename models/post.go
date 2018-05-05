@@ -49,17 +49,13 @@ func Posts() orm.QuerySeter {
 }
 
 func (p *Post) Insert() error {
-	if _, err := orm.NewOrm().Insert(p); err != nil {
-		return err
-	}
-	return nil
+	_, err := orm.NewOrm().Insert(p)
+	return err
 }
 
 func (p *Post) Delete() error {
-	if _, err := orm.NewOrm().Delete(p); err != nil {
-		return err
-	}
-	return nil
+	_, err := orm.NewOrm().Delete(p)
+	return err
 }
 
 func (p *Post) Read(loadRelated bool, fields ...string) error {

@@ -1,25 +1,26 @@
 $(function () {
-    // autofocus work around
+    // autofocus work around for some browsers
     $("input[autofocus]").focus();
-    $('textarea').on("show", function () {
-        var me = $(this)
-        me.attr('style', 'height:' + (this.scrollHeight) + 'px;overflow-y:hidden;');
-        if (this.value.length > 0)
-            me.addClass("filled")
-        else
-            me.removeClass("filled")
-    }).on('input', function () {
+
+    // resize textarea according to the length of the user input
+    // disables submit button if the textarea is empty or only contains spaces
+    $('textarea').on('input show', function () {
         this.style.height = 'auto';
         this.style.height = (this.scrollHeight) + 'px';
-        if (this.value.length > 0)
-            $(this).addClass("filled")
-        else
-            $(this).removeClass("filled")
-    }).filter(":visible").trigger("show")
+
+        var submit = $(this).parents("form").find("input[type=\"submit\"]")
+        submit.prop("disabled", this.value.trim().length == 0);
+    }).filter(":visible").trigger("show") // trigger show event for all items that are visible by defautl
 
     // custom form handling
     $("form").submit(function (e) {
         var form = $(this);
+
+        if (form.hasClass("submit") && !confirm(form.attr("message"))) {
+            e.preventDefault();
+            return
+        }
+
         if (form.attr('method') === "GET") {
             var input = form.find("input[name=\"query\"]")
             // trim whitespace from input
@@ -74,6 +75,13 @@ $(function () {
         });
     });
 
+    // do not send clicks to children
+    // so every click within #user-popup will be recognized as click on #user-popup
+    $("#user-popup").click(function (e) {
+        e.stopPropagation();
+    });
+
+    // toggle user popup list
     $("#user-popup-button").click(function () {
         var $this = $(this)
         var popup = $("#user-popup")
@@ -92,10 +100,8 @@ $(function () {
             popup.hide();
         }
     });
-    $("#user-popup").click(function (e) {
-        e.stopPropagation();
-    });
 
+    // hide user popup if user clicks anywhere but on the pupup
     $(document).click(function (e) {
         if (!$(e.target).parents().addBack().is('#user-popup-button')) {
             $("#user-popup").hide();
@@ -103,15 +109,24 @@ $(function () {
     });
 });
 
-const vote_container = ".vote-container";
-
+// function for vote button
+// sends vote to server and changes the ui based on the vote action
 function vote(button, dir) {
     var $vote = $(button)
     // check if allready voted
     if ($vote.hasClass("voted"))
         return
-    var $post = $vote.parents(vote_container)
+
+    var $post = $vote.parents(".vote-container")
+
+    // get post id
     var item = $post.attr("item")
+    if (!item) {
+        console.error("error while voting")
+        return
+    }
+
+    // get vote direction (up- or downvote) from class
     var dir = 0
     if ($vote.hasClass("up"))
         dir = 1
@@ -121,25 +136,31 @@ function vote(button, dir) {
         console.error("invalid vote direction:" + $vote.attr("class"))
         return
     }
-    if (item)
-        voteOnPost(item, dir, function () {
-            $vote.addClass("voted");
-            $otherVoteButton = $vote.siblings(".vote-button")
-            if ($otherVoteButton.hasClass("voted")) {
-                $otherVoteButton.removeClass("voted")
-                dir *= 2
-            }
+    voteOnPost(item, dir, function () {
+        $vote.addClass("voted");
+        $otherVoteButton = $vote.siblings(".vote-button")
+        if ($otherVoteButton.hasClass("voted")) {
+            $otherVoteButton.removeClass("voted")
+            // if you change your vote on a post you allready voted on
+            // the vote count in- or decreases by two
+            // since we don't want to reload the page after every vote we just conclude the new vote count
+            dir *= 2
+        }
 
-            // update vote count
-            var voteContainer = $post.find(".vote-count")
-            var votes = parseInt(voteContainer.text())
-            voteContainer.text(votes + dir)
-        })
-    else
-        console.error("error while voting")
+        // update vote count
+        var voteContainer = $post.find(".vote-count")
+        var votes = parseInt(voteContainer.text())
+        voteContainer.text(votes + dir)
+    })
 }
 
 
+// Sends a ajax request to server to vote for post
+// If the user is not authorized, he is redirected to the login page
+// Params:
+//  id          it the item to vote on
+//  dir         is up(1) or down(-1) vote
+//  onSuccess   is executed with no arguments if the vote was successfull
 function voteOnPost(id, dir, onSuccess) {
     $.ajax({
         type: "POST",
@@ -163,13 +184,17 @@ function voteOnPost(id, dir, onSuccess) {
     });
 }
 
-function showCommentForm(elem) {
-    $(elem).parents(".content").children(".comment-form").show()
+// expands or collapses the comment in which the given button is located
+function toggleComment(btn) {
+    var button = $(btn);
+    button.closest(".comment").first().toggleClass("collapsed")
 }
 
-function toggleComment(elem) {
-    var button = $(elem);
-    button.closest(".comment").first().toggleClass("collapsed")
+// shows comment form if reply button is pressed
+function showCommentForm(btn) {
+    var form = $(btn).parents(".content").children(".comment-form")
+    form.show()
+    form.find("textarea").trigger("show")
 }
 
 function scrollList(button, dir) {
@@ -201,7 +226,10 @@ function scrollList(button, dir) {
     }
 }
 
-function previewURL(input, previewNode) {
+// previews selected image in browser
+// if the file can be loaded the image is inserted into the source tag of the given preview node 
+// also the class "loaded" is added to the preview node to allow custom css for loaded images 
+function previewImage(input, previewNode) {
     if (input.files && input.files[0]) {
         var reader = new FileReader();
 

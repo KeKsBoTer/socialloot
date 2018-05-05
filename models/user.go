@@ -15,35 +15,22 @@ type User struct {
 }
 
 func (u *User) Insert() error {
-	if _, err := orm.NewOrm().Insert(u); err != nil {
-		return err
-	}
-	return nil
+	_, err := orm.NewOrm().Insert(u)
+	return err
 }
 
 func (u *User) Read(fields ...string) error {
-	if err := orm.NewOrm().Read(u, fields...); err != nil {
-		return err
-	}
-	return nil
-}
-
-func (u *User) ReadOrCreate(field string, fields ...string) (bool, int64, error) {
-	return orm.NewOrm().ReadOrCreate(u, field, fields...)
+	return orm.NewOrm().Read(u, fields...)
 }
 
 func (u *User) Update(fields ...string) error {
-	if _, err := orm.NewOrm().Update(u, fields...); err != nil {
-		return err
-	}
-	return nil
+	_, err := orm.NewOrm().Update(u, fields...)
+	return err
 }
 
 func (u *User) Delete() error {
-	if _, err := orm.NewOrm().Delete(u); err != nil {
-		return err
-	}
-	return nil
+	_, err := orm.NewOrm().Delete(u)
+	return err
 }
 
 func Users() orm.QuerySeter {

@@ -16,10 +16,8 @@ type Media struct {
 }
 
 func (m *Media) Insert() error {
-	if _, err := orm.NewOrm().Insert(m); err != nil {
-		return err
-	}
-	return nil
+	_, err := orm.NewOrm().Insert(m)
+	return err
 }
 
 func (m *Media) Read(fields ...string) error {

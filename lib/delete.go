@@ -16,7 +16,7 @@ func DeletePost(item string, user *models.User) error {
 		return errors.New("Cannot read topic")
 	}
 	if post.User.Id != user.Id {
-		return errors.New("User is not allowed to delete post")
+		return errors.New("User is not allowed to delete this post")
 	}
 	if err := post.Delete(); err != nil {
 		beego.Error(err)

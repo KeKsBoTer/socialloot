@@ -21,10 +21,8 @@ func Topics() orm.QuerySeter {
 }
 
 func (t *Topic) Insert() error {
-	if _, err := orm.NewOrm().Insert(t); err != nil {
-		return err
-	}
-	return nil
+	_, err := orm.NewOrm().Insert(t)
+	return err
 }
 
 func (m *Topic) Read(fields ...string) error {

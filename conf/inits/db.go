@@ -1,6 +1,8 @@
 package inits
 
 import (
+	"time"
+
 	_ "github.com/KeKsBoTer/socialloot/models"
 
 	"github.com/astaxie/beego"
@@ -10,25 +12,15 @@ import (
 )
 
 func init() {
-
 	dbname := "default"
-	runmode := beego.AppConfig.String("runmode")
-	datasource := beego.AppConfig.String("datasource")
+	datasource := beego.AppConfig.String("datasource") // sqlite file
 
-	switch runmode {
-	case "dev":
-		//orm.Debug = true
-		fallthrough
-	default:
-		orm.RegisterDriver("sqlite3", orm.DRSqlite)
-		orm.RegisterDataBase(dbname, "sqlite3", datasource)
-	}
+	orm.DefaultTimeLoc = time.Local
+	orm.RegisterDriver("sqlite3", orm.DRSqlite)
+	orm.RegisterDataBase(dbname, "sqlite3", datasource)
 
-	force, verbose := false, true
-	err := orm.RunSyncdb(dbname, force, verbose)
-	if err != nil {
+	// sync model and database
+	if err := orm.RunSyncdb(dbname, false, true); err != nil {
 		panic(err)
 	}
-
-	//orm.RunCommand()
 }

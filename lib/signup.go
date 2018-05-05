@@ -16,12 +16,10 @@ func SignupUser(username, password string) (*models.User, error) {
 		beego.Error(err)
 		return nil, errors.New("Something seems to be wrong with your password")
 	}
-	now := time.Now()
 	u := models.User{
 		Name:          username,
 		Password:      string(hashedPw),
-		LastLoginTime: now,
-		CreationDate:  now,
+		LastLoginTime: time.Now(),
 	}
 	if err := u.Insert(); err != nil {
 		return nil, err

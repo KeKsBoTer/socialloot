@@ -1,4 +1,4 @@
- {{/* Comment form, needs item id to comment on as data */}}
+ {{/* Comment form, needs the id of the item to comment on as data */}}
 <div class="comment-form">
     <form method="POST" action='{{urlfor "ApiController.Comment"}}' class="clear-on-submit" onsuccess="location.reload();">
         <textarea placeholder="Write a comment..." name="comment" rows="1"></textarea>

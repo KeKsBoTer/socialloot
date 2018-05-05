@@ -26,7 +26,7 @@
       {{else if eq .Type "image"}}
       <label for="insertImage" class="message"></label>
       <input type="file" name="content" id="insertImage" title="Upload image" accept="image/*" 
-              onchange="previewURL(this,$('#image-preview'));"/> 
+              onchange="previewImage(this,$('#image-preview'));"/> 
       <img id="image-preview" src="#"/>
       {{end}}
     </div>

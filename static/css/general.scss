@@ -58,6 +58,7 @@ button {
     border: none;
     cursor: pointer;
     display: inline-block;
+    &:focus {outline:0 !important;}
     &.icon-button {
         opacity: .6;
         transition: opacity .2s;
@@ -92,9 +93,11 @@ textarea {
     font-size: 20px;
     margin-bottom: 10px;
     border: none;
+    border-radius: 0;
     border-bottom: 1px solid rgba(0, 0, 0, 0.3);
     padding: 7px;
     color: rgba(0, 0, 0, 0.8);
+    box-sizing: border-box;
     &:focus {
         outline: none;
         ~.description {
