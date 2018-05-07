@@ -107,7 +107,7 @@ func (c *NeedsAuthController) Prepare() {
 				c.Ctx.Redirect(http.StatusSeeOther, c.LoginPath())
 			}
 		case c.Ctx.Input.IsPost():
-			r := ApiResponse{
+			r := APIResponse{
 				Success: false,
 				Message: "unauthorized",
 				Dest:    c.URLFor("LoginController.LoginPage"),

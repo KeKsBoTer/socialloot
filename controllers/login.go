@@ -25,7 +25,7 @@ func (c *LoginController) LoginPage() {
 
 func (c *LoginController) Login() {
 	form := &models.LoginForm{}
-	handleForm(form, &c.AuthController, func(r *ApiResponse) {
+	handleForm(form, &c.AuthController, func(r *APIResponse) {
 		user, err := lib.Authenticate(form.UserName, form.Password)
 		if err != nil {
 			r.Fail("", err)
@@ -48,7 +48,7 @@ func (c *LoginController) SignupPage() {
 
 func (c *LoginController) Signup() {
 	form := &models.SignUpForm{}
-	handleForm(form, &c.AuthController, func(r *ApiResponse) {
+	handleForm(form, &c.AuthController, func(r *APIResponse) {
 		user, err := lib.SignupUser(form.UserName, form.Password)
 		if err != nil {
 			r.Fail("", err)

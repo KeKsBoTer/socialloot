@@ -7,6 +7,9 @@ import (
 	"github.com/astaxie/beego"
 )
 
+// DeletePost removes the given post from the database
+// The user parameter is the user who wants to delete the post.
+// He can only delete the post if he submited it.
 func DeletePost(item string, user *models.User) error {
 	post := models.Post{
 		Id: item,

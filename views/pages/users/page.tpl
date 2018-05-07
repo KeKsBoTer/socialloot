@@ -13,7 +13,7 @@
     {{if isempty .Posts}}
         <p class="no-results">The user has nothing submitted yet.</p>
     {{else}}
-        <ul class="post-list">
+        <ul class="item-list">
             {{range $post := .Posts}}
                 {{template "components/post_item.tpl" $post}}
             {{end}}
@@ -23,7 +23,7 @@
     {{if isempty .Comments}}
         <p class="no-results">The user has not commented anything yet.</p>
     {{else}}
-        <ul class="comments-list">
+        <ul class="item-list">
             {{range $comment := .Comments}}
                 {{template "components/comment_preview.tpl" $comment}}
             {{end}}

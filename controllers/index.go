@@ -4,10 +4,14 @@ import (
 	"github.com/astaxie/beego"
 )
 
+
+// IndexController serves index page
 type IndexController struct {
 	AuthController
 }
 
+// Get handles incomming HTTP GET requests
+// It loads all posts for the view.
 func (c *IndexController) Get() {
 	choice := Choice(c.Ctx.Input.Param(":choice"))
 	if len(choice) < 1 {

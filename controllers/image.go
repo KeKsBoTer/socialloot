@@ -6,11 +6,13 @@ import (
 	"github.com/KeKsBoTer/socialloot/models"
 )
 
-type MediaController struct {
+// ImageController serves images via http
+type ImageController struct {
 	AuthController
 }
 
-func (c *MediaController) Image() {
+// Image handles image request and writes the image data to the response body.
+func (c *ImageController) Image() {
 	id, err := strconv.Atoi(c.Ctx.Input.Param(":id"))
 	if err != nil {
 		// invalid image id
@@ -23,10 +25,10 @@ func (c *MediaController) Image() {
 		c.Abort("404")
 		return
 	}
-	media := models.Media{
+	media := models.Image{
 		Id: id,
 	}
-	if err := media.Read("Id"); err != nil {
+	if err := media.Read("id"); err != nil {
 		// image not found
 		c.Abort("404")
 		return

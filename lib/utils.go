@@ -8,6 +8,9 @@ import (
 	"github.com/astaxie/beego"
 )
 
+// URLForItem generates the relative url for the given model
+// Valid models are Post,PostMetaData,Topic and User
+// If the given data has non of the types above, "/" is returned
 func URLForItem(data interface{}) string {
 	rv := reflect.ValueOf(data)
 	// if data is a pointer, get the value to make type switching possible
@@ -34,6 +37,8 @@ func URLForItem(data interface{}) string {
 	}
 }
 
+// generates the url for a post model
+// if a error occures "/" is returned
 func urlForPost(post *models.Post) string {
 	if post.Topic == nil {
 		beego.Error("Cannot create URL for post (empty topic):", *post)
@@ -43,6 +48,7 @@ func urlForPost(post *models.Post) string {
 }
 
 // GetRandomString generates base62 string of given length
+// Available characters are: "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
 func GetRandomString(n int) string {
 	const alphanum = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
 	var bytes = make([]byte, n)
