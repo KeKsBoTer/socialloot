@@ -11,6 +11,9 @@ import (
 	"github.com/astaxie/beego"
 )
 
+// various functions for template rendering
+// functions are global and can be used in every template 
+
 func init() {
 
 	// format date to dd.mm.yyyy hh:mm and set timezone to local one

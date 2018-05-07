@@ -8,7 +8,13 @@ import (
 	"github.com/astaxie/beego/validation"
 )
 
+// Comment is the model for every comment in the database.
+// To read or insert comments into the database, fist a instance of this
+// struct needs to be created, with the needed information.
+// The database functions then can be called on this object.
+// This model should be the only wany to communicate comment data with the database.
 type Comment struct {
+	// Id is a unique key for every comment or post. It consists of 11 base64 letters
 	Id string `orm:"pk"`
 
 	// User is the person which wrote the comment
@@ -18,11 +24,13 @@ type Comment struct {
 	// Text is the comment
 	Text string
 
-	// Post that is commented on
+	// Post or comment that is commented on
 	ReplyTo string
 }
 
 // Comments creates orm object to get comments from database
+// This method allows filtering for comment data:
+// e.g. models.Comments().Filter("user",user).All(...)
 func Comments() orm.QuerySeter {
 	var table Comment
 	return orm.NewOrm().QueryTable(table)
@@ -73,10 +81,19 @@ func (c *CommentList) ToMetaData() *CommentMetaDataList {
 	return &metas
 }
 
+// CommentMetaData is a comment, with additional meta data for it
+// This struct extends the comment model with data which is only computed during runtime to render the comment.
 type CommentMetaData struct {
 	*Comment
-	Votes   int
+
+	// Votes is the sum of votes on the comment (upvotes-downvotes)
+	Votes int
+
+	// VoteDir is the direction the viewer(user) votes on the post
+	// This value is zero if the user has not voted yet or is unauthorized.
 	VoteDir VoteDirection
+
+	// Replies are all answers to the comment
 	Replies []*CommentMetaData
 }
 
@@ -136,6 +153,7 @@ func (c *CommentMetaData) ReadVoteOnPost(p *PostMetaData) error {
 }
 
 // ReadVoteData reads the sum of votes and the users vote on the comment
+// see ReadVoteSum(...) and ReadVoteOnPost(...)
 func (c *CommentMetaData) ReadVoteData(u *User) error {
 	if u != nil {
 		// Get user vote on post

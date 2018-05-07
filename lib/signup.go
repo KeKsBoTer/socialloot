@@ -10,6 +10,8 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
+// SignupUser creates user in database and returns the full user data
+// The password is hashed with bcrypt
 func SignupUser(username, password string) (*models.User, error) {
 	hashedPw, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
 	if err != nil {

@@ -34,6 +34,6 @@ func init() {
 	// user profile apge
 	beego.Router("/user/:user/?:choice", &ctl.UserController{})
 	beego.Router("/search", &ctl.SearchController{})
-	beego.Router("/media/image/:size:string/:id:int", &ctl.MediaController{}, "get,post:Image")
-	beego.AutoRouter(&ctl.ApiController{})
+	beego.Router("/media/image/:size:string/:id:int", &ctl.ImageController{}, "get,post:Image")
+	beego.AutoRouter(&ctl.APIController{})
 }

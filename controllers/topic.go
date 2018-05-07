@@ -8,16 +8,6 @@ import (
 	"github.com/KeKsBoTer/socialloot/models"
 )
 
-// Choice defines the way the listed posts are sorted
-type Choice string
-
-const (
-	// Hot means posts with most votes first
-	Hot Choice = "hot"
-	// New means newest posts first
-	New Choice = "new"
-)
-
 type TopicController struct {
 	AuthController
 }
@@ -74,6 +64,16 @@ func getPostsForTopic(user *models.User, topic *models.Topic, choice Choice) (*m
 	}
 	return metas, nil
 }
+
+// Choice defines the way the listed posts are sorted
+type Choice string
+
+const (
+	// Hot means posts with most votes first
+	Hot Choice = "hot"
+	// New means newest posts first
+	New Choice = "new"
+)
 
 // IsValid checks if choice is hot or new
 func (c Choice) IsValid() bool {

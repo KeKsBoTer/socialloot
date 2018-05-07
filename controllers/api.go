@@ -12,13 +12,29 @@ import (
 	"github.com/KeKsBoTer/socialloot/models"
 )
 
-type ApiController struct {
+// This is the socialloot api.
+// It can only be accessed via HTTP POST by authenticated users.
+// Most of the functions just validate the request and use functions from the lib package
+// to handle the request.
+//
+// Functions:
+// 	- vote on Post/Comment
+// 	- submit or delete a post
+//	- create a topic
+// 	- publish a comment
+
+// APIController is the controller for all api requests
+// It needs authentication, otherwise an error will be returned
+type APIController struct {
 	NeedsAuthController
 }
 
-func (c *ApiController) Vote() {
+// Vote can be used to vote on a post
+// See models.VoteForm for a closer description of the request format.
+// This function uses lib.VoteOnItem(...)
+func (c *APIController) Vote() {
 	form := &models.VoteForm{}
-	handleForm(form, &c.AuthController, func(r *ApiResponse) {
+	handleForm(form, &c.AuthController, func(r *APIResponse) {
 		err := lib.VoteOnItem(form.Direction, form.Item, c.User)
 		if err != nil {
 			r.Fail("", err)
@@ -28,14 +44,19 @@ func (c *ApiController) Vote() {
 	})
 }
 
-// Size constants
+// Size constants for 1 mega-byte
 const (
 	MB = 1 << 20
 )
 
-func (c *ApiController) Submit() {
+// Submit handles a submit submit request based on the content type.
+// If the content type is image, it checks if the file is smaller than 20 MB.
+// After successfully submitting the post, the user is redirected to the post.
+// This function uses lib.Submit(..).
+// For a detailes description of the request fields see models.SubmitForm.
+func (c *APIController) Submit() {
 	form := &models.SubmitForm{}
-	handleForm(form, &c.AuthController, func(r *ApiResponse) {
+	handleForm(form, &c.AuthController, func(r *APIResponse) {
 		topic, err := models.ReadTopic(form.TopicName)
 		if err != nil {
 			r.Fail("topic", errors.New("Topic not found"))
@@ -64,13 +85,17 @@ func (c *ApiController) Submit() {
 			return
 		}
 		r.Success = true
+		// redirect to created post
 		r.Dest = lib.URLForItem(post)
 	})
 }
 
-func (c *ApiController) CreateTopic() {
+// CreateTopic creates a new topic
+// See models.CreateTopicForm
+// This function uses lib.CreateTopic(...)
+func (c *APIController) CreateTopic() {
 	form := &models.CreateTopicForm{}
-	handleForm(form, &c.AuthController, func(r *ApiResponse) {
+	handleForm(form, &c.AuthController, func(r *APIResponse) {
 		topic, err := lib.CreateTopic(form.Name, form.Title, form.Description)
 		if err != nil {
 			r.Fail("", err)
@@ -81,9 +106,12 @@ func (c *ApiController) CreateTopic() {
 	})
 }
 
-func (c *ApiController) Comment() {
+// Comment on a post with this function
+// See models.CommentForm
+// This function uses lib.CommentOnPost(...)
+func (c *APIController) Comment() {
 	form := &models.CommentForm{}
-	handleForm(form, &c.AuthController, func(r *ApiResponse) {
+	handleForm(form, &c.AuthController, func(r *APIResponse) {
 		if err := lib.CommentOnPost(form.Comment, form.Item, c.User); err != nil {
 			r.Fail("", err)
 			return
@@ -92,9 +120,12 @@ func (c *ApiController) Comment() {
 	})
 }
 
-func (c *ApiController) Delete() {
+// Delete an existing post with this function
+// See models.DeleteForm
+// This function uses lib.DeletePost
+func (c *APIController) Delete() {
 	form := &models.DeleteForm{}
-	handleForm(form, &c.AuthController, func(r *ApiResponse) {
+	handleForm(form, &c.AuthController, func(r *APIResponse) {
 		if err := lib.DeletePost(form.Item, c.User); err != nil {
 			r.Fail("", err)
 			return
@@ -104,32 +135,71 @@ func (c *ApiController) Delete() {
 	})
 }
 
-type ApiResponse struct {
-	Success bool   `json:"success"`
+// APIResponse is the model for all responses from the api
+// The answer is converted in JSON format and sent to the client.
+// example:
+// {
+//   "success": false,
+//   "message": "unauthorized",
+//   "dest": "/login",
+//   "Field": "",
+// }
+type APIResponse struct {
+	// Success tells the client with the request could be handled successfully
+	// The JSON key is "success"
+	Success bool `json:"success"`
+
+	// Message describes the occurred error
+	// If no error occurred the field is empty
+	// The JSON key is "message"
 	Message string `json:"message"`
-	Dest    string `json:"dest"`
-	Field   string `json:"field"`
+
+	// Dest is the location the user is redirected to
+	// This redirect is handled with JavaScript by the client
+	// The JSON key is "dest"
+	Dest string `json:"dest"`
+
+	// Field is the key of the request parameter, which cased the error
+	// This can be empty if no single field caused the error (e.g. unauthorized request)
+	// The JSON key is "field"
+	Field string `json:"field"`
 }
 
-func NewApiResponse(c *beego.Controller) *ApiResponse {
-	r := ApiResponse{}
+// NewAPIResponse creates a new API response object from a controller
+// If a destionation (a url) is provided in the HTTP GET parameters,
+// the value is copied into the Dest field of the APIResponse.
+// Also the response is applied to the controllers json field (c.Data["Json"])
+// to tell beego, that the response is a JSON string.
+func NewAPIResponse(c *beego.Controller) *APIResponse {
+	r := APIResponse{}
 	if dst := c.GetString("dest"); len(dst) > 0 {
 		r.Dest = dst
 	}
+	// tell beego that it should write this object as json string to the response body
 	c.Data["json"] = &r
 	return &r
 }
 
-func (a *ApiResponse) Fail(field string, err error) {
+// Fail sets the responses success field to false
+// and sets the message and field.
+// The given error is converted to a string and used as message.
+func (a *APIResponse) Fail(field string, err error) {
 	a.Success = false
 	a.Field = field
 	a.Message = err.Error()
 }
 
-type FormHandlerFunc func(r *ApiResponse)
+// FormHandlerFunc is a function that handles a parsed form
+// The result of the request should be written to the api response parameter
+// in this function.
+type FormHandlerFunc func(r *APIResponse)
 
+// This function parses the HTTP request and sets the corresponding fields in the given form
+// The request is valideted using beego's validation (specificated in the model of the form as tag)
+// If an error occurred during the validation, the error message and field is written to the response.
+// At the end, if no error occurred, the given FormHandlerFunc is called.
 func handleForm(form interface{}, c *AuthController, f FormHandlerFunc) {
-	r := NewApiResponse(&c.Controller)
+	r := NewAPIResponse(&c.Controller)
 	defer c.ServeJSON(true)
 	if err := c.ParseForm(form); err != nil {
 		r.Fail("", err)

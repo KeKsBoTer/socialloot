@@ -9,7 +9,9 @@ import (
 	"github.com/KeKsBoTer/socialloot/models"
 )
 
-// Get authenticated user and update logintime
+// Authenticate checks if the given user credentials are valid
+// If the user name is found in the database the password hashes are compared
+// Also the LastLoginTime time field for the user is updates
 func Authenticate(name string, password string) (user *models.User, err error) {
 	msg := "Invalid name or password."
 	user = &models.User{Name: name}
@@ -17,13 +19,13 @@ func Authenticate(name string, password string) (user *models.User, err error) {
 		if err.Error() == "<QuerySeter> no row found" {
 			err = errors.New(msg)
 		}
-		return user, err
+		return nil, err
 	} else if user.Id < 1 {
 		// No user
-		return user, errors.New(msg)
+		return nil, errors.New(msg)
 	} else if err = bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(password)); err != nil {
 		// No matched password
-		return user, errors.New(msg)
+		return nil, errors.New(msg)
 	}
 	user.LastLoginTime = time.Now()
 	user.Update("LastLoginTime")

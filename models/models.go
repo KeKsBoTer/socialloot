@@ -5,12 +5,13 @@ import (
 )
 
 func init() {
+	// register models to orm
 	orm.RegisterModel(
 		new(User),
 		new(Topic),
 		new(Post),
 		new(Vote),
 		new(Comment),
-		new(Media),
+		new(Image),
 	)
 }

@@ -2,24 +2,27 @@ package models
 
 import "github.com/astaxie/beego/orm"
 
-type MediaType string
+// Image is the model for a image entry in the database
+// The images are stored as BLOB in the file and thumbnail field.
+type Image struct {
 
-const (
-	MediaImage = MediaType("image")
-)
+	// Unique id for image
+	Id int `orm:"pk;auto"`
 
-type Media struct {
-	Id        int `orm:"pk;auto"`
-	Type      MediaType
-	File      string
+	// The image as string
+	File string
+
+	// Small version of image as string
 	Thumbnail string
 }
 
-func (m *Media) Insert() error {
+// Insert image to database
+func (m *Image) Insert() error {
 	_, err := orm.NewOrm().Insert(m)
 	return err
 }
 
-func (m *Media) Read(fields ...string) error {
+// Read image from database by given field
+func (m *Image) Read(fields ...string) error {
 	return orm.NewOrm().Read(m, fields...)
 }

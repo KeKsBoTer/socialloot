@@ -8,22 +8,38 @@ import (
 	"github.com/astaxie/beego/orm"
 )
 
-// The length of all item ids
+// ItemIDLength  is the length of all item ids
 // Change in model tags!!
 const ItemIDLength = 11
 
+// PostType specifies with type of content the post holds
 type PostType string
 
 const (
+
+	// PostTypeImage  image png,jpeg or gif
 	PostTypeImage = PostType("image")
-	PostTypeText  = PostType("text")
-	PostTypeLink  = PostType("link")
+
+	//PostTypeText post is plain text
+	PostTypeText = PostType("text")
+
+	// PostTypeLink post is an URL
+	PostTypeLink = PostType("link")
 )
 
+// Post is the model for a post entry in the database
 type Post struct {
-	Id    string    `orm:"pk;size(11)"`
-	User  *User     `orm:"rel(fk);null;on_delete(do_nothing)"`
-	Date  time.Time `orm:"auto_now_add"`
+
+	// unique identifier for every post and comment
+	Id string `orm:"pk;size(11)"`
+
+	// User that submitted the post
+	User *User `orm:"rel(fk);null;on_delete(do_nothing)"`
+
+	// Point in time when the post was submitted
+	Date time.Time `orm:"auto_now_add"`
+
+	// The post's title
 	Title string
 
 	// Content depends on the type of the post.
@@ -34,6 +50,7 @@ type Post struct {
 	// Type of the post. Image, text, or link
 	Type PostType
 
+	// A refrence to the topic which the post belongs to
 	Topic *Topic `orm:"rel(fk);null;on_delete(do_nothing)"`
 }
 
@@ -43,21 +60,26 @@ func ReadPost(id string, loadRelated bool) (*Post, error) {
 	return &p, p.Read(loadRelated, "id")
 }
 
+// Posts is a helper to query the post table
 func Posts() orm.QuerySeter {
 	var table Post
 	return orm.NewOrm().QueryTable(table)
 }
 
+// Insert the post to database
 func (p *Post) Insert() error {
 	_, err := orm.NewOrm().Insert(p)
 	return err
 }
 
+// Delete post from database
 func (p *Post) Delete() error {
 	_, err := orm.NewOrm().Delete(p)
 	return err
 }
 
+// Read post from database by the given field
+// If loadRelated related is true, the user and topic field is also loaded
 func (p *Post) Read(loadRelated bool, fields ...string) error {
 	o := orm.NewOrm()
 	if err := o.Read(p, fields...); err != nil {
@@ -91,6 +113,8 @@ func (p *PostList) ToMetaData() *PostMetaDataList {
 	return &metas
 }
 
+// ReadVoteData reads vote data for every post in list
+// See post.ReadVoteData(..)
 func (p *PostMetaDataList) ReadVoteData(u *User) error {
 	for _, i := range *p {
 		if err := i.ReadVoteData(u); err != nil {
@@ -118,6 +142,8 @@ func (p *Post) NewMetaData() *PostMetaData {
 	}
 }
 
+// ReadVoteData reads the user's vote on the post
+// See user.ReadVoteOnPost(...)
 func (p *PostMetaData) ReadVoteData(u *User) error {
 	if u != nil {
 		// Get user vote on post
@@ -128,6 +154,7 @@ func (p *PostMetaData) ReadVoteData(u *User) error {
 	return p.ReadVoteSum()
 }
 
+// ReadVoteSum calculates the vote-sum (upvotes - downvotes) for the post
 func (p *PostMetaData) ReadVoteSum() error {
 	var votes []*Vote
 	p.Votes = 0
@@ -146,6 +173,8 @@ func (p *PostMetaData) ReadVoteSum() error {
 	return nil
 }
 
+// ReadComments loads all comments on the post recursivly
+// It also loads the user's votes on this comments.
 func (p *PostMetaData) ReadComments(u *User) error {
 	var comments CommentList
 	if _, err := Comments().Filter("replyto", p.Id).RelatedSel("user").All(&comments); err != nil {
