@@ -59,7 +59,7 @@ func (v *Vote) InsertOrUpdate() error {
 		return err
 	}
 	v.Action = newAction
-	if _, err := o.Update(v, "direction"); err != nil {
+	if _, err := o.Update(v, "action"); err != nil {
 		return err
 	}
 	return nil
