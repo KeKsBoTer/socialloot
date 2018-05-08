@@ -12,6 +12,12 @@ type ImageController struct {
 }
 
 // Image handles image request and writes the image data to the response body.
+// @Title Get Image
+// @Description Returns the image data
+// @Param   size 	path    string  true    "Image size. small or original"
+// @Param   id 		path    int  	true    "Image id"
+// @Success 200 image type
+// @router /media/image/:size/:id [get]
 func (c *ImageController) Image() {
 	id, err := strconv.Atoi(c.Ctx.Input.Param(":id"))
 	if err != nil {

@@ -10,24 +10,12 @@ import (
 	"github.com/astaxie/beego/orm"
 )
 
+// SearchController provides search page and outputs search results
 type SearchController struct {
 	AuthController
 }
 
-// SearchChoice is the type of content to search for
-type SearchChoice string
-
-const (
-	SearchPosts  SearchChoice = "posts"
-	SearchTopics SearchChoice = "topics"
-	SearchUsers  SearchChoice = "users"
-)
-
-// IsValid checks if choice is hot or new
-func (c SearchChoice) IsValid() bool {
-	return c == SearchPosts || c == SearchTopics || c == SearchUsers
-}
-
+// Get serves page for search page
 func (c *SearchController) Get() {
 	query := strings.Trim(c.GetString("query"), " ")
 	choice := SearchChoice(c.GetString("choice"))
@@ -66,6 +54,7 @@ func (c *SearchController) Get() {
 	c.TplName = "pages/search.tpl"
 }
 
+// find all posts with the given key in title, link or text
 func searchPosts(key string, viewer *models.User) (*models.PostMetaDataList, error) {
 	// check if post is of type text or link
 	isNotImage := orm.NewCondition().Or("type", models.PostTypeText).Or("type", models.PostTypeLink)
@@ -84,6 +73,7 @@ func searchPosts(key string, viewer *models.User) (*models.PostMetaDataList, err
 	return meta, nil
 }
 
+// find all topics with the given key in title, name or description
 func searchTopics(key string) (*[]*models.Topic, error) {
 	cond := orm.NewCondition().Or("title__icontains", key).Or("name__icontains", key).Or("description__icontains", key)
 	var topics []*models.Topic
@@ -93,10 +83,28 @@ func searchTopics(key string) (*[]*models.Topic, error) {
 	return &topics, nil
 }
 
+// find all users with the given key in the name
 func searchUsers(key string) (*[]*models.User, error) {
 	var users []*models.User
 	if _, err := models.Users().Filter("name__icontains", key).Limit(20).All(&users); err != nil {
 		return nil, err
 	}
 	return &users, nil
+}
+
+// SearchChoice is the type of content to search for
+type SearchChoice string
+
+const (
+	// SearchPosts search for posts
+	SearchPosts SearchChoice = "posts"
+	//SearchTopics search for topics
+	SearchTopics SearchChoice = "topics"
+	// SearchUsers search for users
+	SearchUsers SearchChoice = "users"
+)
+
+// IsValid checks if choice is hot or new
+func (c SearchChoice) IsValid() bool {
+	return c == SearchPosts || c == SearchTopics || c == SearchUsers
 }

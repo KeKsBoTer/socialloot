@@ -58,3 +58,13 @@ func GetRandomString(n int) string {
 	}
 	return string(bytes)
 }
+
+// GenerateItemID generates a new unused item id with length of models.ItemIDLength
+func GenerateItemID() string {
+	id := GetRandomString(models.ItemIDLength)
+	// find free id
+	for models.Comments().Filter("id", id).Exist() || models.Posts().Filter("id", id).Exist() {
+		id = GetRandomString(models.ItemIDLength)
+	}
+	return id
+}

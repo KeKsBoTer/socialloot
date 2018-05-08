@@ -4,7 +4,7 @@ $(function () {
 
     // resize textarea according to the length of the user input
     // disables submit button if the textarea is empty or only contains spaces
-    $('textarea').on('input show', function () {
+    $('.comment-form > form > textarea').on('input show', function () {
         this.style.height = 'auto';
         this.style.height = (this.scrollHeight) + 'px';
 
@@ -16,7 +16,7 @@ $(function () {
     $("form").submit(function (e) {
         var form = $(this);
 
-        if (form.hasClass("submit") && !confirm(form.attr("message"))) {
+        if (form.hasClass("confirm") && !confirm(form.attr("message"))) {
             e.preventDefault();
             return
         }

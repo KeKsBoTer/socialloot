@@ -1,3 +1,7 @@
+// @APIVersion 1.0.0
+// @Title socialloot webpage
+// @Description socialloot webpage
+
 package routers
 
 import (
@@ -8,10 +12,6 @@ import (
 func init() {
 	// custom error page renderer
 	beego.ErrorController(&ctl.ErrorController{})
-
-	beego.Router("/?:choice(hot|new)", &ctl.IndexController{})
-	// since a post id is unique we can redirect /post-id to the post
-	beego.Router("/?:post", &ctl.PostController{}, "get:Redirect")
 
 	// auth pages
 	beego.Router("/login", &ctl.LoginController{}, "get:LoginPage;post:Login")
@@ -35,5 +35,18 @@ func init() {
 	beego.Router("/user/:user/?:choice", &ctl.UserController{})
 	beego.Router("/search", &ctl.SearchController{})
 	beego.Router("/media/image/:size:string/:id:int", &ctl.ImageController{}, "get,post:Image")
-	beego.AutoRouter(&ctl.APIController{})
+	api := &ctl.APIController{}
+	beego.AddNamespace(
+		beego.NewNamespace("/api",
+			beego.NSRouter("/submit", api, "post:Submit"),
+			beego.NSRouter("/createtopic", api, "post:CreateTopic"),
+			beego.NSRouter("/comment", api, "post:Comment"),
+			beego.NSRouter("/vote", api, "post:Vote"),
+			beego.NSRouter("/delete", api, "post:Delete"),
+		),
+	)
+
+	beego.Router("/?:choice(hot|new)", &ctl.IndexController{})
+	// since a post id is unique we can redirect /post-id to the post
+	beego.Router("/?:post", &ctl.PostController{}, "get:Redirect")
 }

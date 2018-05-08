@@ -2,16 +2,17 @@ package controllers
 
 import (
 	"log"
-	"net/http"
 
 	"github.com/KeKsBoTer/socialloot/lib"
 	"github.com/KeKsBoTer/socialloot/models"
 )
 
+// TopicController serves topic page
 type TopicController struct {
 	AuthController
 }
 
+// Get serves topic pages
 func (c *TopicController) Get() {
 	topicName := c.Ctx.Input.Param(":topic")
 	choice := Choice(c.Ctx.Input.Param(":choice"))
@@ -19,7 +20,7 @@ func (c *TopicController) Get() {
 		choice = Hot
 	}
 	if !choice.IsValid() {
-		c.CustomAbort(http.StatusBadRequest, "invalid choice")
+		c.Abort("404")
 		return
 	}
 	c.Data["Choice"] = choice
@@ -34,7 +35,7 @@ func (c *TopicController) Get() {
 	posts, err := getPostsForTopic(c.User, topic, choice)
 	if err != nil {
 		log.Println(err)
-		c.Abort("505")
+		c.Abort("500")
 		return
 	}
 	c.Data["Posts"] = posts
@@ -42,7 +43,11 @@ func (c *TopicController) Get() {
 	c.TplName = "pages/posts/topic.tpl"
 }
 
-func getPostsForTopic(user *models.User, topic *models.Topic, choice Choice) (*models.PostMetaDataList, error) {
+// loads all posts for a topic and orders them by the given choice:
+//  - new: newest first
+//  - hot: posts with hightest rank first (see lib.SortByRank)
+// also the vote data for the viewer is loaded
+func getPostsForTopic(viewer *models.User, topic *models.Topic, choice Choice) (*models.PostMetaDataList, error) {
 	var posts models.PostList
 	all := models.Posts()
 	if topic != nil {
@@ -54,7 +59,7 @@ func getPostsForTopic(user *models.User, topic *models.Topic, choice Choice) (*m
 	}
 	metas := posts.ToMetaData()
 	for _, m := range *metas {
-		m.ReadVoteData(user)
+		m.ReadVoteData(viewer)
 	}
 	switch choice {
 	case New:

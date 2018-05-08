@@ -15,7 +15,7 @@
             </a>
         </div>
         {{if .CanDelete}}
-        <form method="POST" action="{{urlfor "ApiController.Delete"}}" class="submit" message="Delete?">
+        <form method="POST" action="{{urlfor "APIController.Delete"}}" class="confirm" message="Delete?">
             <input type="hidden" name="item"  value="{{.Post.Id}}"/>
             <button class="delete-post" type="submit">
                 <i class="ion-ios-trash"></i>
@@ -38,8 +38,12 @@
         {{if .User}}
             {{template "components/comment_form.tpl" .Post.Id}} 
         {{end}} 
-        {{range $c := .Post.Comments}} 
-            {{template "components/comment.tpl" $c}}
+        {{if isempty .Post.Comments}}
+            <p style="opacity: .5;" class="no-underline">There are no comments here yet.</p>
+        {{else}}
+            {{range $c := .Post.Comments}} 
+                {{template "components/comment.tpl" $c}}
+            {{end}}
         {{end}}
     </div>
 </div>

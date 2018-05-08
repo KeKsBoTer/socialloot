@@ -1,6 +1,6 @@
 <div class="auth-form">
   <h1>create topic</h1>
-  <form method="POST" action='{{urlfor "ApiController.CreateTopic"}}'>
+  <form method="POST" action='{{urlfor "APIController.CreateTopic"}}'>
     <label for="inputName">Name</label>
     <div class="reverse-order">
       <input name="name" value="" id="autofocus" type="text" id="inputName" autofocus=/>

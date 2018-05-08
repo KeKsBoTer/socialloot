@@ -8,10 +8,12 @@ import (
 	"github.com/astaxie/beego"
 )
 
+// PostController serves post page and redirects short post links
 type PostController struct {
 	AuthController
 }
 
+// Get serves post page
 func (c *PostController) Get() {
 	topicName := c.Ctx.Input.Param(":topic")
 	topic, err := models.ReadTopic(topicName)
@@ -48,6 +50,8 @@ func (c *PostController) Get() {
 	c.TplName = "pages/posts/post.tpl"
 }
 
+// Redirect redirects a short post id link to the original post
+// e.g. /asdf67as8df => /t/test/asdf67as8df
 func (c *PostController) Redirect() {
 	id := c.Ctx.Input.Param(":post")
 	post := models.Post{

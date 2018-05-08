@@ -29,6 +29,12 @@ func (c *ErrorController) Error404() {
 	c.Data["Message"] = "We couldn’t find this page."
 }
 
+// Error405 error page for HTTP code 405
+func (c *ErrorController) Error405() {
+	c.Data["ErrorCode"] = 405
+	c.Data["Message"] = "Method Not Allowed"
+}
+
 // Error500 error page for HTTP code 500
 func (c *ErrorController) Error500() {
 	c.Data["ErrorCode"] = 500
@@ -36,7 +42,7 @@ func (c *ErrorController) Error500() {
 }
 
 // ErrorDB error page for database errors
-func (c *ErrorController) ErrorDb() {
+func (c *ErrorController) ErrorDB() {
 	c.Data["ErrorCode"] = "DB"
 	c.Data["Message"] = "There is a problem with the database."
 }

@@ -8,20 +8,13 @@ import (
 	"github.com/KeKsBoTer/socialloot/models"
 )
 
+// UserController serves the user page
+// On this page, data about the user can be seen
 type UserController struct {
 	AuthController
 }
 
-// UserChoice is the kind of information that is displayes about the user
-type UserChoice string
-
-const (
-	// Comments will display all comments the user wrote
-	Comments UserChoice = "comments"
-	// Posts will display all posts the user published
-	Posts UserChoice = "posts"
-)
-
+// Get serves HTML user page
 func (c *UserController) Get() {
 	choice := UserChoice(c.Ctx.Input.Param(":choice"))
 	if len(choice) < 1 {
@@ -65,11 +58,9 @@ func (c *UserController) Get() {
 	c.TplName = "pages/users/page.tpl"
 }
 
-// IsValid checks if choice is hot or new
-func (c UserChoice) IsValid() bool {
-	return c == Comments || c == Posts
-}
-
+// Loads all the posts submitted by the user
+// Also the vote data for every post is loaded
+// The posts are sorted by date (newest first).
 func getPostsForUser(user, viewer *models.User) (*models.PostMetaDataList, error) {
 	var posts models.PostList
 	if _, err := models.Posts().Filter("user", user).OrderBy("-Date").RelatedSel().All(&posts); err != nil {
@@ -82,6 +73,9 @@ func getPostsForUser(user, viewer *models.User) (*models.PostMetaDataList, error
 	return metas, nil
 }
 
+// Loads all commments which the user published.
+// Also the vote data for all the comments is loaded.
+// The comments are sorted by date (newest first).
 func getCommentsForUser(user *models.User) (*models.CommentMetaDataList, error) {
 	var comments models.CommentList
 	if _, err := models.Comments().Filter("user", user).OrderBy("-Date").RelatedSel().All(&comments); err != nil {
@@ -94,4 +88,19 @@ func getCommentsForUser(user *models.User) (*models.CommentMetaDataList, error) 
 		}
 	}
 	return metas, nil
+}
+
+// UserChoice is the kind of information that is displayes about the user
+type UserChoice string
+
+const (
+	// Comments will display all comments the user wrote
+	Comments UserChoice = "comments"
+	// Posts will display all posts the user published
+	Posts UserChoice = "posts"
+)
+
+// IsValid checks if choice is hot or new
+func (c UserChoice) IsValid() bool {
+	return c == Comments || c == Posts
 }

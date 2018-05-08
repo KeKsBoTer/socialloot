@@ -8,19 +8,25 @@ import (
 	"github.com/astaxie/beego"
 )
 
+// NestPreparer is used to execute prepare functions in subclass
 type NestPreparer interface {
 	NestPrepare()
 }
 
+// AuthController is the base controller for all other controllers
+// It authenticated the user by session key and loads the user data
 type AuthController struct {
 	beego.Controller
 
+	// The user that requests the page (nil if unauthorized)
 	User *models.User
 }
 
 // UserInfoKey is the session key for the user id
 const UserInfoKey = "userinfo"
 
+// Prepare authenticates user and loads user data
+// For HTTP GET requests, basic form data like URL and layout is set
 func (c *AuthController) Prepare() {
 	isLogin := c.GetSession(UserInfoKey) != nil
 	if isLogin {
@@ -56,12 +62,15 @@ func (c *AuthController) Prepare() {
 	}
 }
 
+// RedirectForm redirects user to the value of the HTTP GET parameter "dest"
+// e.g. /test?dest=/login => redirect to /login
 func (c *AuthController) RedirectForm() {
 	if dst := c.GetString("dest"); len(dst) > 0 {
 		c.Redirect(dst, http.StatusSeeOther)
 	}
 }
 
+// GetLogin identifies user by session key and loads user data from database
 func (c *AuthController) GetLogin() *models.User {
 	if i, ok := c.GetSession(UserInfoKey).(int); ok {
 		u := &models.User{
@@ -73,18 +82,23 @@ func (c *AuthController) GetLogin() *models.User {
 	return nil
 }
 
+// IsLogin checks if user is a user is loaded
+// If yes, this means the user is logged in
 func (c *AuthController) IsLogin() bool {
 	return c.User != nil
 }
 
+// DelLogin deletes session
 func (c *AuthController) DelLogin() {
 	c.DelSession(UserInfoKey)
 }
 
+// SetLogin sets session cookie for client
 func (c *AuthController) SetLogin(user *models.User) {
 	c.SetSession(UserInfoKey, user.Id)
 }
 
+// LoginPath returns the login url as string
 func (c *AuthController) LoginPath() string {
 	return c.URLFor("LoginController.Login")
 }

@@ -56,12 +56,9 @@ func Submit(title, content string, postType models.PostType, topic *models.Topic
 	default:
 		return nil, errors.New("Invalid post type")
 	}
+	// get new item id
+	post.Id = GenerateItemID()
 
-	post.Id = GetRandomString(models.ItemIDLength)
-	// generate new random ids until we find a unused id
-	for models.Posts().Filter("id", post.Id).Exist() {
-		post.Id = GetRandomString(models.ItemIDLength)
-	}
 	if err := post.Insert(); err != nil {
 		beego.Error(err)
 		return nil, errors.New("Cannot submit post")
@@ -130,14 +127,10 @@ func CommentOnPost(text string, replyTo string, user *models.User) error {
 		}
 	}
 	comment := models.Comment{
-		Id:      GetRandomString(models.ItemIDLength),
+		Id:      GenerateItemID(),
 		User:    user,
 		Text:    text,
 		ReplyTo: replyTo,
-	}
-	// find free id
-	for models.Comments().Filter("id", comment.Id).Exist() {
-		comment.Id = GetRandomString(models.ItemIDLength)
 	}
 	return comment.Insert()
 }

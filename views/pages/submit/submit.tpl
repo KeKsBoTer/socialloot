@@ -11,7 +11,7 @@
       <a href="{{ChangeParam .URL "type" "image"}}" class="uppercase">image</a>
     </li>
   </ul>
-  <form method="POST" action='{{urlfor "ApiController.Submit"}}' enctype="multipart/form-data">
+  <form method="POST" action='{{urlfor "APIController.Submit"}}' enctype="multipart/form-data">
     <div>
       <label for="inputTitle" class="message"></label>
       <input autofocus placeholder="Insert a title" name="title" value="" type="text" id="inputTitle"/>

@@ -6,10 +6,12 @@ import (
 	"github.com/KeKsBoTer/socialloot/models"
 )
 
+// SubmitController handles new posts and topics
 type SubmitController struct {
 	NeedsAuthController
 }
 
+// Submit serves submit post page
 func (c *SubmitController) Submit() {
 	c.TplName = "pages/submit/submit.tpl"
 	c.Data["Title"] = "Submit to Socialloot"
@@ -34,6 +36,7 @@ func (c *SubmitController) Submit() {
 	}
 }
 
+// CreateTopic serves topic creation page
 func (c *SubmitController) CreateTopic() {
 	c.TplName = "pages/submit/createTopic.tpl"
 	c.Data["Title"] = "Create a topic"
