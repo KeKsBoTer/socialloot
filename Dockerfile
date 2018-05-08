@@ -13,6 +13,8 @@ RUN mkdir -p $APP_DIR
 ENTRYPOINT (cd $APP_DIR && ./socialloot)
 ADD . $APP_DIR
 
+RUN cd $APP_DIR && godep restore
+
 # Compile the binary and statically link
 RUN cd $APP_DIR && CGO_ENABLED=1 godep go build -ldflags ' -w -s'
 
