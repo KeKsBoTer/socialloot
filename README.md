@@ -13,6 +13,6 @@ docker build -t socialloot .
 
 Run docker container:
 ```
-docker run -d -p 8080:8008 socialloot
+docker run -d -p 8080:8080 socialloot
 ```
 Open http://localhost:8080 in browser
