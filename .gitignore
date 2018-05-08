@@ -9,3 +9,4 @@ swagger/*
 *.tmp
 *.pprof
 *.memprof
+/vendor
