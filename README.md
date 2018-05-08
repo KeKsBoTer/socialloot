@@ -2,7 +2,7 @@
 
 Clone repository:
 ```
-git clone https://github.com/KeKsBoTer/socailloot
+git clone https://github.com/KeKsBoTer/socialloot
 ```
 
 Navigate into folder and build container:
