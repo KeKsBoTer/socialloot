@@ -2,6 +2,7 @@ package models
 
 import (
 	"net/url"
+	"regexp"
 
 	"github.com/astaxie/beego/validation"
 )
@@ -18,6 +19,8 @@ func IsValid(model interface{}) error {
 
 // Valid checks if the entered password and the reentered passwords are the same
 func (form *SignUpForm) Valid(v *validation.Validation) {
+	reg := regexp.MustCompile("^[[:word:]\\-]+$")
+	v.Match(form.UserName, reg, "UserName.Match").Message("Name must only contain letters, numbers and underscores")
 	if form.Password != form.PasswordRe {
 		v.AddError("PasswordRe.Match", "Password and reentered password do not match")
 	}
@@ -49,4 +52,9 @@ func (form *VoteForm) Valid(v *validation.Validation) {
 	if form.Direction != VoteDirectionUp && form.Direction != VoteDirectionDown {
 		v.SetError("Direction.Match", "Direction must be up or downvote")
 	}
+}
+
+func (form *CreateTopicForm) Valid(v *validation.Validation) {
+	reg := regexp.MustCompile("^[[:alnum:]][:word:]]+$")
+	v.Match(form.Name, reg, "Name.Match").Message("Name must not start with underscore and only contain numbers, letters and underscores")
 }

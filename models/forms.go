@@ -22,7 +22,7 @@ type SignUpForm struct {
 
 	// Every user has a unique name with a length between 3 and 15 characters
 	// Also the name can only contain letters, numbers, underscores and "-"
-	UserName string `form:"username" valid:"Required;MinSize(3);MaxSize(15);Match(^[a-zA-Z0-9_\\-]+$)"`
+	UserName string `form:"username" valid:"Required;MinSize(3);MaxSize(15);"`
 
 	// A Password must consist of 8 to 30 characters
 	Password string `form:"password" valid:"Required;MinSize(8);MaxSize(30)"`
@@ -67,7 +67,7 @@ type CreateTopicForm struct {
 	// The short unique identifier for the topic
 	// The name can only contain letters, numbers and underscores but can not start with an underscores
 	// The length must be between 3 and 21 characters
-	Name string `form:"name" valid:"Required;MinSize(3);MaxSize(21);Match(^[[:alnum:]][[:alnum:]_]+$)"`
+	Name string `form:"name" valid:"Required;MinSize(3);MaxSize(21);"`
 
 	// The title for the topic
 	Title string `form:"title" valid:"Required;MinSize(3);MaxSize(200)"`
