@@ -55,6 +55,6 @@ func (form *VoteForm) Valid(v *validation.Validation) {
 }
 
 func (form *CreateTopicForm) Valid(v *validation.Validation) {
-	reg := regexp.MustCompile("^[[:alnum:]][:word:]]+$")
+	reg := regexp.MustCompile("^[[:alnum:]][[:word:]]+$")
 	v.Match(form.Name, reg, "Name.Match").Message("Name must not start with underscore and only contain numbers, letters and underscores")
 }
