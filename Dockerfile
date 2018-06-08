@@ -19,4 +19,3 @@ RUN cd $APP_DIR && godep restore
 RUN cd $APP_DIR && CGO_ENABLED=1 godep go build -ldflags ' -w -s'
 
 EXPOSE 8080
-EXPOSE 8088
