@@ -1,0 +1,3 @@
+static/**/*.css linguist-vendored
+static/**/*.min.js linguist-vendored
+static/icons/* linguist-vendored
