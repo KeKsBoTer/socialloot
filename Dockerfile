@@ -12,7 +12,7 @@ COPY . .
 RUN CGO_ENABLED=1 go build -ldflags="-s -w" -a -o socialloot .
 
 
-FROM gcr.io/distroless/base:debug
+FROM gcr.io/distroless/base
 WORKDIR /root/
 COPY conf/app.conf conf/app.conf
 COPY static static
