@@ -1,4 +1,4 @@
-<p><img with="100%" src="docs/socialloot.jpg"/></p>
+<p align="center"><img with="100%" src="docs/socialloot.jpg"/></p>
 
 # Socialloot
 Socialloot is a platform to share images, texts and links and rate and comment them. It is strongly inspired by reddit and created by me during a lecture in university. View a demo version [here](https://socialloot.dotcookie.me).
