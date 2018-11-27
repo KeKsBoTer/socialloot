@@ -1,0 +1,8 @@
+github.com/astaxie/beego v0.0.0-20171218111859-f16688817aa4 h1:S+9NpWgwkBlu/nZi3F4bkj5gcf5luYb4h5hc58f+tXo=
+github.com/astaxie/beego v0.0.0-20171218111859-f16688817aa4/go.mod h1:0R4++1tUqERR0WYFWdfkcrsyoVBCG4DgpDGokT3yb+U=
+github.com/mattn/go-sqlite3 v0.0.0-20180218131552-696e2e43cb00 h1:EBBUnaoxrlTrnmwlqJSrPQ2bhkQKPs4vm9nSuaEiqak=
+github.com/mattn/go-sqlite3 v0.0.0-20180218131552-696e2e43cb00/go.mod h1:FPy6KqzDD04eiIsT53CuJW3U88zkxoIYsOqkbpncsNc=
+github.com/nfnt/resize v0.0.0-20180221191011-83c6a9932646 h1:zYyBkD/k9seD2A7fsi6Oo2LfFZAehjjQMERAvZLEDnQ=
+github.com/nfnt/resize v0.0.0-20180221191011-83c6a9932646/go.mod h1:jpp1/29i3P1S/RLdc7JQKbRpFeM1dOBd8T9ki5s+AY8=
+golang.org/x/crypto v0.0.0-20180214000028-650f4a345ab4 h1:OfaUle5HH9Y0obNU74mlOZ/Igdtwi3eGOKcljJsTnbw=
+golang.org/x/crypto v0.0.0-20180214000028-650f4a345ab4/go.mod h1:6SG95UA2DQfeDnfUPMdvaQW0Q7yPrPDi9nlGo2tz2b4=

@@ -1,21 +1,22 @@
-FROM library/golang
 
-# Godep for vendoring
-RUN go get github.com/tools/godep
+FROM golang:1.11 as builder
+WORKDIR /server/
 
-# Recompile the standard library without CGO
-RUN CGO_ENABLED=0 go install -a std
+COPY go.mod .
+COPY go.sum .
 
-ENV APP_DIR $GOPATH/src/github.com/KeKsBoTer/socialloot
-RUN mkdir -p $APP_DIR
+RUN go mod download
 
-# Set the entrypoint
-ENTRYPOINT (cd $APP_DIR && ./socialloot)
-ADD . $APP_DIR
+COPY . .
 
-RUN cd $APP_DIR && godep restore
+RUN CGO_ENABLED=1 go build -ldflags="-s -w" -a -o socialloot .
 
-# Compile the binary and statically link
-RUN cd $APP_DIR && CGO_ENABLED=1 godep go build -ldflags ' -w -s'
 
-EXPOSE 8080
+FROM gcr.io/distroless/base
+WORKDIR /root/
+COPY conf/app.conf conf/app.conf
+COPY static static
+COPY views views
+COPY --from=builder /server/socialloot .
+ENTRYPOINT [ "./socialloot"]
+EXPOSE 80
