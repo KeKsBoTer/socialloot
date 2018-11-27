@@ -2,9 +2,6 @@ anguage: go
 go:
   - 1.11.x
   
-install:
-  - export PATH=$PATH:$HOME/gopath/bin
-  - go get github.com/tools/godep
-  - godep get
+install: true
 script:
   - go build main.go
