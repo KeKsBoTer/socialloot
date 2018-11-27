@@ -2,6 +2,7 @@ language: go
 go:
   - 1.11.x
   
-install: true
+install:
+  - godep restore
 script:
   - go build main.go
